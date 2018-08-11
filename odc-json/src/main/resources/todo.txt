@@ -1,0 +1,4 @@
+Missing:
+- Add element finder factory or builder
+- Streamline interface (ElementHandler should only have one method - start/end element marked as boolean)
+- Unit test (remove uncoverable code)

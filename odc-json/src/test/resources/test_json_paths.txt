@@ -1,0 +1,9 @@
+/root/objects/name
+/root/firstName
+/root/lastname
+/root/age
+/root/phoneNumbers/aroot/type
+/root/phoneNumbers/number
+/root/mails
+/root/crazy
+/root/array

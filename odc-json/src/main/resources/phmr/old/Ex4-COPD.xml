@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="../Stylesheet/cda.xsl"?>
+<ClinicalDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns="urn:hl7-org:v3" classCode="DOCCLIN" moodCode="EVN">
+  <typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
+  <templateId root="1.2.208.184.11.1"/>
+  <id extension="437f8b60-9563-11e3-a5e2-0800200c9a66" root="1.2.208.184" assigningAuthorityName="MedCom"/>
+  <code code="53576-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Personal Health Monitoring Report"/>
+  <title>Hjemmemonitorering for 2606481234</title>
+  <effectiveTime value="20130217091500+0100"/>
+  <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
+  <languageCode code="da-DK"/>
+  <setId extension="2358344" root="1.2.208.184.100.1"/>
+  <versionNumber value="1"/>
+  <recordTarget typeCode="RCT" contextControlCode="OP">
+    <patientRole classCode="PAT">
+      <id extension="2606481234" root="1.2.208.176.1.2" assigningAuthorityName="CPR"/>
+      <addr use="H">
+        <streetAddressLine>Skovvejen 12</streetAddressLine>
+        <streetAddressLine>Landet</streetAddressLine>
+        <postalCode>5700</postalCode>
+        <city>Svendborg</city>
+        <country>Danmark</country>
+      </addr>
+      <telecom value="tel:65123456" use="H"/>
+      <telecom value="mailto:jab@udkantsdanmark.dk" use="WP"/>
+      <patient classCode="PSN" determinerCode="INSTANCE">
+        <name>
+          <given>Janus</given>
+          <family>Berggren</family>
+        </name>
+        <administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1"/>
+        <birthTime value="19480626"/>
+      </patient>
+    </patientRole>
+  </recordTarget>
+
+  <author typeCode="AUT" contextControlCode="OP">
+    <time value="20130217091500+0100"/>
+    <assignedAuthor classCode="ASSIGNED">
+      <id extension="77668685" root="1.2.208.176.1.1" assigningAuthorityName="SOR"/>
+      <addr use="WP">
+        <streetAddressLine>Lungemedicinsk afdeling J</streetAddressLine>
+        <streetAddressLine>Sdr. Boulevard 29,</streetAddressLine>
+        <streetAddressLine>Indgang 87-88</streetAddressLine>
+        <postalCode>5000</postalCode>
+        <city>Odense C</city>
+        <country>Danmark</country>
+      </addr>
+      <assignedPerson classCode="PSN" determinerCode="INSTANCE">
+        <name>
+          <prefix>Læge</prefix>
+          <given>M</given>
+          <family>Madsen</family>
+        </name>
+      </assignedPerson>
+      <representedOrganization classCode="ORG" determinerCode="INSTANCE"> 
+        <name>Odense Universitetshospital, Odense</name>
+      </representedOrganization>
+    </assignedAuthor>
+  </author>
+
+  <custodian typeCode="CST">
+    <assignedCustodian classCode="ASSIGNED">
+      <representedCustodianOrganization classCode="ORG" determinerCode="INSTANCE">
+        <id extension="77668685" root="1.2.208.176.1.1" assigningAuthorityName="SOR"/>
+        <name>Odense Universitetshospital, Odense</name>
+        <addr use="WP">
+          <streetAddressLine>Lungemedicinsk afdeling J</streetAddressLine>
+          <streetAddressLine>Sdr. Boulevard 29,</streetAddressLine>
+          <streetAddressLine>Indgang 87-88</streetAddressLine>
+          <postalCode>5000</postalCode>
+          <city>Odense C</city>
+          <country>Danmark</country>
+        </addr>
+      </representedCustodianOrganization>
+    </assignedCustodian>
+  </custodian>
+
+
+  <legalAuthenticator typeCode="LA" contextControlCode="OP">
+    <time value="20130217091500+0100"/>
+    <signatureCode nullFlavor="NI"/>
+    <assignedEntity classCode="ASSIGNED">
+      <id extension="77668685" root="1.2.208.176.1.1" assigningAuthorityName="SOR"/>
+      <addr use="WP">
+        <streetAddressLine>Lungemedicinsk afdeling J</streetAddressLine>
+        <streetAddressLine>Sdr. Boulevard 29,</streetAddressLine>
+        <streetAddressLine>Indgang 87-88</streetAddressLine>
+        <postalCode>5000</postalCode>
+        <city>Odense C</city>
+        <country>Danmark</country>
+      </addr>
+      <assignedPerson classCode="PSN" determinerCode="INSTANCE">
+        <name>
+          <prefix>Læge</prefix>
+          <given>Lars</given>
+          <family>Olsen</family>
+        </name>
+      </assignedPerson>
+      <representedOrganization classCode="ORG" determinerCode="INSTANCE">
+        <name>Odense Universitetshospital</name>
+      </representedOrganization>
+    </assignedEntity>
+  </legalAuthenticator>
+
+  <documentationOf typeCode="DOC">
+    <serviceEvent classCode="MPROT" moodCode="EVN">
+      <effectiveTime>
+        <low value="20130211091100+0100"/>
+        <high value="20130216111400+0100"/>
+      </effectiveTime>
+    </serviceEvent>
+  </documentationOf>
+
+  <component typeCode="COMP" contextConductionInd="true">
+    <structuredBody classCode="DOCBODY" moodCode="EVN">
+      <!-- Vital Signs -->
+      <component typeCode="COMP" contextConductionInd="true">
+        <section classCode="DOCSECT" moodCode="EVN">
+          <templateId root="2.16.840.1.113883.10.20.1.16"/>
+          <templateId root="1.2.208.184.11.1"/>
+          <code code="8716-3" codeSystem="2.16.840.1.113883.6.1"/>
+          <title>Vital Signs</title>
+          <!-- Saturation only -->
+          <entry typeCode="COMP" contextConductionInd="true">
+            <organizer classCode="CLUSTER" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.1.35"/>
+              <statusCode code="Completed"/>
+              <effectiveTime value="20130211091100+0100"/>
+              <component typeCode="COMP" contextConductionInd="true">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.1.31"/>
+                  <templateId root="2.16.840.1.113883.10.20.9.8"/>
+                  <code code="NPU03011" codeSystem="1.2.208.176.2.1" displayName="O2 sat.;Hb(aB)" codeSystemName="NPU terminologien"/>
+                  <value unit="%" value="92" xsi:type="PQ"/>
+                  <methodCode code="POT" codeSystem="1.2.208.184.100.1" displayName="Målt af borger"
+                    codeSystemName="MedCom Message Codes"/>
+                  <methodCode code="AUT" codeSystem="1.2.208.184.100.1" displayName="Måling overført automatisk"
+                    codeSystemName="MedCom Message Codes"/>
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+          <entry typeCode="COMP" contextConductionInd="true">
+            <organizer classCode="CLUSTER" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.1.35"/>
+              <statusCode code="Completed"/>
+              <effectiveTime value="20130212084500+0100"/>
+              <component typeCode="COMP" contextConductionInd="true">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.1.31"/>
+                  <templateId root="2.16.840.1.113883.10.20.9.8"/>
+                  <code code="NPU03011" codeSystem="1.2.208.176.2.1" displayName="O2 sat.;Hb(aB)" codeSystemName="NPU terminologien"/>
+                  <value unit="%" value="91" xsi:type="PQ"/>
+                  <methodCode code="POT" codeSystem="1.2.208.184.100.1" displayName="Målt af borger"
+                    codeSystemName="MedCom Message Codes"/>
+                  <methodCode code="AUT" codeSystem="1.2.208.184.100.1" displayName="Måling overført automatisk"
+                    codeSystemName="MedCom Message Codes"/>
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+          <entry typeCode="COMP" contextConductionInd="true">
+            <organizer classCode="CLUSTER" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.1.35"/>
+              <statusCode code="Completed"/>
+              <effectiveTime value="20130213091500+0100"/>
+              <component typeCode="COMP" contextConductionInd="true">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.1.31"/>
+                  <templateId root="2.16.840.1.113883.10.20.9.8"/>
+                  <code code="NPU03011" codeSystem="1.2.208.176.2.1" displayName="O2 sat.;Hb(aB)" codeSystemName="NPU terminologien"/>
+                  <value unit="%" value="94" xsi:type="PQ"/>
+                  <methodCode code="POT" codeSystem="1.2.208.184.100.1" displayName="Målt af borger"
+                    codeSystemName="MedCom Message Codes"/>
+                  <methodCode code="AUT" codeSystem="1.2.208.184.100.1" displayName="Måling overført automatisk"
+                    codeSystemName="MedCom Message Codes"/>
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+          <entry typeCode="COMP" contextConductionInd="true">
+            <organizer classCode="CLUSTER" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.1.35"/>
+              <statusCode code="Completed"/>
+              <effectiveTime value="20130214094500+0100"/>
+              <component typeCode="COMP" contextConductionInd="true">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.1.31"/>
+                  <templateId root="2.16.840.1.113883.10.20.9.8"/>
+                  <code code="NPU03011" codeSystem="1.2.208.176.2.1" displayName="O2 sat.;Hb(aB)" codeSystemName="NPU terminologien"/>
+                  <value unit="%" value="95" xsi:type="PQ"/>
+                  <methodCode code="POT" codeSystem="1.2.208.184.100.1" displayName="Målt af borger"
+                    codeSystemName="MedCom Message Codes"/>
+                  <methodCode code="AUT" codeSystem="1.2.208.184.100.1" displayName="Måling overført automatisk"
+                    codeSystemName="MedCom Message Codes"/>
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+          <entry typeCode="COMP" contextConductionInd="true">
+            <organizer classCode="CLUSTER" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.1.35"/>
+              <statusCode code="Completed"/>
+              <effectiveTime value="20130215070100+0100"/>
+              <component typeCode="COMP" contextConductionInd="true">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.1.31"/>
+                  <templateId root="2.16.840.1.113883.10.20.9.8"/>
+                  <code code="NPU03011" codeSystem="1.2.208.176.2.1" displayName="O2 sat.;Hb(aB)" codeSystemName="NPU terminologien"/>
+                  <value unit="%" value="90" xsi:type="PQ"/>
+                  <methodCode code="POT" codeSystem="1.2.208.184.100.1" displayName="Målt af borger"
+                    codeSystemName="MedCom Message Codes"/>
+                  <methodCode code="AUT" codeSystem="1.2.208.184.100.1" displayName="Måling overført automatisk"
+                    codeSystemName="MedCom Message Codes"/>
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+          <entry typeCode="COMP" contextConductionInd="true">
+            <organizer classCode="CLUSTER" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.1.35"/>
+              <statusCode code="Completed"/>
+              <effectiveTime value="20130216111000+0100"/>
+              <component typeCode="COMP" contextConductionInd="true">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.1.31"/>
+                  <templateId root="2.16.840.1.113883.10.20.9.8"/>
+                  <code code="NPU03011" codeSystem="1.2.208.176.2.1" displayName="O2 sat.;Hb(aB)" codeSystemName="NPU terminologien"/>
+                  <value unit="%" value="94" xsi:type="PQ"/>
+                  <methodCode code="POT" codeSystem="1.2.208.184.100.1" displayName="Målt af borger"
+                    codeSystemName="MedCom Message Codes"/>
+                  <methodCode code="AUT" codeSystem="1.2.208.184.100.1" displayName="Måling overført automatisk"
+                    codeSystemName="MedCom Message Codes"/>
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+        </section>
+      </component>
+      <!-- Results -->
+      <component typeCode="COMP" contextConductionInd="true">
+        <section classCode="DOCSECT" moodCode="EVN">
+          <templateId root="2.16.840.1.113883.10.20.1.14"/>
+          <templateId root="1.2.208.184.11.1"/>
+          <code code="30954-2" codeSystem="2.16.840.1.113883.6.1"/>
+          <title>Results</title>
+          <!-- FVC -->
+          <entry typeCode="COMP" contextConductionInd="true">
+            <organizer classCode="CLUSTER" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.1.35"/>
+              <statusCode code="completed"/>
+              <effectiveTime value="20130211091400+0100"/>
+              <component typeCode="COMP" contextConductionInd="true">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.1.31"/>
+                  <templateId root="2.16.840.1.113883.10.20.9.8"/>
+                  <code code="MCS88016" codeSystem="1.2.208.184.100.8" displayName="FVC" codeSystemName="DAK-e datafangst"/>
+                  <value unit="L" value="2.5" xsi:type="PQ"/>
+                  <methodCode code="POT" codeSystem="1.2.208.184.100.1" displayName="Målt af borger"
+                    codeSystemName="MedCom Message Codes"/>
+                  <methodCode code="AUT" codeSystem="1.2.208.184.100.1" displayName="Måling overført automatisk"
+                    codeSystemName="MedCom Message Codes"/>
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+          <entry typeCode="COMP" contextConductionInd="true">
+            <organizer classCode="CLUSTER" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.1.35"/>
+              <statusCode code="completed"/>
+              <effectiveTime value="20130212085000+0100"/>
+              <component typeCode="COMP" contextConductionInd="true">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.1.31"/>
+                  <templateId root="2.16.840.1.113883.10.20.9.8"/>
+                  <code code="MCS88016" codeSystem="1.2.208.184.100.8" displayName="FVC" codeSystemName="DAK-e datafangst"/>
+                  <value unit="L" value="2.4" xsi:type="PQ"/>
+                  <methodCode code="POT" codeSystem="1.2.208.184.100.1" displayName="Målt af borger"
+                    codeSystemName="MedCom Message Codes"/>
+                  <methodCode code="AUT" codeSystem="1.2.208.184.100.1" displayName="Måling overført automatisk"
+                    codeSystemName="MedCom Message Codes"/>
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+          <entry typeCode="COMP" contextConductionInd="true">
+            <organizer classCode="CLUSTER" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.1.35"/>
+              <statusCode code="completed"/>
+              <effectiveTime value="20130213092100+0100"/>
+              <component typeCode="COMP" contextConductionInd="true">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.1.31"/>
+                  <templateId root="2.16.840.1.113883.10.20.9.8"/>
+                  <code code="MCS88016" codeSystem="1.2.208.184.100.8" displayName="FVC" codeSystemName="DAK-e datafangst"/>
+                  <value unit="L" value="2.9" xsi:type="PQ"/>
+                  <methodCode code="POT" codeSystem="1.2.208.184.100.1" displayName="Målt af borger"
+                    codeSystemName="MedCom Message Codes"/>
+                  <methodCode code="AUT" codeSystem="1.2.208.184.100.1" displayName="Måling overført automatisk"
+                    codeSystemName="MedCom Message Codes"/>
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+          <entry typeCode="COMP" contextConductionInd="true">
+            <organizer classCode="CLUSTER" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.1.35"/>
+              <statusCode code="completed"/>
+              <effectiveTime value="20130214095000+0100"/>
+              <component typeCode="COMP" contextConductionInd="true">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.1.31"/>
+                  <templateId root="2.16.840.1.113883.10.20.9.8"/>
+                  <code code="MCS88016" codeSystem="1.2.208.184.100.8" displayName="FVC" codeSystemName="DAK-e datafangst"/>
+                  <value unit="L" value="3.1" xsi:type="PQ"/>
+                  <methodCode code="POT" codeSystem="1.2.208.184.100.1" displayName="Målt af borger"
+                    codeSystemName="MedCom Message Codes"/>
+                  <methodCode code="AUT" codeSystem="1.2.208.184.100.1" displayName="Måling overført automatisk"
+                    codeSystemName="MedCom Message Codes"/>
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+          <entry typeCode="COMP" contextConductionInd="true">
+            <organizer classCode="CLUSTER" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.1.35"/>
+              <statusCode code="completed"/>
+              <effectiveTime value="20130215071000+0100"/>
+              <component typeCode="COMP" contextConductionInd="true">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.1.31"/>
+                  <templateId root="2.16.840.1.113883.10.20.9.8"/>
+                  <code code="MCS88016" codeSystem="1.2.208.184.100.8" displayName="FVC" codeSystemName="DAK-e datafangst"/>
+                  <value unit="L" value="2.2" xsi:type="PQ"/>
+                  <methodCode code="POT" codeSystem="1.2.208.184.100.1" displayName="Målt af borger"
+                    codeSystemName="MedCom Message Codes"/>
+                  <methodCode code="AUT" codeSystem="1.2.208.184.100.1" displayName="Måling overført automatisk"
+                    codeSystemName="MedCom Message Codes"/>
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+          <entry typeCode="COMP" contextConductionInd="true">
+            <organizer classCode="CLUSTER" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.1.35"/>
+              <statusCode code="completed"/>
+              <effectiveTime value="20130216111400+0100"/>
+              <component typeCode="COMP" contextConductionInd="true">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.1.31"/>
+                  <templateId root="2.16.840.1.113883.10.20.9.8"/>
+                  <code code="MCS88016" codeSystem="1.2.208.184.100.8" displayName="FVC" codeSystemName="DAK-e datafangst"/>
+                  <value unit="L" value="3.0" xsi:type="PQ"/>
+                  <methodCode code="POT" codeSystem="1.2.208.184.100.1" displayName="Målt af borger"
+                    codeSystemName="MedCom Message Codes"/>
+                  <methodCode code="AUT" codeSystem="1.2.208.184.100.1" displayName="Måling overført automatisk"
+                    codeSystemName="MedCom Message Codes"/>
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+        </section>
+      </component>
+
+      <!-- Medical Equipment -->
+      <component typeCode="COMP" contextConductionInd="true">
+        <section classCode="DOCSECT" moodCode="EVN">
+          <templateId root="2.16.840.1.113883.10.20.1.7"/>
+          <templateId root="1.2.208.184.11.1"/>
+          <code code="46264-8" codeSystem="2.16.840.1.113883.6.1"/>
+          <title>Medical Equipment</title>
+          <!-- COPD -->
+          <entry typeCode="COMP" contextConductionInd="true">
+            <organizer classCode="CLUSTER" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.9.4"/>
+              <statusCode code="completed"/>
+              <participant typeCode="SBJ" contextControlCode="OP">
+                <templateId root="2.16.840.1.113883.10.20.9.9"/>
+                <participantRole classCode="MANU">
+                  <playingDevice classCode="DEV" determinerCode="INSTANCE">
+                    <code code="EPQXXXXX" codeSystem="1.2.208.184.100.2" displayName="COPD Kit"/>
+                    <manufacturerModelName>Manufacturer: AD Company / Model: COHM-0034</manufacturerModelName>
+                    <softwareName>SerialNr: 6788-0034987 / SW Rev. 6755-ABT</softwareName>
+                  </playingDevice>
+                </participantRole>
+              </participant>
+            </organizer>
+          </entry>
+        </section>
+      </component>
+    </structuredBody>
+  </component>
+</ClinicalDocument>
