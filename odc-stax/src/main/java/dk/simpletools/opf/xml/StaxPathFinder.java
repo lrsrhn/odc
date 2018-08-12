@@ -22,11 +22,9 @@
  */
 package dk.simpletools.opf.xml;
 
-import com.ctc.wstx.cfg.InputConfigFlags;
 import dk.simpletools.opf.core.processing.ObjectStore;
 import dk.simpletools.opf.core.processing.ObservablePathFinder;
 import dk.simpletools.opf.core.processing.StructureElement;
-import org.codehaus.stax2.XMLInputFactory2;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
@@ -37,8 +35,7 @@ public class StaxPathFinder extends ObservablePathFinder {
 
   static XMLInputFactory createDefaultFactory() {
     XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
-    xmlInputFactory.setProperty(XMLInputFactory2.P_INTERN_NAMES, true);
-    xmlInputFactory.setProperty("javax.xml.stream.isCoalescing", true);
+    xmlInputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
 
     return xmlInputFactory;
   }
@@ -51,7 +48,7 @@ public class StaxPathFinder extends ObservablePathFinder {
 
   public StaxPathFinder(XMLInputFactory xmlInputFactory) {
     if (xmlInputFactory != DEFAULT_XML_INPUT_FACTORY) {
-      xmlInputFactory.setProperty("javax.xml.stream.isCoalescing", true);
+      xmlInputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
     }
     this.xmlInputFactory = xmlInputFactory;
   }

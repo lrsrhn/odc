@@ -27,23 +27,23 @@ import dk.simpletools.opf.core.finder.OnEndHandler;
 
 import java.util.Arrays;
 
-public class ElementFinderStack {
+final class ElementFinderStack {
     private ElementFinderStack.StackElement[] elementFinderStack;
     private int lookupIndex;
 
-    public ElementFinderStack(int size) {
+    ElementFinderStack(int size) {
         this.elementFinderStack = new ElementFinderStack.StackElement[size];
         this.lookupIndex = -1;
     }
 
-    public void push(int searchDepth, ElementFinder previousElementFinder, OnEndHandler onEndHandler) {
+    void push(int searchDepth, ElementFinder previousElementFinder, OnEndHandler onEndHandler) {
         if (lookupIndex == elementFinderStack.length - 1) {
             elementFinderStack = Arrays.copyOf(elementFinderStack, elementFinderStack.length * 2);
         }
          elementFinderStack[++lookupIndex]= new ElementFinderStack.StackElement(onEndHandler, searchDepth, previousElementFinder);
     }
 
-    public ElementFinderStack.StackElement lookup(int searchDepth) {
+    ElementFinderStack.StackElement lookup(int searchDepth) {
         if (lookupIndex != -1) {
             ElementFinderStack.StackElement stackElement = elementFinderStack[lookupIndex];
             if (stackElement.getSearchDepth() == searchDepth) {
@@ -54,25 +54,25 @@ public class ElementFinderStack {
         return null;
     }
 
-    public static class StackElement {
+    static final class StackElement {
         private int searchDepth;
         private OnEndHandler onEndHandler;
         private ElementFinder previousElementFinder;
 
-        public StackElement(OnEndHandler onEndHandler, int searchDepth, ElementFinder previousElementFinder) {
+        StackElement(OnEndHandler onEndHandler, int searchDepth, ElementFinder previousElementFinder) {
             this.onEndHandler = onEndHandler;
             this.previousElementFinder = previousElementFinder;
             this.searchDepth = searchDepth;
         }
 
-        public OnEndHandler getOnEndHandler() {
+        OnEndHandler getOnEndHandler() {
             return onEndHandler;
         }
 
-        public ElementFinder getPreviousElementFinder() {
+        ElementFinder getPreviousElementFinder() {
             return previousElementFinder;
         }
 
-        public int getSearchDepth() {return searchDepth;}
+        int getSearchDepth() {return searchDepth;}
     }
 }
