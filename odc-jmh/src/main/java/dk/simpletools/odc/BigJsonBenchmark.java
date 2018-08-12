@@ -65,7 +65,7 @@ public class BigJsonBenchmark {
     }
 
 
-//    @Benchmark
+    @Benchmark
     public void testBigXml(BenchmarkState benchmarkState, final Blackhole blackhole) {
         blackhole.consume(benchmarkState.jsonPath.find(benchmarkState.xmlContent));
 //        System.out.println("Length: " + benchmarkState.builder.length());
