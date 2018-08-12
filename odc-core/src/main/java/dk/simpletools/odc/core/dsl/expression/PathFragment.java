@@ -20,13 +20,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.dsl.expression;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+import dk.simpletools.odc.core.dsl.searchtree.RootAllTreeBuilder;
+import dk.simpletools.odc.core.predicate.Predicate;
 
-    @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
-    }
+import java.util.HashMap;
+
+public class PathFragment {
+  private PathReference xmlElementFinder;
+
+  public PathFragment(PathReference xmlElementFinder) {
+    this.xmlElementFinder = xmlElementFinder;
+  }
+
+  private ExpressionBuilder expression() {
+    return new ExpressionBuilder(xmlElementFinder, false);
+  }
+
+  public RootAllTreeBuilder treeBuilder() {
+    return new RootAllTreeBuilder(new HashMap<String, PathReference>(), xmlElementFinder);
+  }
+
+  public ExpressionBuilder addPath(String xpath) {
+    return expression().path(xpath);
+  }
+
+  public ExpressionBuilder addElementsAbsolute(String...elements) {
+    return expression().elementsAbsolute(elements);
+  }
+
+  public ExpressionBuilder addPredicate(Predicate predicate) {
+    return expression().predicate(predicate);
+  }
+
+  public PathReference getPathReference() {
+    return xmlElementFinder;
+  }
 }

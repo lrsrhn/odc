@@ -20,13 +20,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.predicate;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+import dk.simpletools.odc.core.processing.StructureElement;
 
-    @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
-    }
+public class TextPredicate implements Predicate {
+  private String expectedText;
+
+  public TextPredicate(String expectedText) {
+    this.expectedText = expectedText;
+  }
+
+  @Override
+  public boolean evaluate(StructureElement structureElement) {
+    return expectedText.equals(structureElement.getElementValue());
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+
+    TextPredicate that = (TextPredicate) o;
+
+    return expectedText != null ? expectedText.equals(that.expectedText) : that.expectedText == null;
+  }
+
+  @Override
+  public int hashCode() {
+    return expectedText != null ? expectedText.hashCode() : 0;
+  }
+
+  @Override
+  public String toString() {
+    return "text()='" + expectedText + "'";
+  }
 }

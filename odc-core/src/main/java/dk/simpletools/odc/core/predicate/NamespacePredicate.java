@@ -20,13 +20,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.predicate;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+import dk.simpletools.odc.core.processing.StructureElement;
+
+public class NamespacePredicate implements Predicate {
+    private String expectedNamespace;
+
+    public NamespacePredicate(String expectedNamespace) {
+        this.expectedNamespace = expectedNamespace;
+    }
 
     @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
+    public boolean evaluate(StructureElement structureElement) {
+        return expectedNamespace.equals(structureElement.getElementNS());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NamespacePredicate that = (NamespacePredicate) o;
+
+        return expectedNamespace != null ? expectedNamespace.equals(that.expectedNamespace) : that.expectedNamespace == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return expectedNamespace != null ? expectedNamespace.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "namespace-uri()='" + expectedNamespace + "'";
     }
 }

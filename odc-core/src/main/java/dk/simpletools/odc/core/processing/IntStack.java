@@ -20,13 +20,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.processing;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+import java.util.Arrays;
 
-    @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
+public final class IntStack {
+  private int[] array;
+  private int head;
+
+  public IntStack(int size) {
+    this.array = new int[size];
+    this.head = -1;
+  }
+
+  public int pop() {
+    if (head != -1) {
+      return array[head--];
     }
+    throw new ArrayIndexOutOfBoundsException();
+  }
+
+  public void push(int value) {
+    array[++head] = value;
+    if (head == array.length - 1) {
+      array = Arrays.copyOf(array, array.length * 2);
+    }
+  }
+
+  public int peek() {
+    return array[head];
+  }
+
+  public void reset() {
+    this.head = -1;
+  }
 }

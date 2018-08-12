@@ -20,13 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.predicate;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+import dk.simpletools.odc.core.processing.StructureElement;
 
-    @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
-    }
+public class TruePredicate implements Predicate {
+  public static final Predicate INSTANCE = new TruePredicate();
+
+  @Override
+  public boolean evaluate(StructureElement structureElement) {
+    return true;
+  }
 }

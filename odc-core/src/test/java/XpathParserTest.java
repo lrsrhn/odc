@@ -21,7 +21,7 @@
  * THE SOFTWARE.
  */
 
-import dk.simpletools.opf.core.dsl.expression.XpathParser;
+import dk.simpletools.odc.core.dsl.expression.XpathParser;
 import org.junit.Test;
 
 public class XpathParserTest {

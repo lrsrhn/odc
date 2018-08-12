@@ -20,13 +20,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.picker;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+import dk.simpletools.odc.core.processing.StructureElement;
 
-    @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
-    }
+public class ElementValuePicker implements ValuePicker {
+
+  private Enum<?> valueStoreIndex;
+
+  public ElementValuePicker(Enum<?> valueStoreIndex) {
+    this.valueStoreIndex = valueStoreIndex;
+  }
+
+  @Override
+  public String pick(StructureElement structureElement) {
+    return structureElement.getElementValue();
+  }
+
+  @Override
+  public Enum<?> getValueStoreIndex() {
+    return valueStoreIndex;
+  }
 }

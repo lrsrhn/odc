@@ -20,13 +20,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.processing;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+public class ValueStore {
+  private String[] values;
 
-    @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
+  public void initialize(Enum<?> enumValue) {
+    if (values == null) {
+      Object[] enumValues = enumValue.getClass().getEnumConstants();
+      values = new String[enumValues.length];
     }
+  }
+
+  public String lookupValue(Enum<?> enumValue) {
+    initialize(enumValue);
+    if (enumValue.ordinal() >= values.length) {
+      throw new IndexOutOfBoundsException();
+    }
+    return values[enumValue.ordinal()];
+  }
+
+  public void addValue(Enum<?> enumValue, String value) {
+    initialize(enumValue);
+    values[enumValue.ordinal()] = value;
+  }
+
+  public void resetValue(Enum<?> enumValue) {
+    initialize(enumValue);
+    values[enumValue.ordinal()] = null;
+  }
+
+  public void clear() {
+    if (values != null) {
+      for (int i = 0; i < values.length; i++) {
+        values[i] = null;
+      }
+    }
+  }
 }

@@ -20,19 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.opf.core.finder.ElementHandler;
-import dk.simpletools.opf.core.processing.EndElement;
-import dk.simpletools.opf.core.processing.ObjectStore;
-import dk.simpletools.opf.core.processing.StructureElement;
-import dk.simpletools.opf.core.processing.ValueStore;
-import dk.simpletools.opf.json.JsonPathFinder;
+import dk.simpletools.odc.core.finder.ElementHandler;
+import dk.simpletools.odc.core.processing.EndElement;
+import dk.simpletools.odc.core.processing.ObjectStore;
+import dk.simpletools.odc.core.processing.StructureElement;
+import dk.simpletools.odc.core.processing.ValueStore;
+import dk.simpletools.odc.json.JsonPathFinder;
 import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
-import static dk.simpletools.opf.core.predicate.Predicates.text;
+import static dk.simpletools.odc.core.predicate.Predicates.text;
 
 public class JsonPathFinderTest {
 

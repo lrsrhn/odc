@@ -20,13 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.processing;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+public class EndElement {
+    private StructureElement structureElement;
 
-    @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
+    public String getElementName() {
+        return structureElement.getElementName();
+    }
+
+    public void setStructureElement(StructureElement structureElement) {
+        this.structureElement = structureElement;
     }
 }

@@ -20,8 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.opf.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.opf.xml.StaxPathFinder;
+import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
+import dk.simpletools.odc.xml.StaxPathFinder;
 
 public class StaxTreeBuilderTests extends TreeBuilderTests {
 

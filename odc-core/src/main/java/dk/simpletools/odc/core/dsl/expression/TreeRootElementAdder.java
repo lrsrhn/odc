@@ -20,13 +20,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.dsl.expression;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+import dk.simpletools.odc.core.finder.ElementFinder;
+
+public class TreeRootElementAdder implements TreePathAdder {
+    private String element;
+    private boolean isRelative;
+
+    public TreeRootElementAdder(String element, boolean isRelative) {
+        this.element = element;
+        this.isRelative = isRelative;
+    }
 
     @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
+    public PathReference addTreePath(PathReference reference, boolean hasRoot) {
+        ElementFinder currentElementFinder = reference.getElementFinder();
+        if (!hasRoot) {
+            throw new RuntimeException("The hasRoot is false!");
+        }
+        return new PathReference(currentElementFinder.setSearchElement(element, isRelative), element, isRelative);
     }
 }

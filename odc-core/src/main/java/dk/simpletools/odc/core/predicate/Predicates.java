@@ -20,13 +20,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.predicate;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+public class Predicates {
+  public static Predicate or(Predicate... predicates) {
+    return new OrPredicate(predicates);
+  }
 
-    @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
-    }
+  public static Predicate and(Predicate... predicates) {
+    return new AndPredicate(predicates);
+  }
+
+  public static Predicate attribute(String attributeName, String attributeValue) {
+    return new AttributePredicate(attributeName, attributeValue);
+  }
+
+  public static Predicate text(String text) {
+    return new TextPredicate(text);
+  }
+
+  public static Predicate storedValue(Enum<?> enumValueIndex, String value) {
+    return new ValueStorePredicate(enumValueIndex, value);
+  }
+
+  public static Predicate namespace(String namespace) {
+    return new NamespacePredicate(namespace);
+  }
+
+  public static Predicate alwaysTrue() {
+    return TruePredicate.INSTANCE;
+  }
+
 }

@@ -20,13 +20,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.xpp;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+import dk.simpletools.odc.core.finder.ElementFinder;
+import dk.simpletools.odc.core.processing.BaseElementProcessor;
+import dk.simpletools.odc.core.processing.ObjectStore;
+import org.xmlpull.v1.XmlPullParser;
 
-    @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
+public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XMLElement> {
+
+  public ElementProcessor(ElementFinder nextElementFinder, XMLElement xmlElement) {
+    super(nextElementFinder, xmlElement);
+  }
+
+  public ObjectStore search(XmlPullParser streamReader, XMLElement xmlElement) throws Exception {
+    int currentDepth = 0;
+    while (streamReader.next() != XmlPullParser.END_DOCUMENT) {
+      switch (streamReader.getEventType()) {
+      case XmlPullParser.START_TAG:
+        observablePathTraverser.startElement(xmlElement, currentDepth++);
+        if (streamReader.getEventType() == XmlPullParser.END_TAG) {
+          observablePathTraverser.endElement(xmlElement, --currentDepth);
+        }
+        break;
+      case XmlPullParser.END_TAG:
+        observablePathTraverser.endElement(xmlElement, --currentDepth);
+        break;
+      }
     }
+    return xmlElement.getObjectStore();
+  }
 }

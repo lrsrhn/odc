@@ -20,8 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.opf.core.dsl.expression.ExpressionXmlTests;
-import dk.simpletools.opf.xpp.XppPathFinder;
+import dk.simpletools.odc.core.dsl.expression.ExpressionXmlTests;
+import dk.simpletools.odc.xpp.XppPathFinder;
 
 public class XppExpressionTests extends ExpressionXmlTests {
 

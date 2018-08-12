@@ -20,13 +20,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.finder;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+import dk.simpletools.odc.core.predicate.Predicate;
 
-    @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
+public class SearchLocationBuilder {
+    private SearchLocation searchLocation;
+
+    public SearchLocationBuilder(SearchLocation searchLocation) {
+        if (searchLocation == null) {
+            throw new RuntimeException("Passed searchLocation is null!");
+        }
+        this.searchLocation = searchLocation;
+    }
+
+    public SearchLocationBuilder filter(Predicate filter) {
+        this.searchLocation.setFilter(filter);
+        return this;
+    }
+
+    public SearchLocationBuilder onStartHandler(OnStartHandler onStartHandler) {
+        this.searchLocation.setOnStartHandler(onStartHandler);
+        return this;
+    }
+
+    public SearchLocationBuilder onEndHandler(OnEndHandler onEndHandler) {
+        this.searchLocation.setOnEndHandler(onEndHandler);
+        return this;
+    }
+
+    public SearchLocation build() {
+        return searchLocation;
     }
 }

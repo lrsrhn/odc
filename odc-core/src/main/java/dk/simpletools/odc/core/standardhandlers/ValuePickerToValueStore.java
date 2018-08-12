@@ -20,13 +20,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.standardhandlers;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+import dk.simpletools.odc.core.picker.ValuePicker;
+import dk.simpletools.odc.core.processing.EndElement;
+import dk.simpletools.odc.core.processing.StructureElement;
+import dk.simpletools.odc.core.processing.ValueStore;
+import dk.simpletools.odc.core.processing.ObjectStore;
+import dk.simpletools.odc.core.finder.ElementHandler;
 
-    @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
+public class ValuePickerToValueStore implements ElementHandler {
+  private ValuePicker[] pickers;
+
+  public ValuePickerToValueStore(ValuePicker... pickers) {
+    if (pickers == null || pickers.length == 0) {
+      throw new IllegalArgumentException("ValuePickers must be set");
     }
+    this.pickers = pickers;
+  }
+
+  @Override
+  public void startElement(StructureElement structureElement) throws Exception {
+    for (ValuePicker picker : pickers) {
+      structureElement.getValueStore().addValue(picker.getValueStoreIndex(), picker.pick(structureElement));
+    }
+  }
+
+  @Override
+  public void endElement(EndElement endElement, ValueStore valueStore, ObjectStore objectStore) throws Exception {
+
+  }
+
+  @Override
+  public void clear() {
+  }
 }

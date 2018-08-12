@@ -20,13 +20,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.processing;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+import java.util.HashMap;
+import java.util.Map;
 
-    @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
+public class ObjectStore {
+    private Map<Object, Object> objectMap;
+
+    public ObjectStore() {
+        this.objectMap = new HashMap<Object, Object>();
+    }
+
+    public <E> void put(Object key, E object) {
+        objectMap.put(key, object);
+    }
+
+    public <E> E get(Object key, Class<E> type) {
+        Object object = objectMap.get(key);
+        if (type.isInstance(object)) {
+            return (E) object;
+        }
+        return null;
+    }
+
+    public void clearKey(Object key) {
+        objectMap.put(key, null);
+    }
+
+    public void clear() {
+        objectMap.clear();
     }
 }

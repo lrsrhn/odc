@@ -20,13 +20,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.processing;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+import dk.simpletools.odc.core.finder.ElementFinder;
 
-    @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
+public abstract class BaseElementProcessor<E,T extends StructureElement> {
+    protected ObservablePathTraverser observablePathTraverser;
+
+    public BaseElementProcessor(ElementFinder rootElementFinder, StructureElement structureElement) {
+        if (rootElementFinder == null) {
+            throw new IllegalArgumentException("The root xml element finder cannot be null");
+        }
+        this.observablePathTraverser = new ObservablePathTraverser(rootElementFinder, structureElement);
     }
+
+    public abstract ObjectStore search(E parser, T structureElement) throws Exception;
+
 }

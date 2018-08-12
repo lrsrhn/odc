@@ -20,13 +20,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.dsl.expression;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+import dk.simpletools.odc.core.dsl.searchtree.ExpressionHelper;
+
+public class TreeRecursionAdder implements TreePathAdder {
+    private PathReference pathReference;
+
+    public TreeRecursionAdder(PathReference pathReference) {
+        this.pathReference = pathReference;
+    }
 
     @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
+    public PathReference addTreePath(PathReference reference, boolean hasRoot) {
+        if (pathReference.getLastPredicate() != null) {
+            throw new RuntimeException("Something wrong!!");
+        }
+
+        ExpressionHelper.addElmentFinderCopy(reference, pathReference)
+        .mergeElementFinder(pathReference.getElementFinder());
+        return reference;
     }
 }

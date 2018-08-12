@@ -20,13 +20,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.predicate;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+import dk.simpletools.odc.core.processing.StructureElement;
 
-    @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
-    }
+public class ValueStorePredicate implements Predicate {
+  private Enum<?> enumValueIndex;
+  private String expectedValue;
+
+  public ValueStorePredicate(Enum<?> enumValueIndex, String expectedValue) {
+    this.enumValueIndex = enumValueIndex;
+    this.expectedValue = expectedValue;
+  }
+
+  @Override
+  public boolean evaluate(StructureElement structureElement) {
+    return expectedValue.equals(structureElement.getValueStore().lookupValue(enumValueIndex));
+  }
+
+  @Override
+  public String toString() {
+    return "store[" + enumValueIndex.name() + "]='" + expectedValue + "'";
+  }
 }
