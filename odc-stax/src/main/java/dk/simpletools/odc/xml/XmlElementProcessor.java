@@ -45,10 +45,10 @@ public class XmlElementProcessor extends BaseElementProcessor<XMLStreamReader, S
             if (streamReader.getEventType() == XMLStreamReader.END_ELEMENT) {
               observablePathTraverser.endElement(xmlElement, --currentDepth);
             }
-            break;
+            continue;
           case XMLStreamReader.END_ELEMENT:
             observablePathTraverser.endElement(xmlElement, --currentDepth);
-            break;
+            continue;
         }
       }
     }

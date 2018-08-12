@@ -42,10 +42,10 @@ public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XMLEle
         if (streamReader.getEventType() == XmlPullParser.END_TAG) {
           observablePathTraverser.endElement(xmlElement, --currentDepth);
         }
-        break;
+        continue;
       case XmlPullParser.END_TAG:
         observablePathTraverser.endElement(xmlElement, --currentDepth);
-        break;
+        continue;
       }
     }
     return xmlElement.getObjectStore();

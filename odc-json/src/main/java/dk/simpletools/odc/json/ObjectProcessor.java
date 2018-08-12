@@ -44,10 +44,10 @@ class ObjectProcessor extends BaseElementProcessor<JsonParser, JsonObject>{
             switch (currentEvent) {
                 case START_OBJECT:
                     currentDepth = processObject("$", currentDepth, jsonObject, jsonParser);
-                    break;
+                    continue;
                 case START_ARRAY:
                     currentDepth = processArray("$", currentDepth, jsonObject, jsonParser);
-                    break;
+                    continue;
             }
         }
         return jsonObject.getObjectStore();

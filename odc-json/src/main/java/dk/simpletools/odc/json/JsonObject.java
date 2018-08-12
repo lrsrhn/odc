@@ -121,10 +121,12 @@ public class JsonObject implements StructureElement {
                     elementValuesCache = array.toArray(new String[array.size()]);
                     return elementValuesCache;
                 default:
+                    elementValueCache = null;
                     array.add(getElementValue());
                     break;
             }
         }
+        elementValueCache = null;
         elementValuesCache = array.toArray(new String[array.size()]);
         return elementValuesCache;
     }
