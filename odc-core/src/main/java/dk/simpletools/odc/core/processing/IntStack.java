@@ -24,34 +24,30 @@ package dk.simpletools.odc.core.processing;
 
 import java.util.Arrays;
 
-public final class IntStack {
+final class IntStack {
   private int[] array;
   private int head;
 
-  public IntStack(int size) {
+  IntStack(int size) {
     this.array = new int[size];
     this.head = -1;
   }
 
-  public int pop() {
+  int pop() {
     if (head != -1) {
       return array[head--];
     }
     throw new ArrayIndexOutOfBoundsException();
   }
 
-  public void push(int value) {
+  void push(int value) {
     array[++head] = value;
     if (head == array.length - 1) {
       array = Arrays.copyOf(array, array.length * 2);
     }
   }
 
-  public int peek() {
+  int peek() {
     return array[head];
-  }
-
-  public void reset() {
-    this.head = -1;
   }
 }

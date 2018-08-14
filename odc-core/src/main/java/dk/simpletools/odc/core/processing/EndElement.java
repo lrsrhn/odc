@@ -22,7 +22,7 @@
  */
 package dk.simpletools.odc.core.processing;
 
-public class EndElement {
+public final class EndElement {
     private StructureElement structureElement;
 
     public String getElementName() {
