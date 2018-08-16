@@ -33,14 +33,23 @@ final class ElementFinderStack {
 
     ElementFinderStack(int size) {
         this.elementFinderStack = new ElementFinderStack.StackElement[size];
+        prefill(0);
         this.lookupIndex = -1;
+    }
+
+    private void prefill(int startIndex) {
+        for (int i = startIndex; i < elementFinderStack.length; i++) {
+            elementFinderStack[i] = new StackElement();
+        }
     }
 
     void push(int searchDepth, ElementFinder previousElementFinder, OnEndHandler onEndHandler) {
         if (lookupIndex == elementFinderStack.length - 1) {
+            int previousSize = elementFinderStack.length;
             elementFinderStack = Arrays.copyOf(elementFinderStack, elementFinderStack.length * 2);
+            prefill(previousSize);
         }
-         elementFinderStack[++lookupIndex]= new ElementFinderStack.StackElement(onEndHandler, searchDepth, previousElementFinder);
+         elementFinderStack[++lookupIndex].setValues(onEndHandler, searchDepth, previousElementFinder);
     }
 
     ElementFinderStack.StackElement lookup(int searchDepth) {
@@ -59,12 +68,6 @@ final class ElementFinderStack {
         private OnEndHandler onEndHandler;
         private ElementFinder previousElementFinder;
 
-        StackElement(OnEndHandler onEndHandler, int searchDepth, ElementFinder previousElementFinder) {
-            this.onEndHandler = onEndHandler;
-            this.previousElementFinder = previousElementFinder;
-            this.searchDepth = searchDepth;
-        }
-
         OnEndHandler getOnEndHandler() {
             return onEndHandler;
         }
@@ -74,5 +77,11 @@ final class ElementFinderStack {
         }
 
         int getSearchDepth() {return searchDepth;}
+
+        void setValues(OnEndHandler onEndHandler, int searchDepth, ElementFinder previousElementFinder) {
+            this.onEndHandler = onEndHandler;
+            this.previousElementFinder = previousElementFinder;
+            this.searchDepth = searchDepth;
+        }
     }
 }
