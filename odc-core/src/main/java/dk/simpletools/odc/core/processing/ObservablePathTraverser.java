@@ -35,10 +35,14 @@ public final class ObservablePathTraverser {
     private final IntStack depthStack;
     private int parentDepth;
     private int childDepth;
+    private final ValueStore valueStore;
+    private final ObjectStore objectStore;
 
     ObservablePathTraverser(ElementFinder rootElementFinder, StructureElement structureElement) {
         this.endElement = new EndElement();
         this.endElement.setStructureElement(structureElement);
+        this.valueStore = structureElement.getValueStore();
+        this.objectStore = structureElement.getObjectStore();
         this.currentElementFinder = rootElementFinder;
         this.elementFinderStack = new ElementFinderStack(15);
         this.depthStack = new IntStack(15);
@@ -76,7 +80,7 @@ public final class ObservablePathTraverser {
             }
         }
         if (onEndHandler == null) {
-            structureElement.clearCache();
+//            structureElement.clearCache();
             if (nextElementFinder != null) {
                 handleStacks(currentDepth, null);
                 handleNextElementFinder(structureElement, currentDepth, nextElementFinder);
@@ -93,7 +97,7 @@ public final class ObservablePathTraverser {
         depthStack.push(currentDepth);
         parentDepth = currentDepth;
         childDepth = parentDepth + 1;
-        elementFinderStack.push(currentDepth, currentElementFinder, onEndHandler);
+        elementFinderStack.push(currentElementFinder, onEndHandler);
     }
 
     private void handleNextElementFinder(StructureElement structureElement, final int currentDepth, ElementFinder nextElementFinder) throws Exception {
@@ -111,12 +115,12 @@ public final class ObservablePathTraverser {
             depthStack.pop();
             childDepth = parentDepth;
             parentDepth = depthStack.peek();
-            ElementFinderStack.StackElement stackElement = elementFinderStack.lookup(currentDepth);
+            ElementFinderStack.StackElement stackElement = elementFinderStack.pop();
             OnEndHandler onEndHandler = stackElement.getOnEndHandler();
             ElementFinder previousElementFinder = stackElement.getPreviousElementFinder();
             if (onEndHandler != null) {
                 structureElement.clearCache();
-                onEndHandler.endElement(endElement, structureElement.getValueStore(), structureElement.getObjectStore());
+                onEndHandler.endElement(endElement, valueStore, objectStore);
             }
             currentElementFinder = previousElementFinder;
             endElement(structureElement, currentDepth);

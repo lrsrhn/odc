@@ -43,28 +43,25 @@ final class ElementFinderStack {
         }
     }
 
-    void push(int searchDepth, ElementFinder previousElementFinder, OnEndHandler onEndHandler) {
+    void push(ElementFinder previousElementFinder, OnEndHandler onEndHandler) {
         if (lookupIndex == elementFinderStack.length - 1) {
             int previousSize = elementFinderStack.length;
             elementFinderStack = Arrays.copyOf(elementFinderStack, elementFinderStack.length * 2);
             prefill(previousSize);
         }
-         elementFinderStack[++lookupIndex].setValues(onEndHandler, searchDepth, previousElementFinder);
+         elementFinderStack[++lookupIndex].setValues(onEndHandler, previousElementFinder);
     }
 
-    ElementFinderStack.StackElement lookup(int searchDepth) {
-        if (lookupIndex != -1) {
-            ElementFinderStack.StackElement stackElement = elementFinderStack[lookupIndex];
-            if (stackElement.getSearchDepth() == searchDepth) {
-                lookupIndex--;
-                return stackElement;
-            }
+    ElementFinderStack.StackElement pop() {
+        if (lookupIndex == -1) {
+            throw new RuntimeException("");
         }
-        return null;
+        ElementFinderStack.StackElement stackElement = elementFinderStack[lookupIndex];
+        lookupIndex--;
+        return stackElement;
     }
 
     static final class StackElement {
-        private int searchDepth;
         private OnEndHandler onEndHandler;
         private ElementFinder previousElementFinder;
 
@@ -76,12 +73,9 @@ final class ElementFinderStack {
             return previousElementFinder;
         }
 
-        int getSearchDepth() {return searchDepth;}
-
-        void setValues(OnEndHandler onEndHandler, int searchDepth, ElementFinder previousElementFinder) {
+        void setValues(OnEndHandler onEndHandler, ElementFinder previousElementFinder) {
             this.onEndHandler = onEndHandler;
             this.previousElementFinder = previousElementFinder;
-            this.searchDepth = searchDepth;
         }
     }
 }

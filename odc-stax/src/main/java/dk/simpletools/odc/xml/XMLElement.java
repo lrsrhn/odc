@@ -87,16 +87,14 @@ public class XMLElement implements StructureElement {
    * 
    */
   public String getElementValue() {
-    if (elementTextCache != null) {
-      return elementTextCache;
+    if (elementTextCache == null) {
+      try {
+        elementTextCache = xmlStreamReader.getElementText();
+      } catch (XMLStreamException e) {
+        // Element has children and does not have a value/text
+      }
     }
-    try {
-      elementTextCache = xmlStreamReader.getElementText();
-      return elementTextCache;
-    } catch (XMLStreamException e) {
-      // Element has children and does not have a value/text
-      return elementTextCache;
-    }
+    return elementTextCache;
   }
 
   /**
