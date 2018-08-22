@@ -29,9 +29,9 @@ import dk.simpletools.odc.core.processing.StructureElement;
 
 import javax.xml.stream.XMLStreamReader;
 
-public class XmlElementProcessor extends BaseElementProcessor<XMLStreamReader, StructureElement> {
+public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamReader, StructureElement> {
 
-  public XmlElementProcessor(ElementFinder nextElementFinder, StructureElement structureElement) {
+  XmlElementProcessor(ElementFinder nextElementFinder, StructureElement structureElement) {
     super(nextElementFinder, structureElement);
   }
 
@@ -48,7 +48,6 @@ public class XmlElementProcessor extends BaseElementProcessor<XMLStreamReader, S
             continue;
           case XMLStreamReader.END_ELEMENT:
             observablePathTraverser.endElement(xmlElement, --currentDepth);
-            continue;
         }
       }
     }

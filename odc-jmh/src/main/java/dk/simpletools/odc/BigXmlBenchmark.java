@@ -63,11 +63,18 @@ public class BigXmlBenchmark {
     }
 
 
-//    @Benchmark
+    private static boolean run = false;
+//
+    @Benchmark
     public void testBigXml(BenchmarkState benchmarkState, final Blackhole blackhole) {
-        blackhole.consume(benchmarkState.jsonPath.find(benchmarkState.xmlContent));
-//        System.out.println("Length: " + benchmarkState.builder.length());
-        benchmarkState.builder.setLength(0);
+//        if (!run) {
+            blackhole.consume(benchmarkState.jsonPath.find(benchmarkState.xmlContent));
+//            System.out.println("Length: " + benchmarkState.builder.length());
+//            System.out.println(benchmarkState.builder.toString());
+            benchmarkState.builder.setLength(0);
+//            run = true;
+//        }
+
     }
 
     private static String readFile() throws Exception {

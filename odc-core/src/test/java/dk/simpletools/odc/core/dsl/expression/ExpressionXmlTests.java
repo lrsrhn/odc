@@ -32,9 +32,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public abstract class ExpressionXmlTests {
     protected ObservablePathFinder observablePathFinder;
@@ -54,6 +52,31 @@ public abstract class ExpressionXmlTests {
             .elementEnd();
 
         AssertElementHandler assertElementHandler = new AssertElementHandler();
+        assertElementHandler.exptectedStartElements("one", "two", "three");
+        assertElementHandler.exptectedEndElements("three", "two", "one");
+
+        observablePathFinder.addXpath("/one").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/one/two/three").handleElementBy(assertElementHandler);
+
+        observablePathFinder.find(new StringReader(builder.toString()));
+        assertElementHandler.verify();
+    }
+
+    @Test
+    public void textTest() throws IOException {
+        StringBuilder builder = new StringBuilder();
+        withXmlBuilder(builder)
+                .element("one")
+                    .element("two")
+                        .element("three")
+                            .value("Something darkside")
+                        .elementEnd()
+                    .elementEnd()
+                .elementEnd();
+
+        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        assertElementHandler.expectedValue("three", "Something darkside");
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
@@ -303,10 +326,12 @@ public abstract class ExpressionXmlTests {
         private List<String> expectedEndElements;
         private List<String> startElementsActual;
         private List<String> endElementsActual;
+        private Map<String, String> elementsToRead;
 
         public AssertElementHandler() {
             this.startElementsActual = new ArrayList<String>();
             this.endElementsActual = new ArrayList<String>();
+            this.elementsToRead = new HashMap<String, String>();
         }
 
         public void exptectedStartElements(String...elements) {
@@ -325,6 +350,10 @@ public abstract class ExpressionXmlTests {
         @Override
         public void startElement(StructureElement structureElement) throws Exception {
             startElementsActual.add(structureElement.getElementName());
+            String expectedValue = elementsToRead.get(structureElement.getElementName());
+            if (expectedValue != null) {
+                Assert.assertEquals(expectedValue, structureElement.getElementValue());
+            }
         }
 
         @Override
@@ -335,6 +364,10 @@ public abstract class ExpressionXmlTests {
         @Override
         public void clear() {
 
+        }
+
+        public void expectedValue(String key, String value) {
+            elementsToRead.put(key, value);
         }
     }
 }

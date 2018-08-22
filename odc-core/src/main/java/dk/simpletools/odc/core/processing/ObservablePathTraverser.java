@@ -38,7 +38,7 @@ public final class ObservablePathTraverser {
     private final ValueStore valueStore;
     private final ObjectStore objectStore;
 
-    ObservablePathTraverser(ElementFinder rootElementFinder, StructureElement structureElement) {
+    ObservablePathTraverser(final ElementFinder rootElementFinder, final StructureElement structureElement) {
         this.endElement = new EndElement();
         this.endElement.setStructureElement(structureElement);
         this.valueStore = structureElement.getValueStore();
@@ -51,7 +51,7 @@ public final class ObservablePathTraverser {
         this.childDepth = 0;
     }
 
-    public void startElement(StructureElement structureElement, final int currentDepth) throws Exception {
+    public void startElement(final StructureElement structureElement, final int currentDepth) throws Exception {
         if (childDepth == currentDepth) {
             SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, false);
             if (searchLocation != null) {
@@ -65,7 +65,7 @@ public final class ObservablePathTraverser {
         }
     }
 
-    private void handleSearchLocation(SearchLocation searchLocation, StructureElement structureElement, final int currentDepth) throws Exception {
+    private void handleSearchLocation(final SearchLocation searchLocation, final StructureElement structureElement, final int currentDepth) throws Exception {
         OnStartHandler onStartHandler = searchLocation.getOnStartHandler();
         Predicate filter = searchLocation.getFilter();
         OnEndHandler onEndHandler = searchLocation.getOnEndHandler();
@@ -79,8 +79,8 @@ public final class ObservablePathTraverser {
                 }
             }
         }
+        structureElement.clearCache();
         if (onEndHandler == null) {
-//            structureElement.clearCache();
             if (nextElementFinder != null) {
                 handleStacks(currentDepth, null);
                 handleNextElementFinder(structureElement, currentDepth, nextElementFinder);
@@ -93,14 +93,14 @@ public final class ObservablePathTraverser {
         }
     }
 
-    private void handleStacks(int currentDepth, OnEndHandler onEndHandler) {
+    private void handleStacks(final int currentDepth, final OnEndHandler onEndHandler) {
         depthStack.push(currentDepth);
         parentDepth = currentDepth;
         childDepth = parentDepth + 1;
         elementFinderStack.push(currentElementFinder, onEndHandler);
     }
 
-    private void handleNextElementFinder(StructureElement structureElement, final int currentDepth, ElementFinder nextElementFinder) throws Exception {
+    private void handleNextElementFinder(final StructureElement structureElement, final int currentDepth, final ElementFinder nextElementFinder) throws Exception {
         currentElementFinder = nextElementFinder;
         if (currentElementFinder.isPredicate()) {
             SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, false);
@@ -110,11 +110,10 @@ public final class ObservablePathTraverser {
         }
     }
 
-    public void endElement(StructureElement structureElement, final int currentDepth) throws Exception {
+    public void endElement(final StructureElement structureElement, final int currentDepth) throws Exception {
         if (parentDepth == currentDepth) {
-            depthStack.pop();
             childDepth = parentDepth;
-            parentDepth = depthStack.peek();
+            parentDepth = depthStack.popAndPeek();
             ElementFinderStack.StackElement stackElement = elementFinderStack.pop();
             OnEndHandler onEndHandler = stackElement.getOnEndHandler();
             ElementFinder previousElementFinder = stackElement.getPreviousElementFinder();

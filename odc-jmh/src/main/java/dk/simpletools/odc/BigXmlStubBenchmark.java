@@ -68,7 +68,7 @@ public class BigXmlStubBenchmark {
     }
 
 
-    @Benchmark
+//    @Benchmark
     public void testBigXml(BenchmarkState benchmarkState, final Blackhole blackhole) {
         benchmarkState.inputReader.reset();
         blackhole.consume(benchmarkState.stubPathFinder.find(benchmarkState.inputReader));

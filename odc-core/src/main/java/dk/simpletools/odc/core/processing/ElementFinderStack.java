@@ -54,11 +54,9 @@ final class ElementFinderStack {
 
     ElementFinderStack.StackElement pop() {
         if (lookupIndex == -1) {
-            throw new RuntimeException("");
+            throw new ArrayIndexOutOfBoundsException();
         }
-        ElementFinderStack.StackElement stackElement = elementFinderStack[lookupIndex];
-        lookupIndex--;
-        return stackElement;
+        return elementFinderStack[lookupIndex--];
     }
 
     static final class StackElement {

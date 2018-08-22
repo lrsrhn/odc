@@ -54,7 +54,7 @@ public class BigXmlStaxBenchmark {
         }
     }
 
-//    @Benchmark
+    @Benchmark
     public void bigXmlStaxBenchmark(BenchmarkState benchmarkState, final Blackhole blackhole) throws Exception {
         XMLStreamReader streamReader = benchmarkState.xmlInputFactory.createXMLStreamReader(new StringReader(benchmarkState.xmlContent));
         while (streamReader.hasNext()) {

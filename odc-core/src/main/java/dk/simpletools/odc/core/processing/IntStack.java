@@ -33,21 +33,17 @@ final class IntStack {
     this.head = -1;
   }
 
-  int pop() {
-    if (head != -1) {
-      return array[head--];
+  int popAndPeek() {
+    if (head == 0) {
+      throw new ArrayIndexOutOfBoundsException();
     }
-    throw new ArrayIndexOutOfBoundsException();
+    return array[--head];
   }
 
   void push(int value) {
-    array[++head] = value;
     if (head == array.length - 1) {
       array = Arrays.copyOf(array, array.length * 2);
     }
-  }
-
-  int peek() {
-    return array[head];
+    array[++head] = value;
   }
 }
