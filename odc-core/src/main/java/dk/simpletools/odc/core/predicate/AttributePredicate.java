@@ -29,24 +29,21 @@ public class AttributePredicate implements Predicate {
   private String attributeValue;
 
   public AttributePredicate(String attributeName, String attributeValue) {
-    this.attributeName = attributeName;
+    this.attributeName = attributeName.intern();
     this.attributeValue = attributeValue;
   }
 
   public AttributePredicate(String attributeName) {
-    this.attributeName = attributeName;
+    this.attributeName = attributeName.intern();
     this.attributeValue = null;
   }
 
   @Override
   public boolean evaluate(StructureElement structureElement) {
-    if (attributeName != null) {
-      if (attributeValue == null) {
-        return structureElement.hasAttribute(attributeName);
-      }
-      return attributeValue.equals(structureElement.getAttributeValue(attributeName));
+    if (attributeValue == null) {
+      return structureElement.hasAttribute(attributeName);
     }
-    return false;
+    return attributeValue.equals(structureElement.getAttributeValue(attributeName));
   }
 
   @Override
