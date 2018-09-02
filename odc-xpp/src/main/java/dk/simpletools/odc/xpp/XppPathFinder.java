@@ -37,7 +37,9 @@ public class XppPathFinder extends ObservablePathFinder {
 
   static XmlPullParserFactory createFactory() {
     try {
-      return XmlPullParserFactory.newInstance();
+      XmlPullParserFactory factory  = XmlPullParserFactory.newInstance();
+      factory.setNamespaceAware(true);
+      return factory;
     } catch (XmlPullParserException e) {
       throw new RuntimeException(e);
     }

@@ -109,12 +109,9 @@ public class XMLElement implements StructureElement {
         if (xmlStreamReader.getEventType() != XMLStreamConstants.START_ELEMENT) {
           throw new RuntimeException("Cannot retrieve raw value from other event then Start_element");
         }
-        int startIndex = xmlStreamReader.getLocation().getCharacterOffset();
-        xmlRawTextReader.setStartIndex(startIndex);
-        xmlStreamReader.next(); // No need to process the current start element - So move forward
+        xmlRawTextReader.setStartIndex(xmlStreamReader.getLocation().getCharacterOffset());
         moveCursorToEndElement();
-        int endIndex = xmlStreamReader.getLocation().getCharacterOffset();
-        elementTextCache = xmlRawTextReader.readRawText(endIndex - xmlStreamReader.getLocalName().length());
+        elementTextCache = xmlRawTextReader.readRawText(xmlStreamReader.getLocation().getCharacterOffset());
       }
       return elementTextCache;
     } catch (XMLStreamException xse) {
@@ -123,15 +120,15 @@ public class XMLElement implements StructureElement {
   }
 
   private void moveCursorToEndElement() throws XMLStreamException {
-    int currentDepth = 0;
+    int currentDepth = 1;
     // Process all child elements if necessary
     while(xmlStreamReader.getEventType() != XMLStreamConstants.END_ELEMENT || (xmlStreamReader.getEventType() == XMLStreamConstants.END_ELEMENT && currentDepth > 0)) {
+      xmlStreamReader.next();
       if (xmlStreamReader.getEventType() == XMLStreamConstants.START_ELEMENT) {
         currentDepth++;
       } else if (xmlStreamReader.getEventType() == XMLStreamConstants.END_ELEMENT) {
         currentDepth--;
       }
-      xmlStreamReader.next();
     }
   }
 

@@ -97,14 +97,14 @@ public class XmlRawTextReader extends Reader {
     }
 
     public void setStartIndex(int startIndex) {
-      this.startIndex = startIndex;
+      this.startIndex = findProperStartIndex(startIndex - currentStartOffset);
+
     }
 
     public String readRawText(int endIndex) {
-      endIndex = findProperEndIndex(Math.abs(currentStartOffset - endIndex));
+      endIndex = Math.abs(currentStartOffset - endIndex);
       if (endIndex >= 0) {
         // The element end tag is in the cbuf array
-        startIndex = startIndex < currentStartOffset ? 0 : startIndex - currentStartOffset;
         if (startIndex >= endIndex) {
           // Occurs with <test/> and <test></test>
           return "";
@@ -130,6 +130,13 @@ public class XmlRawTextReader extends Reader {
         endIndex--;
       }
       return endIndex;
+    }
+
+    private int findProperStartIndex(int startIndex) {
+      while (startIndex < cbuf.length && cbuf[startIndex] != '>') {
+        startIndex++;
+      }
+      return ++startIndex;
     }
   }
 }
