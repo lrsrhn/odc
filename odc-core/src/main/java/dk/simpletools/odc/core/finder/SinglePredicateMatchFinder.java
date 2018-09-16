@@ -122,29 +122,31 @@ public class SinglePredicateMatchFinder implements ElementFinder {
 
   @Override
   public void buildToString(StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder) {
-//    if (this.nextElementFinder == null && this.predicate == null && this.elementHandler == null) {
-//      toStringBuilder.append(previousElementsBuilder).append("/null\n");
-//      return;
-//    }
-//    previousElementsBuilder.append('[').append(predicate.toString()).append(']');
-//    if (elementHandler != null) {
-//      toStringBuilder
-//          .append(previousElementsBuilder)
-//          .append(" => ")
-//          .append(elementHandler.getClass().getName())
-//          .append('\n');
-//    }
-//    if (nextElementFinder != null) {
-//      if (!visited.contains(nextElementFinder)) {
-//        visited.add(nextElementFinder);
-//        nextElementFinder.buildToString(previousElementsBuilder, visited, toStringBuilder);
-//        visited.remove(nextElementFinder);
-//      } else {
-//        toStringBuilder
-//                .append(previousElementsBuilder)
-//                .append(" <=>\n");
-//      }
-//    }
+    if (this.searchLocation == null && this.predicate == null) {
+      toStringBuilder.append(previousElementsBuilder).append("/null\n");
+      return;
+    }
+    previousElementsBuilder.append('[').append(predicate.toString()).append(']');
+    OnStartHandler elementHandler = searchLocation.getOnStartHandler();
+    if (elementHandler != null) {
+      toStringBuilder
+          .append(previousElementsBuilder)
+          .append(" => ")
+          .append(elementHandler.getClass().getName())
+          .append('\n');
+    }
+    ElementFinder nextElementFinder = searchLocation.getElementFinder();
+    if (nextElementFinder != null) {
+      if (!visited.contains(nextElementFinder)) {
+        visited.add(nextElementFinder);
+        nextElementFinder.buildToString(previousElementsBuilder, visited, toStringBuilder);
+        visited.remove(nextElementFinder);
+      } else {
+        toStringBuilder
+                .append(previousElementsBuilder)
+                .append(" <=>\n");
+      }
+    }
   }
 
   @Override

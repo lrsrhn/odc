@@ -50,7 +50,7 @@ public final class MultipleArrayElementFinder implements ElementFinder {
 
   @Override
   public ElementFinder addNextElementFinder(String searchElement, boolean isRelative) {
-    SearcLocationList searcLocationList = isRelative ?  relativeElementFinders : nextXmlElementFinders;
+    SearcLocationList searcLocationList = selectElementFinderListByRelativity(isRelative);
     SearchLocation searchLocation = searcLocationList.lookupSearchLocation(searchElement);
     if (searchLocation == null) {
       ElementFinder elementFinder = new SingleElementFinder().getReference();
@@ -96,7 +96,7 @@ public final class MultipleArrayElementFinder implements ElementFinder {
 
   @Override
   public ElementFinder setSearchElement(String searchElement, boolean isRelative) {
-    SearcLocationList searcLocationList = isRelative ?  relativeElementFinders : nextXmlElementFinders;
+    SearcLocationList searcLocationList = selectElementFinderListByRelativity(isRelative);
     SearchLocation searchLocation = searcLocationList.lookupSearchLocation(searchElement);
     if (searchLocation == null) {
       nextXmlElementFinders.addSearchLocation(searchElement, new SearchLocation(null, null, null));
@@ -111,7 +111,7 @@ public final class MultipleArrayElementFinder implements ElementFinder {
 
   @Override
   public SearchLocationBuilder buildSearchLocation(String searchElement, boolean isRelative) {
-    SearcLocationList searcLocationList = isRelative ?  relativeElementFinders : nextXmlElementFinders;
+    SearcLocationList searcLocationList = selectElementFinderListByRelativity(isRelative);
     SearchLocation searchLocation = searcLocationList.lookupSearchLocation(searchElement);
     if (searchLocation == null) {
       searchLocation = new SearchLocation(null, null, null);
@@ -132,10 +132,8 @@ public final class MultipleArrayElementFinder implements ElementFinder {
 
   @Override
   public SearchLocation lookupSearchLocation(String elementName, boolean isRelative) {
-    if (nextXmlElementFinders.isEmpty()) {
-      return null;
-    }
-    return nextXmlElementFinders.lookupSearchLocation(elementName);
+    SearcLocationList searcLocationList = selectElementFinderListByRelativity(isRelative);
+    return searcLocationList.isEmpty() ? null : searcLocationList.lookupSearchLocation(elementName);
   }
 
   @Override
@@ -145,23 +143,23 @@ public final class MultipleArrayElementFinder implements ElementFinder {
 
   @Override
   public void buildToString(StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder) {
-//    if (nextXmlElementFinders.isEmpty() && relativeElementFinders.isEmpty()) {
-//      toStringBuilder.append(previousElementsBuilder).append("/null\n");
-//      return;
-//    }
-//    buildToStringForMap(false, previousElementsBuilder, visited, toStringBuilder, nextXmlElementFinders);
-//    buildToStringForMap(true, previousElementsBuilder, visited, toStringBuilder, relativeElementFinders);
+    if (nextXmlElementFinders.isEmpty() && relativeElementFinders.isEmpty()) {
+      toStringBuilder.append(previousElementsBuilder).append("/null\n");
+      return;
+    }
+    buildToStringForMap(false, previousElementsBuilder, visited, toStringBuilder, nextXmlElementFinders);
+    buildToStringForMap(true, previousElementsBuilder, visited, toStringBuilder, relativeElementFinders);
   }
 
   @Override
   public SearchLocation lookupSearchLocation(StructureElement structureElement, boolean isRelative) {
-    SearcLocationList searcLocationList = isRelative ?  relativeElementFinders : nextXmlElementFinders;
+    SearcLocationList searcLocationList = selectElementFinderListByRelativity(isRelative);
     return searcLocationList.lookupSearchLocation(structureElement.getElementName());
   }
 
   @Override
   public List<SearchLocationReference> getSeachLocationReferences(boolean isRelative) {
-    SearcLocationList searcLocationList = isRelative ?  relativeElementFinders : nextXmlElementFinders;
+    SearcLocationList searcLocationList = selectElementFinderListByRelativity(isRelative);
     List<SearchLocationReference> references = new ArrayList<SearchLocationReference>(searcLocationList.getSize());
     for (int i = 0; i < searcLocationList.getSize(); i++) {
       references.add(new SearchLocationReference(searcLocationList.searchLocations[i], searcLocationList.elementNames[i], isRelative));
@@ -177,7 +175,7 @@ public final class MultipleArrayElementFinder implements ElementFinder {
 
   private void mergeElementFinder(ElementFinder elementFinder, boolean isRelative) {
     List<SearchLocationReference> searchLocationReferences = elementFinder.getSeachLocationReferences(isRelative);
-    SearcLocationList searcLocationList = isRelative ?  relativeElementFinders : nextXmlElementFinders;
+    SearcLocationList searcLocationList = selectElementFinderListByRelativity(isRelative);
     for (SearchLocationReference searchLocationReference : searchLocationReferences) {
       if (searchLocationReference.getPredicate() != null) {
         throw new RuntimeException("Unable to add reference using a predicate!");
@@ -194,32 +192,37 @@ public final class MultipleArrayElementFinder implements ElementFinder {
     return false;
   }
 
-  private static void buildToStringForMap(boolean isRelative, StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder, Map<String, SearchLocation> elementFinders) {
-//    int previousElementBuilderLength = previousElementsBuilder.length();
-//    for (Map.Entry<String, SearchLocation> entries : elementFinders.entrySet()) {
-//      previousElementsBuilder.setLength(previousElementBuilderLength);
-//      previousElementsBuilder
-//              .append(isRelative ? "//" : "/")
-//              .append(entries.getKey());
-//      if (entries.getValue().getOnStartHandler() != null) {
-//        toStringBuilder
-//            .append(previousElementsBuilder)
-//            .append(" => ")
-//            .append(entries.getValue().getOnStartHandler().getClass().getName())
-//            .append('\n');
-//      }
-//      if (entries.getValue().getElementFinder() != null) {
-//        if (!visited.contains(entries.getValue().getElementFinder())) {
-//          visited.add(entries.getValue().getElementFinder());
-//          entries.getValue().getElementFinder().buildToString(previousElementsBuilder, visited, toStringBuilder);
-//          visited.remove(entries.getValue().getElementFinder());
-//        } else {
-//          toStringBuilder
-//                  .append(previousElementsBuilder)
-//                  .append(" <=>\n");
-//        }
-//      }
-//    }
+  private static void buildToStringForMap(boolean isRelative, StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder, SearcLocationList elementFinders) {
+    int previousElementBuilderLength = previousElementsBuilder.length();
+    for (int i = 0; i < elementFinders.getSize(); i++) {
+      previousElementsBuilder.setLength(previousElementBuilderLength);
+      previousElementsBuilder
+              .append(isRelative ? "//" : "/")
+              .append(elementFinders.elementNames[i]);
+      SearchLocation searchLocation = elementFinders.searchLocations[i];
+      if (searchLocation.getOnStartHandler() != null) {
+        toStringBuilder
+            .append(previousElementsBuilder)
+            .append(" => ")
+            .append(searchLocation.getOnStartHandler().getClass().getName())
+            .append('\n');
+      }
+      if (searchLocation.getElementFinder() != null) {
+        if (!visited.contains(searchLocation.getElementFinder())) {
+          visited.add(searchLocation.getElementFinder());
+          searchLocation.getElementFinder().buildToString(previousElementsBuilder, visited, toStringBuilder);
+          visited.remove(searchLocation.getElementFinder());
+        } else {
+          toStringBuilder
+                  .append(previousElementsBuilder)
+                  .append(" <=>\n");
+        }
+      }
+    }
+  }
+
+  private SearcLocationList selectElementFinderListByRelativity(boolean isRelative) {
+    return isRelative ?  relativeElementFinders : nextXmlElementFinders;
   }
 
   private final class SearcLocationList {
@@ -227,7 +230,7 @@ public final class MultipleArrayElementFinder implements ElementFinder {
     String[] elementNames;
     private int size;
 
-    public SearcLocationList() {
+    SearcLocationList() {
       this.searchLocations = new SearchLocation[4];
       this.elementNames = new String[4];
       this.size = 0;
@@ -256,7 +259,7 @@ public final class MultipleArrayElementFinder implements ElementFinder {
       return items;
     }
 
-    public final boolean isEmpty() {
+    final boolean isEmpty() {
       return size == 0;
     }
 

@@ -159,31 +159,32 @@ public final class SingleElementFinder implements ElementFinder {
 
   @Override
   public void buildToString(StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder) {
-//    if (elementHandler == null && nextElementFinder == null) {
-//      toStringBuilder.append(previousElementsBuilder).append("/null\n");
-//      return;
-//    }
-//    previousElementsBuilder
-//            .append(isRelative ? "//" : "/")
-//            .append(searchElement);
-//    if (elementHandler != null) {
-//      toStringBuilder
-//          .append(previousElementsBuilder)
-//          .append(" => ")
-//          .append(elementHandler.getClass().getName())
-//          .append('\n');
-//    }
-//    if (nextElementFinder != null) {
-//      if (!visited.contains(nextElementFinder)) {
-//        visited.add(nextElementFinder);
-//        nextElementFinder.buildToString(previousElementsBuilder, visited, toStringBuilder);
-//        visited.remove(nextElementFinder);
-//      } else {
-//        toStringBuilder
-//                .append(previousElementsBuilder)
-//                .append(" <=>\n");
-//      }
-//    }
+    if (searchLocation == null || searchLocation.getElementFinder() == null) {
+      toStringBuilder.append(previousElementsBuilder).append("/null\n");
+      return;
+    }
+    previousElementsBuilder
+            .append(isRelative ? "//" : "/")
+            .append(searchElement);
+    if (searchLocation.getOnStartHandler() != null) {
+      toStringBuilder
+          .append(previousElementsBuilder)
+          .append(" => ")
+          .append(searchLocation.getOnStartHandler().getClass().getName())
+          .append('\n');
+    }
+    ElementFinder nextElementFinder = searchLocation.getElementFinder();
+    if (nextElementFinder != null) {
+      if (!visited.contains(nextElementFinder)) {
+        visited.add(nextElementFinder);
+        nextElementFinder.buildToString(previousElementsBuilder, visited, toStringBuilder);
+        visited.remove(nextElementFinder);
+      } else {
+        toStringBuilder
+                .append(previousElementsBuilder)
+                .append(" <=>\n");
+      }
+    }
   }
 
   @Override
