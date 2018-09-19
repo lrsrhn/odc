@@ -199,25 +199,7 @@ public final class MultipleArrayElementFinder implements ElementFinder {
       previousElementsBuilder
               .append(isRelative ? "//" : "/")
               .append(elementFinders.elementNames[i]);
-      SearchLocation searchLocation = elementFinders.searchLocations[i];
-      if (searchLocation.getOnStartHandler() != null) {
-        toStringBuilder
-            .append(previousElementsBuilder)
-            .append(" => ")
-            .append(searchLocation.getOnStartHandler().getClass().getName())
-            .append('\n');
-      }
-      if (searchLocation.getElementFinder() != null) {
-        if (!visited.contains(searchLocation.getElementFinder())) {
-          visited.add(searchLocation.getElementFinder());
-          searchLocation.getElementFinder().buildToString(previousElementsBuilder, visited, toStringBuilder);
-          visited.remove(searchLocation.getElementFinder());
-        } else {
-          toStringBuilder
-                  .append(previousElementsBuilder)
-                  .append(" <=>\n");
-        }
-      }
+      PrettyPrintHelper.printSearchLocation(elementFinders.searchLocations[i], previousElementsBuilder, visited, toStringBuilder);
     }
   }
 

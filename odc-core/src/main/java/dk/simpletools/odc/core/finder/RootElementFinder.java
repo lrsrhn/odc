@@ -169,54 +169,18 @@ public final class RootElementFinder implements ElementFinder {
 
     @Override
     public void buildToString(StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder) {
-        if (searchLocation == null || searchLocation.getElementFinder() == null && relativeElementFinders.isEmpty()) {
+        if (searchLocation == null && relativeElementFinders.isEmpty()) {
             toStringBuilder.append(previousElementsBuilder).append("/null\n");
         }
         if (searchElement != null) {
             previousElementsBuilder.append("/").append(searchElement);
-            OnStartHandler elementHandler = searchLocation.getOnStartHandler();
-            if (elementHandler != null) {
-                toStringBuilder
-                        .append(previousElementsBuilder)
-                        .append(" => ")
-                        .append(elementHandler.getClass().getName())
-                        .append('\n');
-            }
-            ElementFinder nextElementFinder = searchLocation.getElementFinder();
-            if (nextElementFinder != null) {
-                if (!visited.contains(nextElementFinder)) {
-                    visited.add(nextElementFinder);
-                    nextElementFinder.buildToString(previousElementsBuilder, visited, toStringBuilder);
-                    visited.remove(nextElementFinder);
-                } else {
-                    toStringBuilder
-                            .append(previousElementsBuilder)
-                            .append(" <=>\n");
-                }
-            }
+            PrettyPrintHelper.printSearchLocation(searchLocation, previousElementsBuilder, visited, toStringBuilder);
         } else if (!relativeElementFinders.isEmpty()) {
             int previousElementBuilderLength = previousElementsBuilder.length();
             for (Map.Entry<String, SearchLocation> entries : relativeElementFinders.entrySet()) {
                 previousElementsBuilder.setLength(previousElementBuilderLength);
                 previousElementsBuilder.append("//").append(entries.getKey());
-                if (entries.getValue().getOnStartHandler() != null) {
-                    toStringBuilder
-                            .append(previousElementsBuilder)
-                            .append(" => ")
-                            .append(entries.getValue().getOnStartHandler().getClass().getName())
-                            .append('\n');
-                }
-                if (entries.getValue().getElementFinder() != null) {
-                    if (!visited.contains(entries.getValue().getElementFinder())) {
-                        visited.add(entries.getValue().getElementFinder());
-                        entries.getValue().getElementFinder().buildToString(previousElementsBuilder, visited, toStringBuilder);
-                        visited.remove(entries.getValue().getElementFinder());
-                    } else {
-                        toStringBuilder
-                                .append(previousElementsBuilder)
-                                .append(" <=>\n");
-                    }
-                }
+                PrettyPrintHelper.printSearchLocation(entries.getValue(), previousElementsBuilder, visited, toStringBuilder);
             }
         }
     }

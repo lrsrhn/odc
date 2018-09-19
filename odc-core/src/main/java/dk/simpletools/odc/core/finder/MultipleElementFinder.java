@@ -48,7 +48,7 @@ public class MultipleElementFinder implements ElementFinder {
 
   @Override
   public ElementFinder addNextElementFinder(String searchElement, boolean isRelative) {
-    Map<String, SearchLocation> elementFinderMap = isRelative ?  relativeElementFinders : nextXmlElementFinders;
+    Map<String, SearchLocation> elementFinderMap = selectElementFinderMapByRelativity(isRelative);
     SearchLocation searchLocation = elementFinderMap.get(searchElement);
     if (searchLocation == null) {
       ElementFinder elementFinder = new SingleElementFinder().getReference();
@@ -94,7 +94,7 @@ public class MultipleElementFinder implements ElementFinder {
 
   @Override
   public ElementFinder setSearchElement(String searchElement, boolean isRelative) {
-    Map<String, SearchLocation> elementFinderMap = isRelative ?  relativeElementFinders : nextXmlElementFinders;
+    Map<String, SearchLocation> elementFinderMap = selectElementFinderMapByRelativity(isRelative);
     SearchLocation searchLocation = elementFinderMap.get(searchElement);
     if (searchLocation == null) {
       elementFinderMap.put(searchElement.intern(), new SearchLocation(null, null, null));
@@ -109,7 +109,7 @@ public class MultipleElementFinder implements ElementFinder {
 
   @Override
   public SearchLocationBuilder buildSearchLocation(String searchElement, boolean isRelative) {
-    Map<String, SearchLocation> elementFinderMap = isRelative ?  relativeElementFinders : nextXmlElementFinders;
+    Map<String, SearchLocation> elementFinderMap = selectElementFinderMapByRelativity(isRelative);
     SearchLocation searchLocation = elementFinderMap.get(searchElement);
     if (searchLocation == null) {
       searchLocation = new SearchLocation(null, null, null);
@@ -130,7 +130,7 @@ public class MultipleElementFinder implements ElementFinder {
 
   @Override
   public SearchLocation lookupSearchLocation(String elementName, boolean isRelative) {
-    Map<String, SearchLocation> elementFinderMap = isRelative ?  relativeElementFinders : nextXmlElementFinders;
+    Map<String, SearchLocation> elementFinderMap = selectElementFinderMapByRelativity(isRelative);
     if (elementFinderMap.isEmpty()) {
       return null;
     }
@@ -154,13 +154,13 @@ public class MultipleElementFinder implements ElementFinder {
 
   @Override
   public SearchLocation lookupSearchLocation(StructureElement structureElement, boolean isRelative) {
-    Map<String, SearchLocation> elementFinder = isRelative ? relativeElementFinders : nextXmlElementFinders;
+    Map<String, SearchLocation> elementFinder = selectElementFinderMapByRelativity(isRelative);
     return elementFinder.isEmpty() ? null : elementFinder.get(structureElement.getElementName());
   }
 
   @Override
   public List<SearchLocationReference> getSeachLocationReferences(boolean isRelative) {
-    Map<String, SearchLocation> elementFinders = isRelative ?  relativeElementFinders : nextXmlElementFinders;
+    Map<String, SearchLocation> elementFinders = selectElementFinderMapByRelativity(isRelative);
     List<SearchLocationReference> references = new ArrayList<SearchLocationReference>(elementFinders.size());
     for (Map.Entry<String, SearchLocation> entry : elementFinders.entrySet()) {
       references.add(new SearchLocationReference(entry.getValue(), entry.getKey(), isRelative));
@@ -176,7 +176,7 @@ public class MultipleElementFinder implements ElementFinder {
 
   private void mergeElementFinder(ElementFinder elementFinder, boolean isRelative) {
     List<SearchLocationReference> searchLocationReferences = elementFinder.getSeachLocationReferences(isRelative);
-    Map<String, SearchLocation> elementFinders = isRelative ?  relativeElementFinders : nextXmlElementFinders;
+    Map<String, SearchLocation> elementFinders = selectElementFinderMapByRelativity(isRelative);
     for (SearchLocationReference searchLocationReference : searchLocationReferences) {
       if (searchLocationReference.getPredicate() != null) {
         throw new RuntimeException("Unable to add reference using a predicate!");
@@ -193,6 +193,10 @@ public class MultipleElementFinder implements ElementFinder {
     return false;
   }
 
+  private Map<String, SearchLocation> selectElementFinderMapByRelativity(boolean isRelative) {
+    return isRelative ? relativeElementFinders : nextXmlElementFinders;
+  }
+
   private static void buildToStringForMap(boolean isRelative, StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder, Map<String, SearchLocation> elementFinders) {
     int previousElementBuilderLength = previousElementsBuilder.length();
     for (Map.Entry<String, SearchLocation> entries : elementFinders.entrySet()) {
@@ -200,24 +204,7 @@ public class MultipleElementFinder implements ElementFinder {
       previousElementsBuilder
               .append(isRelative ? "//" : "/")
               .append(entries.getKey());
-      if (entries.getValue().getOnStartHandler() != null) {
-        toStringBuilder
-            .append(previousElementsBuilder)
-            .append(" => ")
-            .append(entries.getValue().getOnStartHandler().getClass().getName())
-            .append('\n');
-      }
-      if (entries.getValue().getElementFinder() != null) {
-        if (!visited.contains(entries.getValue().getElementFinder())) {
-          visited.add(entries.getValue().getElementFinder());
-          entries.getValue().getElementFinder().buildToString(previousElementsBuilder, visited, toStringBuilder);
-          visited.remove(entries.getValue().getElementFinder());
-        } else {
-          toStringBuilder
-                  .append(previousElementsBuilder)
-                  .append(" <=>\n");
-        }
-      }
+      PrettyPrintHelper.printSearchLocation(entries.getValue(), previousElementsBuilder, visited, toStringBuilder);
     }
   }
 }

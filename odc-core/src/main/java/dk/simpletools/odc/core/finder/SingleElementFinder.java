@@ -53,14 +53,14 @@ public final class SingleElementFinder implements ElementFinder {
       searchElement = searchElement.intern();
       if (this.searchElement.equals(searchElement)) {
         if (this.isRelative != isRelative) {
-          MultipleElementFinder multipleXmlElementFinder = new MultipleElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
+          MultipleArrayElementFinder multipleXmlElementFinder = new MultipleArrayElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
           return multipleXmlElementFinder.addNextElementFinder(searchElement, isRelative);
         } else if (searchLocation.getElementFinder() == null) {
           searchLocation.setElementFinder(new SingleElementFinder().getReference());
           return searchLocation.getElementFinder();
         }
       } else {
-        MultipleElementFinder multipleXmlElementFinder = new MultipleElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
+        MultipleArrayElementFinder multipleXmlElementFinder = new MultipleArrayElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
         return multipleXmlElementFinder.addNextElementFinder(searchElement, isRelative);
       }
     }
@@ -96,11 +96,11 @@ public final class SingleElementFinder implements ElementFinder {
       searchElement = searchElement.intern();
       if (this.searchElement.equals(searchElement)) {
         if (this.isRelative != isRelative) {
-          MultipleElementFinder multipleXmlElementFinder = new MultipleElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
+          MultipleArrayElementFinder multipleXmlElementFinder = new MultipleArrayElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
           return multipleXmlElementFinder.setSearchElement(searchElement, isRelative);
         }
       } else {
-        MultipleElementFinder multipleXmlElementFinder = new MultipleElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
+        MultipleArrayElementFinder multipleXmlElementFinder = new MultipleArrayElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
         return multipleXmlElementFinder.setSearchElement(searchElement, isRelative);
       }
     }
@@ -125,11 +125,11 @@ public final class SingleElementFinder implements ElementFinder {
         }
         return new SearchLocationBuilder(this.searchLocation);
       } else {
-        MultipleElementFinder multipleXmlElementFinder = new MultipleElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
+        MultipleArrayElementFinder multipleXmlElementFinder = new MultipleArrayElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
         return multipleXmlElementFinder.buildSearchLocation(searchElement, isRelative);
       }
     } else {
-      MultipleElementFinder multipleXmlElementFinder = new MultipleElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
+      MultipleArrayElementFinder multipleXmlElementFinder = new MultipleArrayElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
       return multipleXmlElementFinder.buildSearchLocation(searchElement, isRelative);
     }
   }
@@ -159,32 +159,14 @@ public final class SingleElementFinder implements ElementFinder {
 
   @Override
   public void buildToString(StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder) {
-    if (searchLocation == null || searchLocation.getElementFinder() == null) {
+    if (searchElement == null || searchLocation == null) {
       toStringBuilder.append(previousElementsBuilder).append("/null\n");
       return;
     }
     previousElementsBuilder
             .append(isRelative ? "//" : "/")
             .append(searchElement);
-    if (searchLocation.getOnStartHandler() != null) {
-      toStringBuilder
-          .append(previousElementsBuilder)
-          .append(" => ")
-          .append(searchLocation.getOnStartHandler().getClass().getName())
-          .append('\n');
-    }
-    ElementFinder nextElementFinder = searchLocation.getElementFinder();
-    if (nextElementFinder != null) {
-      if (!visited.contains(nextElementFinder)) {
-        visited.add(nextElementFinder);
-        nextElementFinder.buildToString(previousElementsBuilder, visited, toStringBuilder);
-        visited.remove(nextElementFinder);
-      } else {
-        toStringBuilder
-                .append(previousElementsBuilder)
-                .append(" <=>\n");
-      }
-    }
+    PrettyPrintHelper.printSearchLocation(searchLocation, previousElementsBuilder, visited, toStringBuilder);
   }
 
   @Override
@@ -217,11 +199,11 @@ public final class SingleElementFinder implements ElementFinder {
         searchLocation = searchLocationReference.getSearchLocation();
         isRelative = searchLocationReference.isRelative();
       } else {
-        MultipleElementFinder multipleArrayElementFinder = new MultipleElementFinder(getReference(), isRelative, searchElement, searchLocation);
+        MultipleArrayElementFinder multipleArrayElementFinder = new MultipleArrayElementFinder(getReference(), isRelative, searchElement, searchLocation);
         multipleArrayElementFinder.mergeElementFinder(elementFinder);
       }
     } else {
-      MultipleElementFinder multipleArrayElementFinder = new MultipleElementFinder(getReference(), isRelative, searchElement, searchLocation);
+      MultipleArrayElementFinder multipleArrayElementFinder = new MultipleArrayElementFinder(getReference(), isRelative, searchElement, searchLocation);
       multipleArrayElementFinder.mergeElementFinder(elementFinder);
       // TODO: Maybe do some more checking here
     }

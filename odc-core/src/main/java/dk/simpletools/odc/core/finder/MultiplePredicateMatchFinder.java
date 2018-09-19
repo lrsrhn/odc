@@ -134,24 +134,7 @@ public class MultiplePredicateMatchFinder implements ElementFinder {
               .append('[')
               .append(searchLocationList.predicates[i].toString())
               .append(']');
-      if (searchLocationList.searchLocations[i].getOnStartHandler() != null) {
-        toStringBuilder
-            .append(previousElementsBuilder)
-            .append(" => ")
-            .append(searchLocationList.searchLocations[i].getOnStartHandler().getClass().getName())
-            .append('\n');
-      }
-      if (searchLocationList.searchLocations[i].getElementFinder() != null) {
-        if (!visited.contains(searchLocationList.searchLocations[i].getElementFinder())) {
-          visited.add(searchLocationList.searchLocations[i].getElementFinder());
-          searchLocationList.searchLocations[i].getElementFinder().buildToString(previousElementsBuilder, visited, toStringBuilder);
-          visited.remove(searchLocationList.searchLocations[i].getElementFinder());
-        } else {
-          toStringBuilder
-                  .append(previousElementsBuilder)
-                  .append(" <=>\n");
-        }
-      }
+      PrettyPrintHelper.printSearchLocation(searchLocationList.searchLocations[i], previousElementsBuilder, visited, toStringBuilder);
     }
   }
 
