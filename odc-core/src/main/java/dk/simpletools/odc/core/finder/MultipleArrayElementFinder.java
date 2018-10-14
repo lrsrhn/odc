@@ -49,52 +49,6 @@ public final class MultipleArrayElementFinder implements ElementFinder {
   }
 
   @Override
-  public ElementFinder addNextElementFinder(String searchElement, boolean isRelative) {
-    SearcLocationList searcLocationList = selectElementFinderListByRelativity(isRelative);
-    SearchLocation searchLocation = searcLocationList.lookupSearchLocation(searchElement);
-    if (searchLocation == null) {
-      ElementFinder elementFinder = new SingleElementFinder().getReference();
-      nextXmlElementFinders.addSearchLocation(searchElement, new SearchLocation(elementFinder, null, null));
-      return elementFinder;
-    } else if (searchLocation.getElementFinder() == null) {
-      ElementFinder elementFinder = new SingleElementFinder().getReference();
-      searchLocation.setElementFinder(elementFinder);
-    }
-    return searchLocation.getElementFinder();
-  }
-
-  /**
-   * Expects that searchElement is in absolute or relative. Not in both.
-   */
-  @Override
-  public ElementFinder addNextPredicate(String searchElement) {
-    SearchLocation searchLocation = nextXmlElementFinders.lookupSearchLocation(searchElement);
-    if (searchLocation != null) {
-      if (searchLocation.getElementFinder() == null) {
-        ElementFinder elementFinder = new SinglePredicateMatchFinder().getReference();
-        searchLocation.setElementFinder(elementFinder);
-        return elementFinder;
-      }
-      return searchLocation.getElementFinder();
-    }
-    searchLocation = relativeElementFinders.lookupSearchLocation(searchElement);
-    if (searchLocation != null) {
-      if (searchLocation.getElementFinder() == null) {
-        ElementFinder elementFinder = new SinglePredicateMatchFinder().getReference();
-        searchLocation.setElementFinder(elementFinder);
-        return elementFinder;
-      }
-      return searchLocation.getElementFinder();
-    }
-    throw new IllegalArgumentException("Did not find matching search element");
-  }
-
-  @Override
-  public ElementFinder addNextElementFinder(Predicate predicate, boolean isRelative) {
-    throw new UnsupportedOperationException("This operation is not supported");
-  }
-
-  @Override
   public ElementFinder setSearchElement(String searchElement, boolean isRelative) {
     SearcLocationList searcLocationList = selectElementFinderListByRelativity(isRelative);
     SearchLocation searchLocation = searcLocationList.lookupSearchLocation(searchElement);
@@ -128,17 +82,6 @@ public final class MultipleArrayElementFinder implements ElementFinder {
   @Override
   public ElementFinderReference getReference() {
     return thisReference;
-  }
-
-  @Override
-  public SearchLocation lookupSearchLocation(String elementName, boolean isRelative) {
-    SearcLocationList searcLocationList = selectElementFinderListByRelativity(isRelative);
-    return searcLocationList.isEmpty() ? null : searcLocationList.lookupSearchLocation(elementName);
-  }
-
-  @Override
-  public SearchLocation lookupSearchLocation(Predicate predicate) {
-    throw new UnsupportedOperationException("This operation is not supported");
   }
 
   @Override

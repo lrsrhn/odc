@@ -23,20 +23,14 @@
 package dk.simpletools.odc.core.finder;
 
 import dk.simpletools.odc.core.dsl.expression.SearchLocationReference;
-import dk.simpletools.odc.core.processing.StructureElement;
 import dk.simpletools.odc.core.predicate.Predicate;
 import dk.simpletools.odc.core.processing.ElementFinderReference;
+import dk.simpletools.odc.core.processing.StructureElement;
 
 import java.util.List;
 import java.util.Set;
 
 public interface ElementFinder {
-  ElementFinder addNextElementFinder(String searchElement, boolean isRelative);
-
-  ElementFinder addNextElementFinder(Predicate predicate, boolean isRelative);
-
-  ElementFinder addNextPredicate(String searchElement);
-
   ElementFinder setSearchElement(String searchElement, boolean isRelative);
 
   ElementFinder setPredicate(Predicate predicate);
@@ -46,10 +40,6 @@ public interface ElementFinder {
   SearchLocationBuilder buildSearchLocation(Predicate predicate);
 
   ElementFinderReference getReference();
-
-  SearchLocation lookupSearchLocation(String elementName, boolean isRelative);
-
-  SearchLocation lookupSearchLocation(Predicate predicate);
 
   SearchLocation lookupSearchLocation(StructureElement structureElement, boolean isRelative);
 

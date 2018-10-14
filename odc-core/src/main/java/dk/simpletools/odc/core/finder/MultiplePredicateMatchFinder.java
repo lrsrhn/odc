@@ -23,9 +23,9 @@
 package dk.simpletools.odc.core.finder;
 
 import dk.simpletools.odc.core.dsl.expression.SearchLocationReference;
-import dk.simpletools.odc.core.processing.StructureElement;
 import dk.simpletools.odc.core.predicate.Predicate;
 import dk.simpletools.odc.core.processing.ElementFinderReference;
+import dk.simpletools.odc.core.processing.StructureElement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,31 +43,6 @@ public class MultiplePredicateMatchFinder implements ElementFinder {
     if (predicate != null) {
       searchLocationList.addSearchLocation(searchLocation, predicate);
     }
-  }
-
-  @Override
-  public ElementFinder addNextElementFinder(String searchElement, boolean isRelative) {
-    throw new UnsupportedOperationException("This operation is not supported");
-  }
-
-  @Override
-  public ElementFinder addNextElementFinder(Predicate predicate, boolean isRelative) {
-    int index = searchLocationList.findIndexByPredicate(predicate);
-    if (index == -1) {
-      ElementFinder newElementFinder = new SingleElementFinder().getReference();
-      searchLocationList.addSearchLocation(new SearchLocation(newElementFinder, null, null), predicate);
-      return newElementFinder;
-    } else if (searchLocationList.searchLocations[index].getElementFinder() == null) {
-      ElementFinder newElementFinder = new SingleElementFinder().getReference();
-      searchLocationList.searchLocations[index].setElementFinder(newElementFinder);
-      return newElementFinder;
-    }
-    return searchLocationList.searchLocations[index].getElementFinder();
-  }
-
-  @Override
-  public ElementFinder addNextPredicate(String searchElement) {
-    throw new UnsupportedOperationException("This operation is not supported");
   }
 
   @Override
@@ -104,21 +79,6 @@ public class MultiplePredicateMatchFinder implements ElementFinder {
   @Override
   public ElementFinderReference getReference() {
     return thisReference;
-  }
-
-  @Override
-  public SearchLocation lookupSearchLocation(String elementName, boolean isRelative) {
-    throw new UnsupportedOperationException("This operation is not supported");
-  }
-
-  @Override
-  public SearchLocation lookupSearchLocation(Predicate predicate){
-    for (int i = 0; i < searchLocationList.getSize(); i++) {
-      if (predicate.equals(searchLocationList.predicates[i])) {
-        return searchLocationList.searchLocations[i];
-      }
-    }
-    return null;
   }
 
   @Override

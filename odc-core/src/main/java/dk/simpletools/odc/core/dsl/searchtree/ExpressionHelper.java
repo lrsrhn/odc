@@ -31,17 +31,20 @@ public class ExpressionHelper {
     public static ElementFinder addNextElementFinder(PathReference parentReference) {
         if (parentReference.getLastPredicate() != null) {
             return parentReference.getElementFinder()
-                    .addNextElementFinder(parentReference.getLastPredicate(), parentReference.isRelative());
+                    .buildSearchLocation(parentReference.getLastPredicate())
+                    .addSearchElementFinder();
         } else {
             return parentReference.getElementFinder()
-                    .addNextElementFinder(parentReference.getLastSearchElement(), parentReference.isRelative());
+                    .buildSearchLocation(parentReference.getLastSearchElement(), parentReference.isRelative())
+                    .addSearchElementFinder();
         }
     }
 
     public static ElementFinder addNextPredicate(PathReference parentReference) {
         if (parentReference.getLastSearchElement() != null) {
             return parentReference.getElementFinder()
-                    .addNextPredicate(parentReference.getLastSearchElement());
+                    .buildSearchLocation(parentReference.getLastSearchElement(), parentReference.isRelative())
+                    .addPredicateElementFinder();
         }
         throw new UnsupportedOperationException();
     }
@@ -52,15 +55,16 @@ public class ExpressionHelper {
                 throw new RuntimeException("Two predicate finders may not be adjacent!");
             } else {
                 return parentReference.getElementFinder()
-                        .addNextElementFinder(parentReference.getLastPredicate(), parentReference.isRelative());
+                        .buildSearchLocation(parentReference.getLastPredicate())
+                        .addSearchElementFinder();
             }
         } else {
             if (reference.getElementFinder().isPredicate()) {
-                return parentReference.getElementFinder()
-                        .addNextPredicate(parentReference.getLastSearchElement());
+                throw new RuntimeException("Last predicate cannot be empty when isPredicate is true");
             } else {
                 return parentReference.getElementFinder()
-                        .addNextElementFinder(parentReference.getLastSearchElement(), parentReference.isRelative());
+                        .buildSearchLocation(parentReference.getLastSearchElement(), parentReference.isRelative())
+                        .addSearchElementFinder();
             }
         }
     }

@@ -43,7 +43,7 @@ public class TreeElementAdder implements TreePathAdder {
                 .setSearchElement(elements[0], isRelative);
         if (elements.length > 1) {
             for (int i = 0; i < elements.length - 1; i++) {
-                currentElementFinder = currentElementFinder.addNextElementFinder(elements[i], isRelative);
+                currentElementFinder = currentElementFinder.buildSearchLocation(elements[i], isRelative).addSearchElementFinder();
             }
             currentElementFinder = currentElementFinder.setSearchElement(elements[elements.length - 1], isRelative);
         }

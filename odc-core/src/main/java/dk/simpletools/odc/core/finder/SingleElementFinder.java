@@ -43,51 +43,6 @@ public final class SingleElementFinder implements ElementFinder {
   }
 
   @Override
-  public ElementFinder addNextElementFinder(String searchElement, boolean isRelative) {
-    if (this.searchElement == null) {
-      this.searchElement = searchElement.intern();
-      this.isRelative = isRelative;
-      searchLocation.setElementFinder(new SingleElementFinder().getReference());
-      return searchLocation.getElementFinder();
-    } else {
-      searchElement = searchElement.intern();
-      if (this.searchElement.equals(searchElement)) {
-        if (this.isRelative != isRelative) {
-          MultipleArrayElementFinder multipleXmlElementFinder = new MultipleArrayElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
-          return multipleXmlElementFinder.addNextElementFinder(searchElement, isRelative);
-        } else if (searchLocation.getElementFinder() == null) {
-          searchLocation.setElementFinder(new SingleElementFinder().getReference());
-          return searchLocation.getElementFinder();
-        }
-      } else {
-        MultipleArrayElementFinder multipleXmlElementFinder = new MultipleArrayElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
-        return multipleXmlElementFinder.addNextElementFinder(searchElement, isRelative);
-      }
-    }
-    return searchLocation.getElementFinder();
-  }
-
-  @Override
-  public ElementFinder addNextElementFinder(Predicate predicate, boolean isRelative) {
-    throw new UnsupportedOperationException("This operation is not supported");
-  }
-
-  @Override
-  public ElementFinder addNextPredicate(String searchElement) {
-    if (this.searchElement == null) {
-      this.searchElement = searchElement.intern();
-      searchLocation.setElementFinder(new SinglePredicateMatchFinder().getReference());
-      return searchLocation.getElementFinder();
-    } else if (this.searchElement.equalsIgnoreCase(searchElement)) {
-      if (searchLocation.getElementFinder() == null) {
-        searchLocation.setElementFinder(new SinglePredicateMatchFinder().getReference());
-      }
-      return searchLocation.getElementFinder();
-    }
-    throw new IllegalArgumentException(String.format("SearchElement mismatch: %s != %s", this.searchElement, searchElement));
-  }
-
-  @Override
   public ElementFinder setSearchElement(String searchElement, boolean isRelative) {
     if (this.searchElement == null) {
       this.searchElement = searchElement.intern();
@@ -142,19 +97,6 @@ public final class SingleElementFinder implements ElementFinder {
   @Override
   public ElementFinderReference getReference() {
     return thisReference;
-  }
-
-  @Override
-  public SearchLocation lookupSearchLocation(String elementName, boolean isRelative) {
-    if (this.isRelative == isRelative && elementName.equals(searchElement)) {
-      return searchLocation;
-    }
-    return null;
-  }
-
-  @Override
-  public SearchLocation lookupSearchLocation(Predicate predicate) {
-    throw new UnsupportedOperationException("This operation is not supported");
   }
 
   @Override

@@ -49,6 +49,20 @@ public class SearchLocationBuilder {
         return this;
     }
 
+    public ElementFinder addSearchElementFinder() {
+        if (searchLocation.getElementFinder() == null) {
+            this.searchLocation.setElementFinder(new SingleElementFinder().getReference());
+        }
+        return searchLocation.getElementFinder();
+    }
+
+    public ElementFinder addPredicateElementFinder() {
+        if (searchLocation.getElementFinder() == null) {
+            this.searchLocation.setElementFinder(new SinglePredicateMatchFinder().getReference());
+        }
+        return searchLocation.getElementFinder();
+    }
+
     public SearchLocation build() {
         return searchLocation;
     }

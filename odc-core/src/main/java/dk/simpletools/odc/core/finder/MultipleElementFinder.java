@@ -23,9 +23,9 @@
 package dk.simpletools.odc.core.finder;
 
 import dk.simpletools.odc.core.dsl.expression.SearchLocationReference;
-import dk.simpletools.odc.core.processing.StructureElement;
 import dk.simpletools.odc.core.predicate.Predicate;
 import dk.simpletools.odc.core.processing.ElementFinderReference;
+import dk.simpletools.odc.core.processing.StructureElement;
 
 import java.util.*;
 
@@ -44,52 +44,6 @@ public class MultipleElementFinder implements ElementFinder {
     } else {
       this.nextXmlElementFinders.put(searchElement.intern(), searchLocation);
     }
-  }
-
-  @Override
-  public ElementFinder addNextElementFinder(String searchElement, boolean isRelative) {
-    Map<String, SearchLocation> elementFinderMap = selectElementFinderMapByRelativity(isRelative);
-    SearchLocation searchLocation = elementFinderMap.get(searchElement);
-    if (searchLocation == null) {
-      ElementFinder elementFinder = new SingleElementFinder().getReference();
-      elementFinderMap.put(searchElement.intern(), new SearchLocation(elementFinder, null, null));
-      return elementFinder;
-    } else if (searchLocation.getElementFinder() == null) {
-      ElementFinder elementFinder = new SingleElementFinder().getReference();
-      searchLocation.setElementFinder(elementFinder);
-    }
-    return searchLocation.getElementFinder();
-  }
-
-  /**
-   * Expects that searchElement is in absolute or relative. Not in both.
-   */
-  @Override
-  public ElementFinder addNextPredicate(String searchElement) {
-    SearchLocation searchLocation = nextXmlElementFinders.get(searchElement);
-    if (searchLocation != null) {
-      if (searchLocation.getElementFinder() == null) {
-        ElementFinder elementFinder = new SinglePredicateMatchFinder().getReference();
-        searchLocation.setElementFinder(elementFinder);
-        return elementFinder;
-      }
-      return searchLocation.getElementFinder();
-    }
-    searchLocation = relativeElementFinders.get(searchElement);
-    if (searchLocation != null) {
-      if (searchLocation.getElementFinder() == null) {
-        ElementFinder elementFinder = new SinglePredicateMatchFinder().getReference();
-        searchLocation.setElementFinder(elementFinder);
-        return elementFinder;
-      }
-      return searchLocation.getElementFinder();
-    }
-    throw new IllegalArgumentException("Did not find matching search element");
-  }
-
-  @Override
-  public ElementFinder addNextElementFinder(Predicate predicate, boolean isRelative) {
-    throw new UnsupportedOperationException("This operation is not supported");
   }
 
   @Override
@@ -126,20 +80,6 @@ public class MultipleElementFinder implements ElementFinder {
   @Override
   public ElementFinderReference getReference() {
     return thisReference;
-  }
-
-  @Override
-  public SearchLocation lookupSearchLocation(String elementName, boolean isRelative) {
-    Map<String, SearchLocation> elementFinderMap = selectElementFinderMapByRelativity(isRelative);
-    if (elementFinderMap.isEmpty()) {
-      return null;
-    }
-    return elementFinderMap.get(elementName);
-  }
-
-  @Override
-  public SearchLocation lookupSearchLocation(Predicate predicate) {
-    throw new UnsupportedOperationException("This operation is not supported");
   }
 
   @Override

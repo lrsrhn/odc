@@ -43,21 +43,6 @@ public class ElementFinderReference implements ElementFinder {
     }
 
     @Override
-    public ElementFinder addNextElementFinder(String searchElement, boolean isRelative) {
-        return elementFinder.addNextElementFinder(searchElement, isRelative);
-    }
-
-    @Override
-    public ElementFinder addNextElementFinder(Predicate predicate, boolean isRelative) {
-        return elementFinder.addNextElementFinder(predicate, isRelative);
-    }
-
-    @Override
-    public ElementFinder addNextPredicate(String searchElement) {
-        return elementFinder.addNextPredicate(searchElement);
-    }
-
-    @Override
     public ElementFinder setSearchElement(String searchElement, boolean isRelative) {
         return elementFinder.setSearchElement(searchElement, isRelative);
     }
@@ -80,16 +65,6 @@ public class ElementFinderReference implements ElementFinder {
     @Override
     public ElementFinderReference getReference() {
         return this;
-    }
-
-    @Override
-    public SearchLocation lookupSearchLocation(String elementName, boolean isRelative) {
-        return elementFinder.lookupSearchLocation(elementName, isRelative);
-    }
-
-    @Override
-    public SearchLocation lookupSearchLocation(Predicate predicate) {
-        return elementFinder.lookupSearchLocation(predicate);
     }
 
     @Override
