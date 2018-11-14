@@ -367,6 +367,36 @@ public abstract class TreeBuilderTests {
         assertElementHandler.verify();
     }
 
+    @Test
+    public void allFinder() throws IOException {
+        StringBuilder builder = new StringBuilder();
+        withXmlBuilder(builder)
+                .element("one")
+                    .element("two").attribute("att", "bla")
+                        .element("three")
+                        .elementEnd()
+                    .elementEnd()
+                .element("two").attribute("att", "wee")
+                    .element("five")
+                    .elementEnd()
+                .elementEnd()
+            .elementEnd();
+
+        AssertElementHandler assertElementHandler = new AssertElementHandler();
+
+        assertElementHandler.exptectedStartElements("two", "three", "two", "five");
+        assertElementHandler.exptectedEndElements("three", "two", "five", "two");
+
+        observablePathFinder.treeBuilder()
+                .element("one")
+                    .all(assertElementHandler, assertElementHandler)
+                .end()
+                .build();
+
+        observablePathFinder.find(new StringReader(builder.toString()));
+        assertElementHandler.verify();
+    }
+
     // @formatter:on
 
     private XmlStreamBuilder withXmlBuilder(StringBuilder builder) {

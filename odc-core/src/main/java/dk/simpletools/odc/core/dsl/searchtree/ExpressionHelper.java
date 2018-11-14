@@ -40,6 +40,18 @@ public class ExpressionHelper {
         }
     }
 
+    public static ElementFinder addNextAllFinder(PathReference parentReference) {
+        if (parentReference.getLastPredicate() != null) {
+            return parentReference.getElementFinder()
+                    .buildSearchLocation(parentReference.getLastPredicate())
+                    .addAllElementFinder();
+        } else {
+            return parentReference.getElementFinder()
+                    .buildSearchLocation(parentReference.getLastSearchElement(), parentReference.isRelative())
+                    .addAllElementFinder();
+        }
+    }
+
     public static ElementFinder addNextPredicate(PathReference parentReference) {
         if (parentReference.getLastSearchElement() != null) {
             return parentReference.getElementFinder()

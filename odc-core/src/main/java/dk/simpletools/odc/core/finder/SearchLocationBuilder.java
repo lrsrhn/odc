@@ -63,6 +63,13 @@ public class SearchLocationBuilder {
         return searchLocation.getElementFinder();
     }
 
+    public ElementFinder addAllElementFinder() {
+        if (searchLocation.getElementFinder() == null) {
+            this.searchLocation.setElementFinder(new AllElementFinder());
+        }
+        return searchLocation.getElementFinder();
+    }
+
     public SearchLocation build() {
         return searchLocation;
     }

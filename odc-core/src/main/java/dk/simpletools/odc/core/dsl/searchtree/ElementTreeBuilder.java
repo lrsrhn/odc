@@ -27,6 +27,7 @@ import dk.simpletools.odc.core.finder.OnEndHandler;
 import dk.simpletools.odc.core.dsl.expression.TreePathAdder;
 import dk.simpletools.odc.core.dsl.expression.XpathParser;
 import dk.simpletools.odc.core.finder.ElementFinder;
+import dk.simpletools.odc.core.finder.OnStartHandler;
 import dk.simpletools.odc.core.predicate.Predicate;
 
 import java.util.List;
@@ -47,6 +48,15 @@ public class ElementTreeBuilder<T> {
         ElementFinder newElementFinder = ExpressionHelper.addNextElementFinder(parentReference)
                 .setSearchElement(elementName, false);
         return new ElementTreeBuilder<ElementTreeBuilder<T>>(this, referenceStore, new PathReference(newElementFinder, elementName, false));
+    }
+
+    public OnlyEndTreeBuilder<T> all(OnStartHandler onStartHandler, OnEndHandler onEndHandler) {
+        ElementFinder newElementFinder = ExpressionHelper.addNextAllFinder(parentReference);
+        newElementFinder.buildSearchLocation(null, false)
+                .onStartHandler(onStartHandler)
+                .onEndHandler(onEndHandler)
+                .build();
+        return new OnlyEndTreeBuilder<T>(parentTreeBuilder, referenceStore, parentReference);
     }
 
     public ElementTreeBuilder<ElementTreeBuilder<T>> path(String path) {
