@@ -56,7 +56,7 @@ public class StaxPathFinder extends ObservablePathFinder {
   public ObjectStore find(Reader reader) {
     XMLStreamReader streamReader = null;
     try {
-      XmlRawTextReader xmlRawTextReader = new XmlRawTextReader(reader);
+      XmlRawTextReader2 xmlRawTextReader = new XmlRawTextReader2(reader);
       streamReader = xmlInputFactory.createXMLStreamReader(xmlRawTextReader);
       StructureElement structureElement = new XMLElement(streamReader, xmlRawTextReader);
       XmlElementProcessor xmlElementProcessor = new XmlElementProcessor(rootElementFinder.getElementFinder(), structureElement);

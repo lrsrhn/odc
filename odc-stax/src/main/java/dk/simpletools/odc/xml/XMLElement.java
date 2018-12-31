@@ -35,9 +35,9 @@ public class XMLElement implements StructureElement {
   private String elementTextCache;
   private ValueStore valueStore;
   private ObjectStore objectStore;
-  private XmlRawTextReader xmlRawTextReader;
+  private XmlRawTextReader2 xmlRawTextReader;
 
-  public XMLElement(XMLStreamReader xmlStreamReader, XmlRawTextReader xmlRawTextReader) {
+  public XMLElement(XMLStreamReader xmlStreamReader, XmlRawTextReader2 xmlRawTextReader) {
     this.valueStore = new ValueStore();
     this.xmlStreamReader = xmlStreamReader;
     this.objectStore = new ObjectStore();

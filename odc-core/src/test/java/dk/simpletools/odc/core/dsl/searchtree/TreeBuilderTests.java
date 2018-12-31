@@ -23,6 +23,7 @@
 package dk.simpletools.odc.core.dsl.searchtree;
 
 import dk.simpletools.odc.core.finder.ElementHandler;
+import dk.simpletools.odc.core.finder.OnStartHandler;
 import dk.simpletools.odc.core.processing.*;
 import dk.simpletools.odc.core.xml.builder.XmlStreamBuilder;
 import org.junit.Assert;
@@ -395,6 +396,51 @@ public abstract class TreeBuilderTests {
 
         observablePathFinder.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
+    }
+
+    /**
+     *
+     * Please prettify this test.
+     */
+    @Test
+    public void testRaw() throws IOException {
+        StringBuilder builder = new StringBuilder();
+        XmlStreamBuilder xmlBuilder = withXmlBuilder(builder)
+                .element("one");
+        final String longValue = veryLongValue();
+
+        for (int i = 0; i < 10000; i++) {
+            xmlBuilder.element("two")
+                    .valueNoEscaping(longValue)
+                    .elementEnd();
+        }
+        xmlBuilder.elementEnd();
+
+        observablePathFinder.treeBuilder()
+                .element("one")
+                    .element("two")
+                        .observeBy().handler(new OnStartHandler() {
+
+                            private int counter = 0;
+            @Override
+            public void startElement(StructureElement structureElement) throws Exception {
+                Assert.assertEquals(longValue.length(), structureElement.getRawElementValue().length());
+                Assert.assertEquals(longValue, structureElement.getRawElementValue());
+            }
+        });
+
+        observablePathFinder.find(new StringReader(builder.toString()));
+
+    }
+
+    private String veryLongValue() {
+        String value = "adcadca¤%¤%¤%¤¤WEFSD<QEDFAS/>";
+        StringBuilder builder = new StringBuilder(10000);
+        for (int i = 0; i < 500; i++) {
+            builder.append(value);
+        }
+        return builder.toString();
+
     }
 
     // @formatter:on

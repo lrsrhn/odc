@@ -25,6 +25,10 @@ package dk.simpletools.odc.xml;
 import java.io.IOException;
 import java.io.Reader;
 
+/**
+ * @deprecated It seems that Woodstox makes changes to it's input buffer while processing. Hence the output of this
+ * class is unreliable. This implementation is faster than  XmlRawTextReader2 though.
+ */
 public class XmlRawTextReader extends Reader {
   private Reader reader;
   private TextExtractor textExtractor;
@@ -36,24 +40,24 @@ public class XmlRawTextReader extends Reader {
 
   @Override
   public int read(char[] cbuf, int off, int len) throws IOException {
-    textExtractor.preRead(cbuf ,len);
+    textExtractor.preRead(cbuf);
     int result = reader.read(cbuf, off, len);
-    textExtractor.postRead(result);
+    textExtractor.postRead(result, off);
     return result;
   }
 
   @Override
   public int read() throws IOException {
     int result = super.read();
-    textExtractor.postRead(result);
+    textExtractor.postRead(result, 0);
     return result;
   }
 
   @Override
   public int read(char[] cbuf) throws IOException {
-    textExtractor.preRead(cbuf, 0);
+    textExtractor.preRead(cbuf);
     int result = super.read(cbuf);
-    textExtractor.postRead(result);
+    textExtractor.postRead(result, 0);
     return result;
   }
 
@@ -74,62 +78,70 @@ public class XmlRawTextReader extends Reader {
     private char[] cbuf;
     private int currentEndOffset;
     private int currentStartOffset;
+    private int previousOffset;
+    private int previousLength;
     private int startIndex;
 
     public TextExtractor() {
       this.currentEndOffset = 0;
       this.currentStartOffset = 0;
+      this.previousOffset = 0;
+      this.previousLength = 0;
       this.startIndex = -1;
       builderBuffer = new StringBuilder(128);
     }
 
-    public void preRead(char[] cbuf, int len) {
+    public void preRead(char[] cbuf) {
       this.cbuf = cbuf;
       if (startIndex != -1) {
-        int startIndexRelativeToOffset = startIndex - currentStartOffset;
-        builderBuffer.append(cbuf, startIndexRelativeToOffset, len - startIndexRelativeToOffset);
+        if (builderBuffer.length() == 0) {
+          builderBuffer.append(cbuf, startIndex + previousOffset, previousLength - startIndex);
+        } else {
+          builderBuffer.append(cbuf, previousOffset, previousLength);
+        }
       }
     }
 
-    public void postRead(int result) {
-      currentStartOffset = currentEndOffset;
-      currentEndOffset += result;
+    public void postRead(int result, int offset) {
+      if (startIndex == -1) {
+        currentStartOffset = currentEndOffset;
+      }
+      this.previousOffset = offset;
+      this.previousLength = result;
+      this.currentEndOffset += result;
     }
 
-    public void setStartIndex(int startIndex) {
-      this.startIndex = findProperStartIndex(startIndex - currentStartOffset);
+    public void setStartIndex(int absoluteStartIndex) {
+      int startIndexRelativeToStartOffset = Math.max(absoluteStartIndex - currentStartOffset, 0);
+      this.startIndex = findProperStartIndex(startIndexRelativeToStartOffset);
 
     }
 
-    public String readRawText(int endIndex) {
-      endIndex = Math.abs(currentStartOffset - endIndex);
-      if (endIndex >= 0) {
-        // The element end tag is in the cbuf array
-        if (startIndex >= endIndex) {
+    public String readRawText(int absoluteEndIndex) {
+      int endIndexRelativeToStartOffset = absoluteEndIndex - currentStartOffset;
+      if (builderBuffer.length() == 0) {
+        // Text is in cbuf
+        if (startIndex >= endIndexRelativeToStartOffset) {
           // Occurs with <test/> and <test></test>
           return "";
         }
-        builderBuffer.append(cbuf, startIndex, endIndex - startIndex);
+        builderBuffer.append(cbuf, startIndex, endIndexRelativeToStartOffset - startIndex);
       } else {
-        // The element end tag is already in the StringBuilder
-        endIndex = builderBuffer.length() - 1;
-        while(builderBuffer.charAt(endIndex) != '<') {
-          endIndex--;
+        // Part of text is in builderBuffer
+        int captureLength = endIndexRelativeToStartOffset - startIndex;
+        currentStartOffset = currentEndOffset - previousLength - previousOffset;
+        if (captureLength <= builderBuffer.length()) {
+          // Text is in builderBuffer
+          builderBuffer.setLength(captureLength);
+        } else {
+          // Text is in builderBuffer and cbuf - append missing text from cbuf
+          builderBuffer.append(cbuf, previousOffset, captureLength - builderBuffer.length());
         }
-        builderBuffer.setLength(endIndex);
       }
       String rawText = builderBuffer.toString();
       builderBuffer.setLength(0);
       startIndex = -1;
       return rawText;
-    }
-
-    private int findProperEndIndex(int endIndex) {
-      endIndex--;
-      while (endIndex >= 0 && cbuf[endIndex] != '<') {
-        endIndex--;
-      }
-      return endIndex;
     }
 
     private int findProperStartIndex(int startIndex) {
