@@ -22,33 +22,32 @@
  */
 package dk.simpletools.odc.xml;
 
+import com.ctc.wstx.stax.WstxInputFactory;
 import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.ObservablePathFinder;
 import dk.simpletools.odc.core.processing.StructureElement;
 
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import java.io.Reader;
 
 public class StaxPathFinder extends ObservablePathFinder {
-  private static final XMLInputFactory DEFAULT_XML_INPUT_FACTORY = createDefaultFactory();
+  private static final WstxInputFactory DEFAULT_XML_INPUT_FACTORY = createDefaultFactory();
 
-  static XMLInputFactory createDefaultFactory() {
-    XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
-    xmlInputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
-
+  static WstxInputFactory createDefaultFactory() {
+    WstxInputFactory xmlInputFactory = new WstxInputFactory();
+    xmlInputFactory.configureForConvenience();
     return xmlInputFactory;
   }
 
-  private XMLInputFactory xmlInputFactory;
+  private WstxInputFactory xmlInputFactory;
 
   public StaxPathFinder() {
     this(DEFAULT_XML_INPUT_FACTORY);
   }
 
-  public StaxPathFinder(XMLInputFactory xmlInputFactory) {
+  public StaxPathFinder(WstxInputFactory xmlInputFactory) {
     if (xmlInputFactory != DEFAULT_XML_INPUT_FACTORY) {
-      xmlInputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
+      xmlInputFactory.setProperty(WstxInputFactory.IS_COALESCING, true);
     }
     this.xmlInputFactory = xmlInputFactory;
   }
