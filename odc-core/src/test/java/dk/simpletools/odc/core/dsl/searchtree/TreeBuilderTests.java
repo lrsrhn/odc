@@ -420,8 +420,6 @@ public abstract class TreeBuilderTests {
                 .element("one")
                     .element("two")
                         .observeBy().handler(new OnStartHandler() {
-
-                            private int counter = 0;
             @Override
             public void startElement(StructureElement structureElement) throws Exception {
                 Assert.assertEquals(longValue.length(), structureElement.getRawElementValue().length());

@@ -111,7 +111,7 @@ public final class ObservablePathTraverser {
     }
 
     public void endElement(final StructureElement structureElement, final int currentDepth) throws Exception {
-        if (parentDepth == currentDepth) {
+        while (parentDepth == currentDepth) {
             childDepth = parentDepth;
             parentDepth = depthStack.popAndPeek();
             ElementFinderStack.StackElement stackElement = elementFinderStack.pop();
@@ -122,7 +122,6 @@ public final class ObservablePathTraverser {
                 onEndHandler.endElement(endElement, valueStore, objectStore);
             }
             currentElementFinder = previousElementFinder;
-            endElement(structureElement, currentDepth);
         }
     }
 }

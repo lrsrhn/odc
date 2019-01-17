@@ -105,11 +105,11 @@ public class XmlRawTextReader2 extends Reader {
 
         private void insertDataInBuffer(char[] cbuf, int off, int len, int result) {
             // Move startOffset to endOffset and take current offset into account
-            currentStartOffset = currentEndOffset - off;
+            currentStartOffset = currentEndOffset;
             currentEndOffset += result; // Move endOffset the amount of read characters
             // Make complete cbuf copy
             builderBuffer.setLength(0);
-            builderBuffer.append(cbuf, 0, result);
+            builderBuffer.append(cbuf, off, result);
         }
 
         String readRawText(int endIndex) {
