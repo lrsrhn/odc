@@ -22,24 +22,23 @@
  */
 package dk.simpletools.odc.core.stub;
 
-import dk.simpletools.odc.core.processing.ElementContext;
-import dk.simpletools.odc.core.processing.ObjectStore;
-import dk.simpletools.odc.core.processing.ObservablePathFinder;
-import dk.simpletools.odc.core.processing.StubElementProcessor;
+import dk.simpletools.odc.core.processing.*;
 
 import java.io.Reader;
 
 public class StubPathFinder extends ObservablePathFinder {
 
     @Override
-    public ObjectStore find(Reader reader) {
+    public ObjectStore find(Reader reader, ValueStore valueStore) {
         throw new UnsupportedOperationException();
     }
 
-    public ObjectStore find(InputReader inputReader) {
+    public ObjectStore find(InputReader inputReader) { return find(inputReader, null); }
+
+    public ObjectStore find(InputReader inputReader, ValueStore valueStore) {
         try {
             inputReader.reset();
-            ElementContext elementContext = new ElementContext();
+            ElementContext elementContext = new ElementContext(valueStore);
             StubElementProcessor stubElementProcessor = new StubElementProcessor(super.rootElementFinder.getElementFinder(), elementContext);
             return stubElementProcessor.search(inputReader, elementContext);
         } catch (Exception e) {

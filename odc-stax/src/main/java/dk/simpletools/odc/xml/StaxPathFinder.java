@@ -23,10 +23,7 @@
 package dk.simpletools.odc.xml;
 
 import com.ctc.wstx.stax.WstxInputFactory;
-import dk.simpletools.odc.core.processing.ObjectStore;
-import dk.simpletools.odc.core.processing.ObservablePathFinder;
-import dk.simpletools.odc.core.processing.XMLElement;
-import dk.simpletools.odc.core.processing.XmlElementProcessor;
+import dk.simpletools.odc.core.processing.*;
 import org.codehaus.stax2.XMLStreamReader2;
 
 import java.io.Reader;
@@ -63,12 +60,13 @@ public class StaxPathFinder extends ObservablePathFinder {
     this.isRawTextReadingEnabled = false;
   }
 
-  public ObjectStore find(Reader reader) {
+  @Override
+  public ObjectStore find(Reader reader, ValueStore valueStore) {
     XMLStreamReader2 streamReader = null;
     try {
       XmlRawTextReader2 xmlRawTextReader = isRawTextReadingEnabled ? new XmlRawTextReader2(reader) : null;
       streamReader = (XMLStreamReader2) xmlInputFactory.createXMLStreamReader(xmlRawTextReader);
-      XMLElement xmlElement = new XMLElement(streamReader, xmlRawTextReader);
+      XMLElement xmlElement = new XMLElement(streamReader, xmlRawTextReader, valueStore);
       XmlElementProcessor xmlElementProcessor = new XmlElementProcessor(rootElementFinder.getElementFinder(), xmlElement);
       return xmlElementProcessor.search(streamReader, xmlElement);
     } catch (Exception ex) {

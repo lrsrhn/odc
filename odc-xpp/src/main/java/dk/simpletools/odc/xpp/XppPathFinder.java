@@ -24,6 +24,7 @@ package dk.simpletools.odc.xpp;
 
 import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.ObservablePathFinder;
+import dk.simpletools.odc.core.processing.ValueStore;
 import dk.simpletools.odc.core.processing.XMLElement;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -55,12 +56,13 @@ public class XppPathFinder extends ObservablePathFinder {
     this(DEFAULT_XML_PULL_PARSER_FACTORY);
   }
 
-  public ObjectStore find(Reader reader) {
+  @Override
+  public ObjectStore find(Reader reader, ValueStore valueStore) {
     XmlPullParser streamReader = null;
     try {
       streamReader = xmlPullParserFactory.newPullParser();
       streamReader.setInput(reader);
-      XMLElement xmlElement = new XMLElement(streamReader);
+      XMLElement xmlElement = new XMLElement(streamReader, valueStore);
       ElementProcessor elementProcessor = new ElementProcessor(rootElementFinder.getElementFinder(), xmlElement);
       return elementProcessor.search(streamReader, xmlElement);
     } catch (Exception ex) {

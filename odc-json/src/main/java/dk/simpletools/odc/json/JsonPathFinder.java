@@ -25,6 +25,7 @@ package dk.simpletools.odc.json;
 import dk.simpletools.odc.core.processing.JsonObject;
 import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.ObservablePathFinder;
+import dk.simpletools.odc.core.processing.ValueStore;
 import org.omg.CORBA.Object;
 
 import javax.json.Json;
@@ -45,11 +46,12 @@ public class JsonPathFinder extends ObservablePathFinder {
     this(DEFAULT_JSON_PARSER_FACTORY);
   }
 
-  public ObjectStore find(Reader reader) {
+  @Override
+  public ObjectStore find(Reader reader, ValueStore valueStore) {
     JsonParser jsonParser = null;
     try {
       jsonParser = jsonParserFactory.createParser(reader);
-      JsonObject jsonObject = new JsonObject(jsonParser);
+      JsonObject jsonObject = new JsonObject(jsonParser, valueStore);
       ObjectProcessor objectProcessor = new ObjectProcessor(rootElementFinder.getElementFinder(), jsonObject);
       return objectProcessor.search(jsonParser, jsonObject);
     } catch (Exception ex) {

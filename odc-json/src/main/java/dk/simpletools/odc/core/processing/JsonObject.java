@@ -35,8 +35,8 @@ public class JsonObject implements InternalStructureElement {
     private String elementValueCache;
     private String[] elementValuesCache;
 
-    public JsonObject(JsonParser jsonParser) {
-        this.valueStore = new ValueStore();
+    public JsonObject(JsonParser jsonParser, ValueStore valueStore) {
+        this.valueStore = valueStore == null ? new ValueStore() : valueStore;
         this.jsonParser = jsonParser;
         this.objectStore = new ObjectStore();
     }

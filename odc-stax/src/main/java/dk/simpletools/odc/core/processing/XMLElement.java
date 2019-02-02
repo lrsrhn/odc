@@ -36,8 +36,8 @@ public class XMLElement implements InternalStructureElement {
   private ObjectStore objectStore;
   private XmlRawTextReader2 xmlRawTextReader;
 
-  public XMLElement(XMLStreamReader2 xmlStreamReader, XmlRawTextReader2 xmlRawTextReader) {
-    this.valueStore = new ValueStore();
+  public XMLElement(XMLStreamReader2 xmlStreamReader, XmlRawTextReader2 xmlRawTextReader, ValueStore valueStore) {
+    this.valueStore = valueStore == null ? new ValueStore() : valueStore;
     this.xmlStreamReader = xmlStreamReader;
     this.objectStore = new ObjectStore();
     this.xmlRawTextReader = xmlRawTextReader;
