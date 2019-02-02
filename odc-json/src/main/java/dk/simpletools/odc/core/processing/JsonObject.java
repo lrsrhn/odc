@@ -20,17 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.json;
-
-import dk.simpletools.odc.core.processing.ObjectStore;
-import dk.simpletools.odc.core.processing.StructureElement;
-import dk.simpletools.odc.core.processing.ValueStore;
+package dk.simpletools.odc.core.processing;
 
 import javax.json.stream.JsonParser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JsonObject implements StructureElement {
+public class JsonObject implements InternalStructureElement {
     private JsonParser.Event currentEvent;
     private JsonParser jsonParser;
     private String keyName;
@@ -142,7 +138,12 @@ public class JsonObject implements StructureElement {
         elementValueCache = null;
     }
 
-    void setKeyName(String keyName) {
+    @Override
+    public void skipElement() {
+        // TODO
+    }
+
+    public void setKeyName(String keyName) {
         this.keyName = keyName;
     }
 }

@@ -20,32 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.core.processing.stub;
+package dk.simpletools.odc.core.stub;
 
-public class Element {
-    private String elementName;
-    private String textValue;
-    private boolean isStartElement;
+import dk.simpletools.odc.core.processing.ElementContext;
+import dk.simpletools.odc.core.processing.ObjectStore;
+import dk.simpletools.odc.core.processing.ObservablePathFinder;
+import dk.simpletools.odc.core.processing.StubElementProcessor;
 
-    public Element(String elementName, String textValue, boolean isStartElement) {
-        this.elementName = elementName;
-        this.textValue = textValue;
-        this.isStartElement = isStartElement;
+import java.io.Reader;
+
+public class StubPathFinder extends ObservablePathFinder {
+
+    @Override
+    public ObjectStore find(Reader reader) {
+        throw new UnsupportedOperationException();
     }
 
-    public String getElementName() {
-        return elementName;
-    }
-
-    public String getTextValue() {
-        return textValue;
-    }
-
-    public boolean isStartElement() {
-        return isStartElement;
-    }
-
-    public void setTextValue(String textValue) {
-        this.textValue = textValue;
+    public ObjectStore find(InputReader inputReader) {
+        try {
+            inputReader.reset();
+            ElementContext elementContext = new ElementContext();
+            StubElementProcessor stubElementProcessor = new StubElementProcessor(super.rootElementFinder.getElementFinder(), elementContext);
+            return stubElementProcessor.search(inputReader, elementContext);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

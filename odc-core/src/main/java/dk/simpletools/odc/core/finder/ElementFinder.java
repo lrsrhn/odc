@@ -50,4 +50,6 @@ public interface ElementFinder {
   void buildToString(StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder);
 
   boolean isPredicate();
+
+  boolean hasRelative();
 }

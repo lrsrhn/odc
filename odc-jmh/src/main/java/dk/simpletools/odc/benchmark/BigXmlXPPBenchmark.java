@@ -20,47 +20,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc;
+package dk.simpletools.odc.benchmark;
 
-import dk.simpletools.odc.core.finder.OnStartHandler;
-import dk.simpletools.odc.core.processing.StructureElement;
-import dk.simpletools.odc.core.processing.stub.InputReader;
-import dk.simpletools.odc.core.processing.stub.StubPathFinder;
-import dk.simpletools.odc.core.processing.stub.XmlToInputReader;
+import dk.simpletools.odc.core.processing.ObservablePathFinder;
+import dk.simpletools.odc.xpp.XppPathFinder;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 
-//jvmArgsAppend={"-XX:MaxInlineSize=0", "-Xverify:none"}
-
+//,jvmArgsAppend={"-XX:MaxInlineSize=0", "-Xverify:none"}
 // jvmArgsAppend = {"-XX:+UnlockDiagnosticVMOptions", "-XX:+PrintInlining"}
-@Fork(value = 1, jvmArgsAppend={"-Xverify:none"})
+@Fork(value = 1)
 @Warmup(iterations = 1)
 //@Measurement(iterations = 100, time = 30)
 @Measurement(iterations = 5, time = 10)
-@BenchmarkMode(Mode.SampleTime)
-public class BigXmlStubBenchmark {
+@BenchmarkMode(Mode.Throughput)
+public class BigXmlXPPBenchmark {
 
     @State(Scope.Benchmark)
     public static class BenchmarkState {
         String xmlContent;
-        InputReader inputReader;
-        StubPathFinder stubPathFinder;
+        ObservablePathFinder jsonPath;
         private StringBuilder builder = new StringBuilder(2000000);
 
         public BenchmarkState() {
             try {
-                String xmlContent = readFile();
-                inputReader = new XmlToInputReader().processXml(new StringReader(xmlContent));
-                stubPathFinder = new StubPathFinder();
-                TestHandler testHandler = new TestHandler(builder);
-                stubPathFinder.addXpath("/root/row/registered").handleStartElementBy(testHandler);
-//                jsonPath.addXpath("/root/row/greeting").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getElementValue()));
-//                jsonPath.addXpath("/root/row/latitude").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getElementValue()));
-                stubPathFinder.addXpath("/root/row/tags").handleStartElementBy(testHandler);
+
+                xmlContent = readFile();
+                jsonPath = new XppPathFinder();
+                jsonPath.addXpath("/root/row/registered").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getElementValue()));
+                jsonPath.addXpath("/root/row/tags").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getElementValue()));
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -70,15 +61,15 @@ public class BigXmlStubBenchmark {
 
 //    @Benchmark
     public void testBigXml(BenchmarkState benchmarkState, final Blackhole blackhole) {
-        benchmarkState.inputReader.reset();
-        blackhole.consume(benchmarkState.stubPathFinder.find(benchmarkState.inputReader));
+        blackhole.consume(benchmarkState.jsonPath.find(benchmarkState.xmlContent));
 //        System.out.println("Length: " + benchmarkState.builder.length());
         benchmarkState.builder.setLength(0);
+
     }
 
     private static String readFile() throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(
-                BigXmlStubBenchmark.class.getClassLoader().getResourceAsStream("bigjson.xml")));
+                BigXmlXPPBenchmark.class.getClassLoader().getResourceAsStream("bigjson.xml")));
         StringBuilder builder = new StringBuilder();
         while (reader.ready()) {
             builder.append(reader.readLine());
@@ -87,18 +78,5 @@ public class BigXmlStubBenchmark {
         reader.close();
         builder.setLength(builder.length() - 1);
         return builder.toString();
-    }
-
-    private static final class TestHandler implements OnStartHandler {
-        private StringBuilder stringBuilder;
-
-        TestHandler(StringBuilder stringBuilder) {
-            this.stringBuilder = stringBuilder;
-        }
-
-        @Override
-        public void startElement(StructureElement structureElement) throws Exception {
-            stringBuilder.append(structureElement.getElementName()).append(": ").append(structureElement.getElementValue());
-        }
     }
 }

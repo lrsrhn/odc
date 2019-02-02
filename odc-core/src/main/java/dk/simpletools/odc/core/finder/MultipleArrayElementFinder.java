@@ -135,6 +135,11 @@ public final class MultipleArrayElementFinder implements ElementFinder {
     return false;
   }
 
+  @Override
+  public boolean hasRelative() {
+    return !relativeElementFinders.isEmpty();
+  }
+
   private static void buildToStringForMap(boolean isRelative, StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder, SearcLocationList elementFinders) {
     int previousElementBuilderLength = previousElementsBuilder.length();
     for (int i = 0; i < elementFinders.getSize(); i++) {

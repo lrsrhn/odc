@@ -20,10 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.expression.ExpressionXmlTests;
+import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
 import dk.simpletools.odc.xml.StaxPathFinder;
 
-public class StaxExpressionTests extends ExpressionXmlTests {
+public class StaxTreeBuilderTest extends TreeBuilderTests {
 
     @Override
     public void setObservablePathFinder() {

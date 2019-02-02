@@ -155,4 +155,9 @@ public final class SingleElementFinder implements ElementFinder {
   public boolean isPredicate() {
     return false;
   }
+
+  @Override
+  public boolean hasRelative() {
+    return isRelative;
+  }
 }

@@ -20,13 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.core.processing.stub;
+package dk.simpletools.odc.core.processing;
 
-import dk.simpletools.odc.core.processing.ObjectStore;
-import dk.simpletools.odc.core.processing.StructureElement;
-import dk.simpletools.odc.core.processing.ValueStore;
+import dk.simpletools.odc.core.stub.Element;
 
-public class ElementContext implements StructureElement {
+public class ElementContext implements InternalStructureElement {
     private ValueStore valueStore;
     private ObjectStore objectStore;
     private Element currentElement;
@@ -83,5 +81,10 @@ public class ElementContext implements StructureElement {
     @Override
     public void clearCache() {
 
+    }
+
+    @Override
+    public void skipElement() {
+        // TODO: implement
     }
 }

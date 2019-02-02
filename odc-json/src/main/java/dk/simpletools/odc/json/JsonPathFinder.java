@@ -22,6 +22,7 @@
  */
 package dk.simpletools.odc.json;
 
+import dk.simpletools.odc.core.processing.JsonObject;
 import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.ObservablePathFinder;
 import org.omg.CORBA.Object;

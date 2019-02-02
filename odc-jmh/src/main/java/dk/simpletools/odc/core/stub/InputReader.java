@@ -20,13 +20,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
-import dk.simpletools.odc.xml.StaxPathFinder;
+package dk.simpletools.odc.core.stub;
 
-public class StaxTreeBuilderTests extends TreeBuilderTests {
+import java.util.ArrayList;
 
-    @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new StaxPathFinder();
+public final class InputReader {
+    private Element[] elements;
+    private int index;
+
+    InputReader(ArrayList<Element> elements) {
+        this.elements = elements.toArray(new Element[elements.size()]);
+        reset();
+    }
+
+    public boolean hasNext() {
+        return index + 1 < elements.length;
+    }
+
+    public Element next() {
+        return elements[++index];
+    }
+
+    public void reset() {
+        index = -1;
     }
 }

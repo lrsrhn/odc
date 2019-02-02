@@ -20,12 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc;
+package dk.simpletools.odc.benchmark;
 
+import com.ctc.wstx.stax.WstxInputFactory;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -40,14 +40,14 @@ public class BigXmlStaxBenchmark {
     @State(Scope.Benchmark)
     public static class BenchmarkState {
         String xmlContent;
-        XMLInputFactory xmlInputFactory;
+        WstxInputFactory xmlInputFactory;
         StringBuilder builder = new StringBuilder(2000000);
 
         public BenchmarkState() {
             try {
                 xmlContent = readFile();
-                xmlInputFactory = XMLInputFactory.newFactory();
-                xmlInputFactory.setProperty("javax.xml.stream.isCoalescing", true);
+                xmlInputFactory = new WstxInputFactory();
+                xmlInputFactory.configureForConvenience();
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }

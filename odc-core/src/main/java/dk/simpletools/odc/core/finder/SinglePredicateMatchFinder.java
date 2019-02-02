@@ -121,4 +121,9 @@ public class SinglePredicateMatchFinder implements ElementFinder {
   public boolean isPredicate() {
     return true;
   }
+
+  @Override
+  public boolean hasRelative() {
+    return false;
+  }
 }

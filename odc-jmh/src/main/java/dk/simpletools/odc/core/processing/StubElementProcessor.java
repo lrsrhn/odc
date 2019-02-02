@@ -20,13 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.expression.ExpressionXmlTests;
-import dk.simpletools.odc.xpp.XppPathFinder;
+package dk.simpletools.odc.core.processing;
 
-public class XppExpressionTests extends ExpressionXmlTests {
+import dk.simpletools.odc.core.finder.ElementFinder;
+import dk.simpletools.odc.core.stub.Element;
+import dk.simpletools.odc.core.stub.InputReader;
+
+public class StubElementProcessor extends BaseElementProcessor<InputReader, ElementContext> {
+
+    public StubElementProcessor(ElementFinder rootElementFinder, StructureElement structureElement) {
+        super(rootElementFinder, structureElement);
+    }
 
     @Override
-    public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
+    public ObjectStore search(InputReader parser, ElementContext structureElement) throws Exception {
+        int currentDepth = 0;
+        while(parser.hasNext()) {
+            Element element = parser.next();
+            structureElement.setCurrentElement(element);
+            if (element.isStartElement()) {
+                super.observablePathTraverser.startElement(structureElement, currentDepth++);
+                continue;
+            }
+            super.observablePathTraverser.endElement(structureElement, --currentDepth);
+        }
+        return structureElement.getObjectStore();
     }
 }

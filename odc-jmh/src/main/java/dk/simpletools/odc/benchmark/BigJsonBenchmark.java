@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc;
+package dk.simpletools.odc.benchmark;
 
 import dk.simpletools.odc.core.processing.ObservablePathFinder;
 import dk.simpletools.odc.json.JsonPathFinder;

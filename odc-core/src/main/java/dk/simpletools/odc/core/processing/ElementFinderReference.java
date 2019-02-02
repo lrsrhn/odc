@@ -91,4 +91,9 @@ public class ElementFinderReference implements ElementFinder {
     public boolean isPredicate() {
         return elementFinder.isPredicate();
     }
+
+    @Override
+    public boolean hasRelative() {
+        return elementFinder.hasRelative();
+    }
 }

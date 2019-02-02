@@ -20,24 +20,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc;
+package dk.simpletools.odc.benchmark;
 
+import dk.simpletools.odc.core.finder.OnStartHandler;
 import dk.simpletools.odc.core.processing.ObservablePathFinder;
-import dk.simpletools.odc.xpp.XppPathFinder;
+import dk.simpletools.odc.core.processing.StructureElement;
+import dk.simpletools.odc.xml.StaxPathFinder;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
 //,jvmArgsAppend={"-XX:MaxInlineSize=0", "-Xverify:none"}
 // jvmArgsAppend = {"-XX:+UnlockDiagnosticVMOptions", "-XX:+PrintInlining"}
 @Fork(value = 1)
 @Warmup(iterations = 1)
 //@Measurement(iterations = 100, time = 30)
 @Measurement(iterations = 5, time = 10)
-@BenchmarkMode(Mode.Throughput)
-public class BigXmlXPPBenchmark {
+@BenchmarkMode(Mode.SampleTime)
+public class BigXmlBenchmark {
 
     @State(Scope.Benchmark)
     public static class BenchmarkState {
@@ -49,9 +50,12 @@ public class BigXmlXPPBenchmark {
             try {
 
                 xmlContent = readFile();
-                jsonPath = new XppPathFinder();
-                jsonPath.addXpath("/root/row/registered").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getElementValue()));
-                jsonPath.addXpath("/root/row/tags").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getElementValue()));
+                jsonPath = new StaxPathFinder();
+                TestHandler testHandler = new TestHandler(builder);
+                jsonPath.addXpath("/root/row/registered").handleStartElementBy(testHandler);
+//                jsonPath.addXpath("/root/row/greeting").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getElementValue()));
+//                jsonPath.addXpath("/root/row/latitude").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getElementValue()));
+                jsonPath.addXpath("/root/row/tags").handleStartElementBy(testHandler);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -59,17 +63,23 @@ public class BigXmlXPPBenchmark {
     }
 
 
-//    @Benchmark
+    private static boolean run = false;
+//
+    @Benchmark
     public void testBigXml(BenchmarkState benchmarkState, final Blackhole blackhole) {
-        blackhole.consume(benchmarkState.jsonPath.find(benchmarkState.xmlContent));
-//        System.out.println("Length: " + benchmarkState.builder.length());
-        benchmarkState.builder.setLength(0);
+//        if (!run) {
+            blackhole.consume(benchmarkState.jsonPath.find(benchmarkState.xmlContent));
+//            System.out.println("Length: " + benchmarkState.builder.length());
+//            System.out.println(benchmarkState.builder.toString());
+            benchmarkState.builder.setLength(0);
+//            run = true;
+//        }
 
     }
 
     private static String readFile() throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(
-                BigXmlXPPBenchmark.class.getClassLoader().getResourceAsStream("bigjson.xml")));
+                BigXmlBenchmark.class.getClassLoader().getResourceAsStream("bigjson.xml")));
         StringBuilder builder = new StringBuilder();
         while (reader.ready()) {
             builder.append(reader.readLine());
@@ -78,5 +88,18 @@ public class BigXmlXPPBenchmark {
         reader.close();
         builder.setLength(builder.length() - 1);
         return builder.toString();
+    }
+
+    private static final class TestHandler implements OnStartHandler {
+        private StringBuilder stringBuilder;
+
+        TestHandler(StringBuilder stringBuilder) {
+            this.stringBuilder = stringBuilder;
+        }
+
+        @Override
+        public void startElement(StructureElement structureElement) throws Exception {
+            stringBuilder.append(structureElement.getElementName()).append(": ").append(structureElement.getElementValue());
+        }
     }
 }

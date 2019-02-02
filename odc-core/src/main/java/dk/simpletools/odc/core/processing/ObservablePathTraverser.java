@@ -51,11 +51,14 @@ public final class ObservablePathTraverser {
         this.childDepth = 0;
     }
 
-    public void startElement(final StructureElement structureElement, final int currentDepth) throws Exception {
+    public void startElement(final InternalStructureElement structureElement, final int currentDepth) throws Exception {
         if (childDepth == currentDepth) {
             SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, false);
             if (searchLocation != null) {
                 handleSearchLocation(searchLocation, structureElement, currentDepth);
+                return;
+            } else if (!currentElementFinder.hasRelative()) {
+                structureElement.skipElement();
                 return;
             }
         }
@@ -65,7 +68,7 @@ public final class ObservablePathTraverser {
         }
     }
 
-    private void handleSearchLocation(final SearchLocation searchLocation, final StructureElement structureElement, final int currentDepth) throws Exception {
+    private void handleSearchLocation(final SearchLocation searchLocation, final InternalStructureElement structureElement, final int currentDepth) throws Exception {
         OnStartHandler onStartHandler = searchLocation.getOnStartHandler();
         Predicate filter = searchLocation.getFilter();
         OnEndHandler onEndHandler = searchLocation.getOnEndHandler();
@@ -100,7 +103,7 @@ public final class ObservablePathTraverser {
         elementFinderStack.push(currentElementFinder, onEndHandler);
     }
 
-    private void handleNextElementFinder(final StructureElement structureElement, final int currentDepth, final ElementFinder nextElementFinder) throws Exception {
+    private void handleNextElementFinder(final InternalStructureElement structureElement, final int currentDepth, final ElementFinder nextElementFinder) throws Exception {
         currentElementFinder = nextElementFinder;
         if (currentElementFinder.isPredicate()) {
             SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, false);
@@ -110,7 +113,7 @@ public final class ObservablePathTraverser {
         }
     }
 
-    public void endElement(final StructureElement structureElement, final int currentDepth) throws Exception {
+    public void endElement(final InternalStructureElement structureElement, final int currentDepth) throws Exception {
         while (parentDepth == currentDepth) {
             childDepth = parentDepth;
             parentDepth = depthStack.popAndPeek();

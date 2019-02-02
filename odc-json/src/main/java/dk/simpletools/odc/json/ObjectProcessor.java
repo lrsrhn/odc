@@ -24,6 +24,7 @@ package dk.simpletools.odc.json;
 
 import dk.simpletools.odc.core.finder.ElementFinder;
 import dk.simpletools.odc.core.processing.BaseElementProcessor;
+import dk.simpletools.odc.core.processing.JsonObject;
 import dk.simpletools.odc.core.processing.ObjectStore;
 
 import javax.json.stream.JsonParser;

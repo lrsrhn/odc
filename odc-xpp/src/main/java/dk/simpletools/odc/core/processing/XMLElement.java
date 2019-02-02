@@ -20,15 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.xpp;
+package dk.simpletools.odc.core.processing;
 
-import dk.simpletools.odc.core.processing.ObjectStore;
-import dk.simpletools.odc.core.processing.StructureElement;
-import dk.simpletools.odc.core.processing.ValueStore;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-public class XMLElement implements StructureElement {
+public class XMLElement implements InternalStructureElement {
   private XmlPullParser xmlPullParser;
   private String elementTextCache;
   private ValueStore valueStore;
@@ -152,6 +149,31 @@ public class XMLElement implements StructureElement {
 
   public void clearCache() {
     elementTextCache = null;
+  }
+
+
+
+  @Override
+  public void skipElement() {
+    try {
+      int currentDepth = 0;
+      xmlPullParser.next(); // Skip current element
+      // Process all child elements if necessary
+      while(xmlPullParser.getEventType() != XmlPullParser.END_TAG || (xmlPullParser.getEventType() == XmlPullParser.END_TAG && currentDepth > 0)) {
+        if (xmlPullParser.getEventType() == XmlPullParser.START_TAG) {
+          currentDepth++;
+          if (xmlPullParser.isEmptyElementTag()) {
+            xmlPullParser.next();
+            currentDepth--;
+          }
+        } else if (xmlPullParser.getEventType() == XmlPullParser.END_TAG) {
+          currentDepth--;
+        }
+        xmlPullParser.next();
+      }
+    } catch (Exception xse) {
+      throw new RuntimeException(xse);
+    }
   }
 
   public String getElementNS() {

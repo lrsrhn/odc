@@ -89,4 +89,9 @@ public class AllElementFinder implements ElementFinder {
     public boolean isPredicate() {
         return false;
     }
+
+    @Override
+    public boolean hasRelative() {
+        return true;
+    }
 }

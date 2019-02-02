@@ -25,9 +25,10 @@ package dk.simpletools.odc.xml;
 import com.ctc.wstx.stax.WstxInputFactory;
 import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.ObservablePathFinder;
-import dk.simpletools.odc.core.processing.StructureElement;
+import dk.simpletools.odc.core.processing.XMLElement;
+import dk.simpletools.odc.core.processing.XmlElementProcessor;
+import org.codehaus.stax2.XMLStreamReader2;
 
-import javax.xml.stream.XMLStreamReader;
 import java.io.Reader;
 
 public class StaxPathFinder extends ObservablePathFinder {
@@ -40,26 +41,36 @@ public class StaxPathFinder extends ObservablePathFinder {
   }
 
   private WstxInputFactory xmlInputFactory;
+  private boolean isRawTextReadingEnabled;
 
   public StaxPathFinder() {
     this(DEFAULT_XML_INPUT_FACTORY);
+    this.isRawTextReadingEnabled = true;
   }
 
   public StaxPathFinder(WstxInputFactory xmlInputFactory) {
     if (xmlInputFactory != DEFAULT_XML_INPUT_FACTORY) {
-      xmlInputFactory.setProperty(WstxInputFactory.IS_COALESCING, true);
+      xmlInputFactory.configureForConvenience();
     }
     this.xmlInputFactory = xmlInputFactory;
   }
 
+  public void enableRawTextReading() {
+    this.isRawTextReadingEnabled = true;
+  }
+
+  public void disableRawTextReading() {
+    this.isRawTextReadingEnabled = false;
+  }
+
   public ObjectStore find(Reader reader) {
-    XMLStreamReader streamReader = null;
+    XMLStreamReader2 streamReader = null;
     try {
-      XmlRawTextReader2 xmlRawTextReader = new XmlRawTextReader2(reader);
-      streamReader = xmlInputFactory.createXMLStreamReader(xmlRawTextReader);
-      StructureElement structureElement = new XMLElement(streamReader, xmlRawTextReader);
-      XmlElementProcessor xmlElementProcessor = new XmlElementProcessor(rootElementFinder.getElementFinder(), structureElement);
-      return xmlElementProcessor.search(streamReader, structureElement);
+      XmlRawTextReader2 xmlRawTextReader = isRawTextReadingEnabled ? new XmlRawTextReader2(reader) : null;
+      streamReader = (XMLStreamReader2) xmlInputFactory.createXMLStreamReader(xmlRawTextReader);
+      XMLElement xmlElement = new XMLElement(streamReader, xmlRawTextReader);
+      XmlElementProcessor xmlElementProcessor = new XmlElementProcessor(rootElementFinder.getElementFinder(), xmlElement);
+      return xmlElementProcessor.search(streamReader, xmlElement);
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);
     } finally {

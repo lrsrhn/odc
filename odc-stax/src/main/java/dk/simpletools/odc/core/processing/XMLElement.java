@@ -20,24 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.xml;
+package dk.simpletools.odc.core.processing;
 
-import dk.simpletools.odc.core.processing.ObjectStore;
-import dk.simpletools.odc.core.processing.StructureElement;
-import dk.simpletools.odc.core.processing.ValueStore;
+import dk.simpletools.odc.xml.XmlRawTextReader2;
+import org.codehaus.stax2.XMLStreamReader2;
 
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-public class XMLElement implements StructureElement {
-  private XMLStreamReader xmlStreamReader;
+public class XMLElement implements InternalStructureElement {
+  private XMLStreamReader2 xmlStreamReader;
   private String elementTextCache;
   private ValueStore valueStore;
   private ObjectStore objectStore;
   private XmlRawTextReader2 xmlRawTextReader;
 
-  public XMLElement(XMLStreamReader xmlStreamReader, XmlRawTextReader2 xmlRawTextReader) {
+  public XMLElement(XMLStreamReader2 xmlStreamReader, XmlRawTextReader2 xmlRawTextReader) {
     this.valueStore = new ValueStore();
     this.xmlStreamReader = xmlStreamReader;
     this.objectStore = new ObjectStore();
@@ -110,7 +109,7 @@ public class XMLElement implements StructureElement {
           throw new RuntimeException("Cannot retrieve raw value from other event then Start_element");
         }
         xmlRawTextReader.setStartIndex(xmlStreamReader.getLocation().getCharacterOffset());
-        moveCursorToEndElement();
+        xmlStreamReader.skipElement();
         elementTextCache = xmlRawTextReader.readRawText(xmlStreamReader.getLocation().getCharacterOffset());
       }
       return elementTextCache;
@@ -119,16 +118,12 @@ public class XMLElement implements StructureElement {
     }
   }
 
-  private void moveCursorToEndElement() throws XMLStreamException {
-    int currentDepth = 1;
-    // Process all child elements if necessary
-    while(xmlStreamReader.getEventType() != XMLStreamConstants.END_ELEMENT || (xmlStreamReader.getEventType() == XMLStreamConstants.END_ELEMENT && currentDepth > 0)) {
-      xmlStreamReader.next();
-      if (xmlStreamReader.getEventType() == XMLStreamConstants.START_ELEMENT) {
-        currentDepth++;
-      } else if (xmlStreamReader.getEventType() == XMLStreamConstants.END_ELEMENT) {
-        currentDepth--;
-      }
+  @Override
+  public void skipElement() {
+    try {
+      xmlStreamReader.skipElement();
+    } catch (XMLStreamException xse) {
+      throw new RuntimeException(xse);
     }
   }
 

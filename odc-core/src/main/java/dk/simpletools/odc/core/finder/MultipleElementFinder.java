@@ -133,6 +133,11 @@ public class MultipleElementFinder implements ElementFinder {
     return false;
   }
 
+  @Override
+  public boolean hasRelative() {
+    return !relativeElementFinders.isEmpty();
+  }
+
   private Map<String, SearchLocation> selectElementFinderMapByRelativity(boolean isRelative) {
     return isRelative ? relativeElementFinders : nextXmlElementFinders;
   }

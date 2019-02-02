@@ -20,28 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.core.processing;
+import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
+import dk.simpletools.odc.xpp.XppPathFinder;
 
-public interface StructureElement {
-    String getElementNS();
+public class XppTreeBuilderTest extends TreeBuilderTests {
 
-    String getElementName();
-
-    String getElementValue();
-
-    String getAttributeValue(String attributeName);
-
-    boolean hasAttribute(String attributeName);
-
-    ValueStore getValueStore();
-
-    ObjectStore getObjectStore();
-
-    String[] getValueArray();
-
-    String getRawElementValue();
-
-    void clearCache();
-
-
+    @Override
+    public void setObservablePathFinder() {
+        this.observablePathFinder = new XppPathFinder();
+    }
 }

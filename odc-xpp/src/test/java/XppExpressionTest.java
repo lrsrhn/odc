@@ -20,10 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
+import dk.simpletools.odc.core.dsl.expression.ExpressionXmlTests;
 import dk.simpletools.odc.xpp.XppPathFinder;
 
-public class XppTreeBuilderTests extends TreeBuilderTests {
+public class XppExpressionTest extends ExpressionXmlTests {
 
     @Override
     public void setObservablePathFinder() {

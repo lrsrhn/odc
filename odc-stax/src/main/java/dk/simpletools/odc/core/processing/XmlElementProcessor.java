@@ -20,22 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.xml;
+package dk.simpletools.odc.core.processing;
 
 import dk.simpletools.odc.core.finder.ElementFinder;
-import dk.simpletools.odc.core.processing.BaseElementProcessor;
-import dk.simpletools.odc.core.processing.ObjectStore;
-import dk.simpletools.odc.core.processing.StructureElement;
 
 import javax.xml.stream.XMLStreamReader;
 
-public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamReader, StructureElement> {
+public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamReader, XMLElement> {
 
-  XmlElementProcessor(ElementFinder nextElementFinder, StructureElement structureElement) {
-    super(nextElementFinder, structureElement);
+  public XmlElementProcessor(ElementFinder nextElementFinder, XMLElement xmlElement) {
+    super(nextElementFinder, xmlElement);
   }
 
-  public ObjectStore search(XMLStreamReader streamReader, StructureElement xmlElement) throws Exception {
+  public ObjectStore search(XMLStreamReader streamReader, XMLElement xmlElement) throws Exception {
     int currentDepth = 0;
     if (streamReader.hasNext()) {
       for (int eventType = streamReader.next(); streamReader.hasNext(); eventType = streamReader.next()) {

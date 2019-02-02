@@ -20,28 +20,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.core.processing.stub;
+package dk.simpletools.odc.core.stub;
 
-import java.util.ArrayList;
+public class Element {
+    private String elementName;
+    private String textValue;
+    private boolean isStartElement;
 
-public final class InputReader {
-    private Element[] elements;
-    private int index;
-
-    InputReader(ArrayList<Element> elements) {
-        this.elements = elements.toArray(new Element[elements.size()]);
-        reset();
+    public Element(String elementName, String textValue, boolean isStartElement) {
+        this.elementName = elementName;
+        this.textValue = textValue;
+        this.isStartElement = isStartElement;
     }
 
-    boolean hasNext() {
-        return index + 1 < elements.length;
+    public String getElementName() {
+        return elementName;
     }
 
-    public Element next() {
-        return elements[++index];
+    public String getTextValue() {
+        return textValue;
     }
 
-    public void reset() {
-        index = -1;
+    public boolean isStartElement() {
+        return isStartElement;
+    }
+
+    public void setTextValue(String textValue) {
+        this.textValue = textValue;
     }
 }

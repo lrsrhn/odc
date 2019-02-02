@@ -25,6 +25,7 @@ package dk.simpletools.odc.xpp;
 import dk.simpletools.odc.core.finder.ElementFinder;
 import dk.simpletools.odc.core.processing.BaseElementProcessor;
 import dk.simpletools.odc.core.processing.ObjectStore;
+import dk.simpletools.odc.core.processing.XMLElement;
 import org.xmlpull.v1.XmlPullParser;
 
 public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XMLElement> {

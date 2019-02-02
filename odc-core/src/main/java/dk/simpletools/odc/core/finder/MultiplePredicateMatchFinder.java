@@ -138,6 +138,11 @@ public class MultiplePredicateMatchFinder implements ElementFinder {
     return true;
   }
 
+  @Override
+  public boolean hasRelative() {
+    return false;
+  }
+
   private final class SearchLocationList {
     SearchLocation[] searchLocations;
     Predicate[] predicates;
