@@ -25,6 +25,7 @@ package dk.simpletools.odc.xml;
 import com.ctc.wstx.stax.WstxInputFactory;
 import dk.simpletools.odc.core.processing.*;
 import org.codehaus.stax2.XMLStreamReader2;
+import org.codehaus.stax2.validation.XMLValidationSchema;
 
 import java.io.Reader;
 
@@ -39,6 +40,7 @@ public class StaxPathFinder extends ObservablePathFinder {
 
   private WstxInputFactory xmlInputFactory;
   private boolean isRawTextReadingEnabled;
+  private XMLValidationSchema xmlValidationSchema;
 
   public StaxPathFinder() {
     this(DEFAULT_XML_INPUT_FACTORY);
@@ -60,12 +62,23 @@ public class StaxPathFinder extends ObservablePathFinder {
     this.isRawTextReadingEnabled = false;
   }
 
+  public XMLValidationSchema getXmlValidationSchema() {
+    return xmlValidationSchema;
+  }
+
+  public void setXmlValidationSchema(XMLValidationSchema xmlValidationSchema) {
+    this.xmlValidationSchema = xmlValidationSchema;
+  }
+
   @Override
   public ObjectStore find(Reader reader, ValueStore valueStore) {
     XMLStreamReader2 streamReader = null;
     try {
       XmlRawTextReader2 xmlRawTextReader = isRawTextReadingEnabled ? new XmlRawTextReader2(reader) : null;
       streamReader = (XMLStreamReader2) xmlInputFactory.createXMLStreamReader(xmlRawTextReader);
+      if (xmlValidationSchema != null) {
+        streamReader.validateAgainst(xmlValidationSchema);
+      }
       XMLElement xmlElement = new XMLElement(streamReader, xmlRawTextReader, valueStore);
       XmlElementProcessor xmlElementProcessor = new XmlElementProcessor(rootElementFinder.getElementFinder(), xmlElement);
       return xmlElementProcessor.search(streamReader, xmlElement);
