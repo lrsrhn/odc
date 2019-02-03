@@ -25,8 +25,6 @@ package dk.simpletools.odc.json;
 import dk.simpletools.odc.core.processing.JsonObject;
 import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.ObservablePathFinder;
-import dk.simpletools.odc.core.processing.ValueStore;
-import org.omg.CORBA.Object;
 
 import javax.json.Json;
 import javax.json.stream.JsonParser;

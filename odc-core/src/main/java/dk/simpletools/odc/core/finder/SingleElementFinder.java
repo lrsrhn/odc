@@ -141,7 +141,7 @@ public final class SingleElementFinder implements ElementFinder {
         searchLocation = searchLocationReference.getSearchLocation();
         isRelative = searchLocationReference.isRelative();
       } else {
-        MultipleArrayElementFinder multipleArrayElementFinder = new MultipleArrayElementFinder(getReference(), isRelative, searchElement, searchLocation);
+        MultipleArrayElementFinder multipleArrayElementFinder = new MultipleArrayElementFinder(getReference(), isRelative, null, searchLocation);
         multipleArrayElementFinder.mergeElementFinder(elementFinder);
       }
     } else {

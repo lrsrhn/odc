@@ -20,9 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import dk.simpletools.odc.core.dsl.expression.ExpressionXmlTests;
 import dk.simpletools.odc.xml.StaxPathFinder;
-import org.junit.Test;
 
 
 public class StaxExpressionTest extends ExpressionXmlTests {

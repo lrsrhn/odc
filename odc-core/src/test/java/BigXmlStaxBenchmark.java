@@ -34,7 +34,7 @@ public class BigXmlStaxBenchmark {
         private static XMLInputFactory xmlInputFactory;
         StringBuilder builder = new StringBuilder(2000000);
 
-        {
+        static {
             try {
                 xmlInputFactory = XMLInputFactory.newFactory();
                 xmlInputFactory.setProperty("javax.xml.stream.isCoalescing", true);

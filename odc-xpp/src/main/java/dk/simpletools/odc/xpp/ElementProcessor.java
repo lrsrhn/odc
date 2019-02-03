@@ -46,7 +46,6 @@ public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XMLEle
         continue;
       case XmlPullParser.END_TAG:
         observablePathTraverser.endElement(xmlElement, --currentDepth);
-        continue;
       }
     }
     return xmlElement.getObjectStore();

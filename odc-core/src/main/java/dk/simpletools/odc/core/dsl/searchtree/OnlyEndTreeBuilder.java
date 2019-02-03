@@ -25,17 +25,13 @@ package dk.simpletools.odc.core.dsl.searchtree;
 import dk.simpletools.odc.core.dsl.expression.PathReference;
 import dk.simpletools.odc.core.finder.OnEndHandler;
 
-import java.util.Map;
-
 public class OnlyEndTreeBuilder<T> {
     private T parentTreeBuilder;
     private PathReference parentReference;
-    private Map<String, PathReference> referenceStore;
 
-    public OnlyEndTreeBuilder(T parentTreeBuilder, Map<String, PathReference> referenceStore, PathReference parentReference) {
+    public OnlyEndTreeBuilder(T parentTreeBuilder, PathReference parentReference) {
         this.parentTreeBuilder = parentTreeBuilder;
         this.parentReference = parentReference;
-        this.referenceStore = referenceStore;
     }
 
     public T end() {

@@ -56,7 +56,7 @@ public class ElementTreeBuilder<T> {
                 .onStartHandler(onStartHandler)
                 .onEndHandler(onEndHandler)
                 .build();
-        return new OnlyEndTreeBuilder<T>(parentTreeBuilder, referenceStore, parentReference);
+        return new OnlyEndTreeBuilder<T>(parentTreeBuilder, parentReference);
     }
 
     public ElementTreeBuilder<ElementTreeBuilder<T>> path(String path) {

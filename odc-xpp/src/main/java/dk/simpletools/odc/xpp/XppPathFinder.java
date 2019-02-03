@@ -24,7 +24,6 @@ package dk.simpletools.odc.xpp;
 
 import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.ObservablePathFinder;
-import dk.simpletools.odc.core.processing.ValueStore;
 import dk.simpletools.odc.core.processing.XMLElement;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

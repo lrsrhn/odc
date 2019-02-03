@@ -45,13 +45,12 @@ public class XmlToInputReader {
                             elements.add(currentElement);
                             continue;
                         case XMLStreamReader.CHARACTERS:
-                            if (!streamReader.isWhiteSpace()) {
+                            if (!streamReader.isWhiteSpace() && currentElement != null) {
                                 currentElement.setTextValue(streamReader.getText());
                             }
                             continue;
                         case XMLStreamReader.END_ELEMENT:
                             elements.add(new Element(streamReader.getLocalName(), null, false));
-                            continue;
                     }
                 }
             }
