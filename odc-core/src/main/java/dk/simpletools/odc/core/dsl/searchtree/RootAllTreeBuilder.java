@@ -23,7 +23,7 @@
 package dk.simpletools.odc.core.dsl.searchtree;
 
 import dk.simpletools.odc.core.dsl.expression.PathReference;
-import dk.simpletools.odc.core.dsl.expression.TreePathAdder;
+import dk.simpletools.odc.core.dsl.adders.TreePathAdder;
 import dk.simpletools.odc.core.finder.OnEndHandler;
 import dk.simpletools.odc.core.dsl.expression.XpathParser;
 import dk.simpletools.odc.core.finder.ElementFinder;

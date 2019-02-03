@@ -22,6 +22,10 @@
  */
 package dk.simpletools.odc.core.dsl.expression;
 
+import dk.simpletools.odc.core.dsl.adders.TreeElementAdder;
+import dk.simpletools.odc.core.dsl.adders.TreePathAdder;
+import dk.simpletools.odc.core.dsl.adders.TreeRootElementAdder;
+
 import java.util.ArrayList;
 import java.util.List;
 

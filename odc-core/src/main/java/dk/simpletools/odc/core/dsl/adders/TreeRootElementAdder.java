@@ -20,21 +20,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.core.dsl.expression;
+package dk.simpletools.odc.core.dsl.adders;
 
-import dk.simpletools.odc.core.finder.OnEndHandler;
-import dk.simpletools.odc.core.dsl.searchtree.ExpressionHelper;
+import dk.simpletools.odc.core.dsl.expression.PathReference;
+import dk.simpletools.odc.core.finder.ElementFinder;
 
-public class TreeOnEndHandlerAdder implements TreePathAdder {
-    private OnEndHandler onEndHandler;
+public class TreeRootElementAdder implements TreePathAdder {
+    private String element;
+    private boolean isRelative;
 
-    public TreeOnEndHandlerAdder(OnEndHandler onEndHandler) {
-        this.onEndHandler = onEndHandler;
+    public TreeRootElementAdder(String element, boolean isRelative) {
+        this.element = element;
+        this.isRelative = isRelative;
     }
 
     @Override
     public PathReference addTreePath(PathReference reference, boolean hasRoot) {
-        ExpressionHelper.getSearchLocationBuilder(reference).onEndHandler(onEndHandler);
-        return reference;
+        ElementFinder currentElementFinder = reference.getElementFinder();
+        if (!hasRoot) {
+            throw new RuntimeException("The hasRoot is false!");
+        }
+        return new PathReference(currentElementFinder.setSearchElement(element, isRelative), element, isRelative);
     }
 }

@@ -20,21 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.core.dsl.expression;
+package dk.simpletools.odc.core.dsl.adders;
 
-import dk.simpletools.odc.core.finder.OnStartHandler;
-import dk.simpletools.odc.core.dsl.searchtree.ExpressionHelper;
+import dk.simpletools.odc.core.dsl.expression.PathReference;
 
-public class TreeOnStartHandlerAdder implements TreePathAdder {
-    private OnStartHandler onStartHandler;
+public interface TreePathAdder {
 
-    public TreeOnStartHandlerAdder(OnStartHandler onStartHandler) {
-        this.onStartHandler = onStartHandler;
-    }
-
-    @Override
-    public PathReference addTreePath(PathReference reference, boolean hasRoot) {
-        ExpressionHelper.getSearchLocationBuilder(reference).onStartHandler(onStartHandler);
-        return reference;
-    }
+    PathReference addTreePath(PathReference reference, boolean hasRoot);
 }

@@ -20,25 +20,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.core.dsl.expression;
+package dk.simpletools.odc.core.dsl.adders;
 
+import dk.simpletools.odc.core.dsl.expression.PathReference;
 import dk.simpletools.odc.core.dsl.searchtree.ExpressionHelper;
+import dk.simpletools.odc.core.predicate.Predicate;
 
-public class TreeRecursionAdder implements TreePathAdder {
-    private PathReference pathReference;
+public class TreePredicateAdder implements TreePathAdder {
+    private Predicate predicate;
 
-    public TreeRecursionAdder(PathReference pathReference) {
-        this.pathReference = pathReference;
+    public TreePredicateAdder(Predicate predicate) {
+        this.predicate = predicate;
     }
 
     @Override
     public PathReference addTreePath(PathReference reference, boolean hasRoot) {
-        if (pathReference.getLastPredicate() != null) {
-            throw new RuntimeException("Something wrong!!");
-        }
-
-        ExpressionHelper.addElmentFinderCopy(reference, pathReference)
-        .mergeElementFinder(pathReference.getElementFinder());
-        return reference;
+        return new PathReference(
+                ExpressionHelper.addNextPredicate(reference).setPredicate(predicate),
+                predicate,
+                reference.isRelative()
+        );
     }
 }
