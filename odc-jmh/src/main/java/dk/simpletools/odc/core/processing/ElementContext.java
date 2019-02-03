@@ -29,9 +29,9 @@ public class ElementContext implements InternalStructureElement {
     private ObjectStore objectStore;
     private Element currentElement;
 
-    public ElementContext(ValueStore valueStore) {
-        this.valueStore = valueStore == null ? new ValueStore() : valueStore;
-        this.objectStore = new ObjectStore();
+    public ElementContext(ObjectStore objectStore) {
+        this.objectStore = objectStore == null ? new ObjectStore() : objectStore;
+        this.valueStore = new ValueStore();
     }
 
     public void setCurrentElement(Element currentElement) {

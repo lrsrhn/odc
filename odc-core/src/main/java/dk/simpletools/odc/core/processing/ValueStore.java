@@ -23,16 +23,16 @@
 package dk.simpletools.odc.core.processing;
 
 public class ValueStore {
-  private String[] values;
+  private Object[] values;
 
   public void initialize(Enum<?> enumValue) {
     if (values == null) {
       Object[] enumValues = enumValue.getClass().getEnumConstants();
-      values = new String[enumValues.length];
+      values = new Object[enumValues.length];
     }
   }
 
-  public String lookupValue(Enum<?> enumValue) {
+  public Object lookupValue(Enum<?> enumValue) {
     initialize(enumValue);
     if (enumValue.ordinal() >= values.length) {
       throw new IndexOutOfBoundsException();

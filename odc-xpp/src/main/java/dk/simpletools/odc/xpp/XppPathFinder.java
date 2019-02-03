@@ -57,12 +57,12 @@ public class XppPathFinder extends ObservablePathFinder {
   }
 
   @Override
-  public ObjectStore find(Reader reader, ValueStore valueStore) {
+  public ObjectStore find(Reader reader, ObjectStore objectStore) {
     XmlPullParser streamReader = null;
     try {
       streamReader = xmlPullParserFactory.newPullParser();
       streamReader.setInput(reader);
-      XMLElement xmlElement = new XMLElement(streamReader, valueStore);
+      XMLElement xmlElement = new XMLElement(streamReader, objectStore);
       ElementProcessor elementProcessor = new ElementProcessor(rootElementFinder.getElementFinder(), xmlElement);
       return elementProcessor.search(streamReader, xmlElement);
     } catch (Exception ex) {

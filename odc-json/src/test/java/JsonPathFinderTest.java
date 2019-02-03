@@ -55,7 +55,7 @@ public class JsonPathFinderTest {
 
         System.out.println("ObjectStore object: " + objectStore.get("something", String.class));
         System.out.println("ObjectStore object: " + objectStore.get("something", Integer.class));
-        System.out.println("ObjectStore object: " + objectStore.get(1, Number.class));
+        System.out.println("ObjectStore object: " + objectStore.get("one", Number.class));
     }
 
     @Test
@@ -112,7 +112,7 @@ public class JsonPathFinderTest {
             } else {
                 System.out.println(String.format("%s=%s", structureElement.getElementName(), structureElement.getElementValue()));
             }
-            structureElement.getObjectStore().put(1, 123);
+            structureElement.getObjectStore().put("one", 123);
         }
 
         @Override

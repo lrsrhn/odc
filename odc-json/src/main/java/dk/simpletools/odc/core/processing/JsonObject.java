@@ -35,10 +35,10 @@ public class JsonObject implements InternalStructureElement {
     private String elementValueCache;
     private String[] elementValuesCache;
 
-    public JsonObject(JsonParser jsonParser, ValueStore valueStore) {
-        this.valueStore = valueStore == null ? new ValueStore() : valueStore;
+    public JsonObject(JsonParser jsonParser, ObjectStore objectStore) {
+        this.objectStore = objectStore == null ? new ObjectStore() : objectStore;
         this.jsonParser = jsonParser;
-        this.objectStore = new ObjectStore();
+        this.valueStore = new ValueStore();
     }
 
     public void setCurrentEvent(JsonParser.Event currentEvent) {

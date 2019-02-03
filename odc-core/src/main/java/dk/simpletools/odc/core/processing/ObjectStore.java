@@ -26,25 +26,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ObjectStore {
-    private Map<Object, Object> objectMap;
+    private Map<String, Object> objectMap;
 
     public ObjectStore() {
-        this.objectMap = new HashMap<Object, Object>();
+        this.objectMap = new HashMap<String, Object>();
     }
 
-    public <E> void put(Object key, E object) {
+    public <E> void put(String key, E object) {
         objectMap.put(key, object);
     }
 
-    public <E> E get(Object key, Class<E> type) {
+    public <E> E get(String key, Class<E> type) {
         Object object = objectMap.get(key);
         if (type.isInstance(object)) {
-            return (E) object;
+            return type.cast(object);
         }
         return null;
     }
 
-    public void clearKey(Object key) {
+    public void clearKey(String key) {
         objectMap.put(key, null);
     }
 

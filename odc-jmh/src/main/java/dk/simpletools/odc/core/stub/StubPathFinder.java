@@ -29,16 +29,16 @@ import java.io.Reader;
 public class StubPathFinder extends ObservablePathFinder {
 
     @Override
-    public ObjectStore find(Reader reader, ValueStore valueStore) {
+    public ObjectStore find(Reader reader, ObjectStore objectStore) {
         throw new UnsupportedOperationException();
     }
 
     public ObjectStore find(InputReader inputReader) { return find(inputReader, null); }
 
-    public ObjectStore find(InputReader inputReader, ValueStore valueStore) {
+    public ObjectStore find(InputReader inputReader, ObjectStore objectStore) {
         try {
             inputReader.reset();
-            ElementContext elementContext = new ElementContext(valueStore);
+            ElementContext elementContext = new ElementContext(objectStore);
             StubElementProcessor stubElementProcessor = new StubElementProcessor(super.rootElementFinder.getElementFinder(), elementContext);
             return stubElementProcessor.search(inputReader, elementContext);
         } catch (Exception e) {

@@ -71,7 +71,7 @@ public class StaxPathFinder extends ObservablePathFinder {
   }
 
   @Override
-  public ObjectStore find(Reader reader, ValueStore valueStore) {
+  public ObjectStore find(Reader reader, ObjectStore objectStore) {
     XMLStreamReader2 streamReader = null;
     try {
       XmlRawTextReader2 xmlRawTextReader = isRawTextReadingEnabled ? new XmlRawTextReader2(reader) : null;
@@ -79,7 +79,7 @@ public class StaxPathFinder extends ObservablePathFinder {
       if (xmlValidationSchema != null) {
         streamReader.validateAgainst(xmlValidationSchema);
       }
-      XMLElement xmlElement = new XMLElement(streamReader, xmlRawTextReader, valueStore);
+      XMLElement xmlElement = new XMLElement(streamReader, xmlRawTextReader, objectStore);
       XmlElementProcessor xmlElementProcessor = new XmlElementProcessor(rootElementFinder.getElementFinder(), xmlElement);
       return xmlElementProcessor.search(streamReader, xmlElement);
     } catch (Exception ex) {

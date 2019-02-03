@@ -59,11 +59,10 @@ public abstract class ObservablePathFinder {
   public ObjectStore find(String rawXml) {
     return find(new StringReader(rawXml), null);
   }
-  public ObjectStore find(String rawXml, ValueStore valueStore) {
-    return find(new StringReader(rawXml), valueStore);
-  }
+  public ObjectStore find(String rawXml, ObjectStore objectStore) { return find(new StringReader(rawXml), objectStore); }
   public ObjectStore find(Reader reader) { return find(reader, null); }
-  public abstract ObjectStore find(Reader reader, ValueStore valueStore);
+
+  public abstract ObjectStore find(Reader reader, ObjectStore objectStore);
 
   @Override
   public String toString() {

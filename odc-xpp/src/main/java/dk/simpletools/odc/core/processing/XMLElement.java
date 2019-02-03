@@ -31,10 +31,10 @@ public class XMLElement implements InternalStructureElement {
   private ValueStore valueStore;
   private ObjectStore objectStore;
 
-  public XMLElement(XmlPullParser xmlStreamReader, ValueStore valueStore) {
-    this.valueStore = valueStore == null ? new ValueStore() : valueStore;
+  public XMLElement(XmlPullParser xmlStreamReader, ObjectStore objectStore) {
+    this.objectStore = objectStore == null ? new ObjectStore() : objectStore;
     this.xmlPullParser = xmlStreamReader;
-    this.objectStore = new ObjectStore();
+    this.valueStore = new ValueStore();
   }
 
   public String getElementName() {
