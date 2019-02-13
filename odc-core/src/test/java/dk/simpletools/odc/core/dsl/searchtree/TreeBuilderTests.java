@@ -323,6 +323,67 @@ public abstract class TreeBuilderTests {
         assertElementHandler.verify();
     }
 
+
+    @Test
+    public void multipleRelative() throws IOException {
+        StringBuilder builder = new StringBuilder();
+        withXmlBuilder(builder)
+                .element("one")
+                    .element("two")
+                        .element("three")
+                        .elementEnd()
+                    .elementEnd()
+                    .element("four")
+                        .element("five")
+                        .elementEnd()
+                    .elementEnd()
+                .elementEnd();
+
+        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        assertElementHandler.exptectedStartElements("three", "five");
+        assertElementHandler.exptectedEndElements("three", "five");
+
+        observablePathFinder.treeBuilder()
+                .element("one")
+                    .element("two")
+                        .element("three").observeBy().handler(assertElementHandler)
+                        .end(assertElementHandler)
+                    .end()
+                    .relativeElement("five").observeBy().handler(assertElementHandler)
+                    .end(assertElementHandler)
+                .end()
+                .build();
+
+        observablePathFinder.find(new StringReader(builder.toString()));
+        assertElementHandler.verify();
+    }
+
+    @Test
+    public void singleRelative() throws IOException {
+        StringBuilder builder = new StringBuilder();
+        withXmlBuilder(builder)
+                .element("one")
+                    .element("four")
+                        .element("five")
+                        .elementEnd()
+                    .elementEnd()
+                .elementEnd();
+
+        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        assertElementHandler.exptectedStartElements("five");
+        assertElementHandler.exptectedEndElements("five");
+
+        observablePathFinder.treeBuilder()
+                .element("one")
+                    .relativeElement("five").observeBy().handler(assertElementHandler)
+                    .end(assertElementHandler)
+                .end()
+                .build();
+
+        observablePathFinder.find(new StringReader(builder.toString()));
+        assertElementHandler.verify();
+    }
+
     @Test
     public void testRecursion() throws IOException {
         StringBuilder builder = new StringBuilder();

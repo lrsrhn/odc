@@ -53,7 +53,7 @@ public final class MultipleArrayElementFinder implements ElementFinder {
     SearcLocationList searcLocationList = selectElementFinderListByRelativity(isRelative);
     SearchLocation searchLocation = searcLocationList.lookupSearchLocation(searchElement);
     if (searchLocation == null) {
-      nextXmlElementFinders.addSearchLocation(searchElement, new SearchLocation(null, null, null));
+      searcLocationList.addSearchLocation(searchElement, new SearchLocation(null, null, null));
     }
     return this;
   }
@@ -69,7 +69,7 @@ public final class MultipleArrayElementFinder implements ElementFinder {
     SearchLocation searchLocation = searcLocationList.lookupSearchLocation(searchElement);
     if (searchLocation == null) {
       searchLocation = new SearchLocation(null, null, null);
-      nextXmlElementFinders.addSearchLocation(searchElement, searchLocation);
+      searcLocationList.addSearchLocation(searchElement, searchLocation);
     }
     return new SearchLocationBuilder(searchLocation);
   }
