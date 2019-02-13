@@ -26,6 +26,8 @@ import dk.simpletools.odc.xml.StaxPathFinder;
 public class StaxExample extends Example {
     @Override
     public void setObservablePathFinder() {
-        super.observablePathFinder = new StaxPathFinder();
+        StaxPathFinder staxPathFinder = new StaxPathFinder();
+        staxPathFinder.enableRawTextReading();
+        super.observablePathFinder = staxPathFinder;
     }
 }
