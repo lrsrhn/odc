@@ -70,9 +70,9 @@ public class ExpressionBuilder {
     return this;
   }
 
-  public ExpressionBuilder storeValue(ValuePicker... valuePickers) {
+  public PathFragment storeValue(ValuePicker... valuePickers) {
     treePathAdders.add(new TreeOnStartHandlerAdder(Handlers.valueToStore(valuePickers)));
-    return this;
+    return toFragment();
   }
 
   public ExpressionBuilder path(String path) {

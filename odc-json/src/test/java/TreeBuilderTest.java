@@ -45,7 +45,7 @@ import static dk.simpletools.odc.core.predicate.Predicates.*;
 import static dk.simpletools.odc.core.standardhandlers.Handlers.valueToStore;
 import static org.junit.Assert.assertEquals;
 
-public class TreeBuilderTests {
+public class TreeBuilderTest {
     private JsonBuilderFactory jsonBuilderFactory;
     private ObservablePathFinder observablePathFinder;
 
