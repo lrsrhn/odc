@@ -24,4 +24,7 @@ package dk.simpletools.odc.core.processing;
 
 interface InternalStructureElement extends StructureElement {
     void skipElement();
+    void clearHasMovedForward();
+    boolean hasMovedForward();
+    String getText();
 }

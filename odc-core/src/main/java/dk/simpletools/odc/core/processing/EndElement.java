@@ -25,11 +25,11 @@ package dk.simpletools.odc.core.processing;
 public final class EndElement {
     private StructureElement structureElement;
 
-    public String getElementName() {
-        return structureElement.getElementName();
+    EndElement(StructureElement structureElement) {
+        this.structureElement = structureElement;
     }
 
-    public void setStructureElement(StructureElement structureElement) {
-        this.structureElement = structureElement;
+    public String getElementName() {
+        return structureElement.getElementName();
     }
 }

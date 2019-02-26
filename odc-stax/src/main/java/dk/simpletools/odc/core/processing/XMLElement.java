@@ -35,12 +35,14 @@ public class XMLElement implements InternalStructureElement {
   private ValueStore valueStore;
   private ObjectStore objectStore;
   private XmlRawTextReader2 xmlRawTextReader;
+  private boolean hasMovedForward;
 
   public XMLElement(XMLStreamReader2 xmlStreamReader, XmlRawTextReader2 xmlRawTextReader, ObjectStore objectStore) {
     this.objectStore = objectStore == null ? new ObjectStore() : objectStore;
     this.xmlStreamReader = xmlStreamReader;
     this.valueStore = new ValueStore();
     this.xmlRawTextReader = xmlRawTextReader;
+    this.hasMovedForward = false;
   }
 
   public String getElementName() {
@@ -55,7 +57,7 @@ public class XMLElement implements InternalStructureElement {
   }
 
   public boolean hasAttribute(String attributeName) {
-    if (attributeName != null) {
+    if (attributeName != null && xmlStreamReader.getEventType() == XMLStreamReader.START_ELEMENT) {
       for (int i = 0; i < xmlStreamReader.getAttributeCount(); i++) {
         if (attributeName.equals(xmlStreamReader.getAttributeLocalName(i))) {
           return true;
@@ -85,11 +87,11 @@ public class XMLElement implements InternalStructureElement {
    * move the XML parser forward
    * 
    */
-  public String getElementValue() {
-    if (elementTextCache == null) {
+  public String getText() {
+    if (elementTextCache == null && (xmlStreamReader.getEventType() != XMLStreamConstants.START_ELEMENT || xmlStreamReader.getEventType() != XMLStreamConstants.END_ELEMENT)) {
       try {
-        elementTextCache = xmlStreamReader.getElementText();
-      } catch (XMLStreamException e) {
+        elementTextCache = xmlStreamReader.getText();
+      } catch (IllegalStateException e) {
         // Element has children and does not have a value/text
       }
     }
@@ -110,6 +112,7 @@ public class XMLElement implements InternalStructureElement {
         }
         xmlRawTextReader.setStartIndex(xmlStreamReader.getLocation().getCharacterOffset());
         xmlStreamReader.skipElement();
+        hasMovedForward = true;
         elementTextCache = xmlRawTextReader.readRawText(xmlStreamReader.getLocation().getCharacterOffset());
       }
       return elementTextCache;
@@ -124,14 +127,27 @@ public class XMLElement implements InternalStructureElement {
       xmlStreamReader.skipElement();
     } catch (XMLStreamException xse) {
       throw new RuntimeException(xse);
+    } finally {
+        hasMovedForward = true;
     }
   }
 
-  public void clearCache() {
+    @Override
+    public void clearHasMovedForward() {
+        hasMovedForward = false;
+        elementTextCache = null;
+    }
+
+    @Override
+    public boolean hasMovedForward() {
+        return hasMovedForward;
+    }
+
+    public void clearCache() {
     elementTextCache = null;
   }
 
   public String getElementNS() {
-        return xmlStreamReader.getNamespaceURI();
-    }
+      return xmlStreamReader.getNamespaceURI();
+  }
 }

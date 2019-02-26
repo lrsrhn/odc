@@ -25,29 +25,45 @@ package dk.simpletools.odc.xpp;
 import dk.simpletools.odc.core.finder.ElementFinder;
 import dk.simpletools.odc.core.processing.BaseElementProcessor;
 import dk.simpletools.odc.core.processing.ObjectStore;
-import dk.simpletools.odc.core.processing.XMLElement;
+import dk.simpletools.odc.core.processing.XPPElement;
 import org.xmlpull.v1.XmlPullParser;
 
-public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XMLElement> {
+public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XPPElement> {
 
-  public ElementProcessor(ElementFinder nextElementFinder, XMLElement xmlElement) {
-    super(nextElementFinder, xmlElement);
+  public ElementProcessor(ElementFinder nextElementFinder, XPPElement XPPElement) {
+    super(nextElementFinder, XPPElement);
   }
 
-  public ObjectStore search(XmlPullParser streamReader, XMLElement xmlElement) throws Exception {
+  public ObjectStore search(XmlPullParser streamReader, XPPElement XPPElement) throws Exception {
     int currentDepth = 0;
-    while (streamReader.next() != XmlPullParser.END_DOCUMENT) {
-      switch (streamReader.getEventType()) {
-      case XmlPullParser.START_TAG:
-        observablePathTraverser.startElement(xmlElement, currentDepth++);
-        if (streamReader.getEventType() == XmlPullParser.END_TAG) {
-          observablePathTraverser.endElement(xmlElement, --currentDepth);
-        }
-        continue;
-      case XmlPullParser.END_TAG:
-        observablePathTraverser.endElement(xmlElement, --currentDepth);
+    boolean continueLoop = true;
+    while (continueLoop) {
+          if (XPPElement.hasMovedForward()) {
+              XPPElement.clearHasMovedForward();
+              // Do not call next when the cursor has moved
+              switch (streamReader.getEventType()) {
+                  case XmlPullParser.START_TAG:
+                      observablePathTraverser.startElement(XPPElement, currentDepth++);
+                      continue;
+                  case XmlPullParser.END_TAG:
+                      observablePathTraverser.endElement(XPPElement, --currentDepth);
+                      continue;
+                  case XmlPullParser.END_DOCUMENT:
+                      continueLoop = false;
+              }
+          } else {
+              switch (streamReader.next()) {
+                  case XmlPullParser.START_TAG:
+                      observablePathTraverser.startElement(XPPElement, currentDepth++);
+                      continue;
+                  case XmlPullParser.END_TAG:
+                      observablePathTraverser.endElement(XPPElement, --currentDepth);
+                      continue;
+                  case XmlPullParser.END_DOCUMENT:
+                      continueLoop = false;
+              }
+          }
       }
-    }
-    return xmlElement.getObjectStore();
+    return XPPElement.getObjectStore();
   }
 }

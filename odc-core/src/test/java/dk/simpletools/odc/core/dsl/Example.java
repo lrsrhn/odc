@@ -23,6 +23,7 @@
 package dk.simpletools.odc.core.dsl;
 
 import dk.simpletools.odc.core.finder.OnStartHandler;
+import dk.simpletools.odc.core.finder.OnTextHandler;
 import dk.simpletools.odc.core.predicate.Predicates;
 import dk.simpletools.odc.core.processing.ObservablePathFinder;
 import dk.simpletools.odc.core.processing.StructureElement;
@@ -50,28 +51,28 @@ public abstract class Example {
                         .predicate(Predicates.namespace(""))
                             .element("author")
                                 .element("first-name")
-                                    .observeBy().handler(new MyOnStartHandler("Author", false))
+                                    .onText().to(new MyOnStartHandler("Author", false))
                                 .end()
                                 .element("publication")
-                                    .observeBy().handler(new MyOnStartHandler("Publication", true))
+                                    .onStart().to(new MyOnStartHandler("Publication", true))
                                 .end()
                             .end()
                             .relativeElement("p")
-                                .observeBy().handler(new MyOnStartHandler("Paragraph", true))
+                                .onStart().to(new MyOnStartHandler("Paragraph", true))
                             .end()
                         .end()
                         .predicate(Predicates.namespace("uri:mynamespace"))
                             .element("author")
-                                .observeBy().handler(new MyOnStartHandler("My author", false))
+                                .onText().to(new MyOnStartHandler("My author", false))
                             .end()
                             .element("title")
-                                .observeBy().handler(new MyOnStartHandler("My title", false))
+                                .onText().to(new MyOnStartHandler("My title", false))
                             .end()
                         .end()
                     .end()
                     .element("magazine")
                         .element("price")
-                            .observeBy().handler(new MyOnStartHandler("Magazine price", false))
+                            .onText().to(new MyOnStartHandler("Magazine price", false))
                         .end()
                     .end()
                 .end()
@@ -97,7 +98,7 @@ public abstract class Example {
         }
     }
 
-    private static class MyOnStartHandler implements OnStartHandler {
+    private static class MyOnStartHandler implements OnStartHandler, OnTextHandler {
         private String prefix;
         private boolean isRaw;
 
@@ -110,9 +111,12 @@ public abstract class Example {
         public void startElement(StructureElement structureElement) throws Exception {
             if (isRaw) {
                 System.out.println(prefix + ": " + structureElement.getRawElementValue());
-            } else {
-                System.out.println(prefix + ": " + structureElement.getElementValue());
             }
+        }
+
+        @Override
+        public void onText(String elementName, String text) {
+            System.out.println(prefix + ": " + text);
         }
     }
 }

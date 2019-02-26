@@ -50,7 +50,7 @@ public class BigJsonBenchmark {
                 xmlContent = readFile();
                 jsonPath = new JsonPathFinder();
                 jsonPath.addXpath("/$/{}/registered").handleStartElementBy(element -> {
-                    builder.append(element.getElementName()).append(": ").append(element.getElementValue());
+                    builder.append(element.getElementName()).append(": ").append(element.getText());
                 });
                 jsonPath.addXpath("/$/{}/tags").handleStartElementBy(element -> {
                     String[] values = element.getValueArray();

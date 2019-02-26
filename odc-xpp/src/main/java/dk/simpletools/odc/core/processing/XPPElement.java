@@ -25,16 +25,18 @@ package dk.simpletools.odc.core.processing;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-public class XMLElement implements InternalStructureElement {
+public class XPPElement implements InternalStructureElement {
   private XmlPullParser xmlPullParser;
   private String elementTextCache;
   private ValueStore valueStore;
   private ObjectStore objectStore;
+  private boolean hasMovedForward;
 
-  public XMLElement(XmlPullParser xmlStreamReader, ObjectStore objectStore) {
+  public XPPElement(XmlPullParser xmlStreamReader, ObjectStore objectStore) {
     this.objectStore = objectStore == null ? new ObjectStore() : objectStore;
     this.xmlPullParser = xmlStreamReader;
     this.valueStore = new ValueStore();
+    this.hasMovedForward = false;
   }
 
   public String getElementName() {
@@ -83,8 +85,8 @@ public class XMLElement implements InternalStructureElement {
    * move the XML parser forward
    * 
    */
-  public String getElementValue() {
-    if (elementTextCache != null) {
+  public String getText() {
+    if (elementTextCache != null || hasMovedForward) {
       return elementTextCache;
     }
     try {
@@ -93,6 +95,7 @@ public class XMLElement implements InternalStructureElement {
         while(xmlPullParser.next() == XmlPullParser.TEXT) {
           stringBuilder.append(xmlPullParser.getText());
         }
+        hasMovedForward = true;
       }
       elementTextCache = stringBuilder.toString();
       return elementTextCache;
@@ -115,6 +118,7 @@ public class XMLElement implements InternalStructureElement {
           throw new RuntimeException("Cannot retrieve raw value from other event then Start_element");
         }
         elementTextCache = moveCursorToEndElement();
+        hasMovedForward = true;
       }
       return elementTextCache;
     } catch (Exception xse) {
@@ -171,9 +175,20 @@ public class XMLElement implements InternalStructureElement {
         }
         xmlPullParser.next();
       }
+      hasMovedForward = true;
     } catch (Exception xse) {
       throw new RuntimeException(xse);
     }
+  }
+
+  @Override
+  public void clearHasMovedForward() {
+    this.hasMovedForward = false;
+  }
+
+  @Override
+  public boolean hasMovedForward() {
+    return hasMovedForward;
   }
 
   public String getElementNS() {

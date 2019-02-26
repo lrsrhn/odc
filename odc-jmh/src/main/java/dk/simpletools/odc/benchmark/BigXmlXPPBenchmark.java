@@ -34,9 +34,8 @@ import java.io.InputStreamReader;
 // jvmArgsAppend = {"-XX:+UnlockDiagnosticVMOptions", "-XX:+PrintInlining"}
 @Fork(value = 1)
 @Warmup(iterations = 1)
-//@Measurement(iterations = 100, time = 30)
 @Measurement(iterations = 5, time = 10)
-@BenchmarkMode(Mode.Throughput)
+@BenchmarkMode(Mode.SampleTime)
 public class BigXmlXPPBenchmark {
 
     @State(Scope.Benchmark)
@@ -50,8 +49,8 @@ public class BigXmlXPPBenchmark {
 
                 xmlContent = readFile();
                 jsonPath = new XppPathFinder();
-                jsonPath.addXpath("/root/row/registered").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getElementValue()));
-                jsonPath.addXpath("/root/row/tags").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getElementValue()));
+                jsonPath.addXpath("/root/row/registered").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getText()));
+                jsonPath.addXpath("/root/row/tags").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getText()));
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -59,7 +58,7 @@ public class BigXmlXPPBenchmark {
     }
 
 
-//    @Benchmark
+    @Benchmark
     public void testBigXml(BenchmarkState benchmarkState, final Blackhole blackhole) {
         blackhole.consume(benchmarkState.jsonPath.find(benchmarkState.xmlContent));
 //        System.out.println("Length: " + benchmarkState.builder.length());

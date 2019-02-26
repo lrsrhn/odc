@@ -27,6 +27,7 @@ import dk.simpletools.odc.core.predicate.Predicate;
 public final class SearchLocation {
     private ElementFinder elementFinder;
     private OnStartHandler onStartHandler;
+    private TextLocation textLocation;
     private OnEndHandler onEndHandler;
     private Predicate filter;
 
@@ -69,5 +70,16 @@ public final class SearchLocation {
 
     public Predicate getFilter() {
         return filter;
+    }
+
+    public TextLocation getTextLocation() {
+        if (textLocation == null) {
+            this.textLocation = new TextLocation();
+        }
+        return textLocation;
+    }
+
+    public void setTextLocation(TextLocation textLocation) {
+        this.textLocation = textLocation;
     }
 }

@@ -44,4 +44,9 @@ public class SimpleHandler implements ElementHandler {
     public void clear() {
 
     }
+
+    @Override
+    public void onText(String elementName, String text) {
+
+    }
 }

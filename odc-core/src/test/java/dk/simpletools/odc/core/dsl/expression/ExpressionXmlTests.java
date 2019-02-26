@@ -350,10 +350,6 @@ public abstract class ExpressionXmlTests {
         @Override
         public void startElement(StructureElement structureElement) throws Exception {
             startElementsActual.add(structureElement.getElementName());
-            String expectedValue = elementsToRead.get(structureElement.getElementName());
-            if (expectedValue != null) {
-                Assert.assertEquals(expectedValue, structureElement.getElementValue());
-            }
         }
 
         @Override
@@ -368,6 +364,14 @@ public abstract class ExpressionXmlTests {
 
         public void expectedValue(String key, String value) {
             elementsToRead.put(key, value);
+        }
+
+        @Override
+        public void onText(String elementName, String text) {
+            String expectedValue = elementsToRead.get(elementName);
+            if (expectedValue != null) {
+                Assert.assertEquals(expectedValue, text);
+            }
         }
     }
 }

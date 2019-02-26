@@ -71,7 +71,11 @@ public class OnlyElementTreeBuilder<T> {
         return this;
     }
 
-    public PartialSearchLocationBuilder<OnlyElementTreeBuilder<T>> observeBy() {
+    public PartialSearchTextLocationBuilder<OnlyElementTreeBuilder<T>> onText() {
+        return new PartialSearchTextLocationBuilder<OnlyElementTreeBuilder<T>>(this, ExpressionHelper.getSearchLocationBuilder(parentReference));
+    }
+
+    public PartialSearchLocationBuilder<OnlyElementTreeBuilder<T>> onStart() {
         return new PartialSearchLocationBuilder<OnlyElementTreeBuilder<T>>(this, ExpressionHelper.getSearchLocationBuilder(parentReference));
     }
 

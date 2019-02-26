@@ -33,6 +33,7 @@ import dk.simpletools.odc.core.predicate.Predicate;
 import java.util.List;
 import java.util.Map;
 
+// TODO: Add syntax for TextLocation stuff!
 public class ElementTreeBuilder<T> {
     private T parentTreeBuilder;
     private PathReference parentReference;
@@ -77,8 +78,12 @@ public class ElementTreeBuilder<T> {
         return new ElementTreeBuilder<ElementTreeBuilder<T>>(this, referenceStore, new PathReference(newElementFinder, elementName, true));
     }
 
-    public PartialSearchLocationBuilder<ElementTreeBuilder<T>> observeBy() {
+    public PartialSearchLocationBuilder<ElementTreeBuilder<T>> onStart() {
         return new PartialSearchLocationBuilder<ElementTreeBuilder<T>>(this, ExpressionHelper.getSearchLocationBuilder(parentReference));
+    }
+
+    public PartialSearchTextLocationBuilder<ElementTreeBuilder<T>> onText() {
+        return new PartialSearchTextLocationBuilder<ElementTreeBuilder<T>>(this, ExpressionHelper.getSearchLocationBuilder(parentReference));
     }
 
     public ElementTreeBuilder<T> storeReference(String referenceName) {

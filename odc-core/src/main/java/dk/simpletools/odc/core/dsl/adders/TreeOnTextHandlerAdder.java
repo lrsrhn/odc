@@ -20,38 +20,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.core.standardhandlers;
+package dk.simpletools.odc.core.dsl.adders;
 
-import dk.simpletools.odc.core.picker.ValuePicker;
-import dk.simpletools.odc.core.processing.EndElement;
-import dk.simpletools.odc.core.processing.StructureElement;
-import dk.simpletools.odc.core.processing.ValueStore;
-import dk.simpletools.odc.core.processing.ObjectStore;
-import dk.simpletools.odc.core.finder.ElementHandler;
+import dk.simpletools.odc.core.dsl.expression.PathReference;
+import dk.simpletools.odc.core.dsl.searchtree.ExpressionHelper;
+import dk.simpletools.odc.core.finder.OnTextHandler;
 
-public class ValuePickerToValueStore implements ElementHandler {
-  private ValuePicker[] pickers;
+public class TreeOnTextHandlerAdder implements TreePathAdder {
+    private OnTextHandler onTextHandler;
 
-  public ValuePickerToValueStore(ValuePicker... pickers) {
-    if (pickers == null || pickers.length == 0) {
-      throw new IllegalArgumentException("ValuePickers must be set");
+    public TreeOnTextHandlerAdder(OnTextHandler onTextHandler) {
+        this.onTextHandler = onTextHandler;
     }
-    this.pickers = pickers;
-  }
 
-  @Override
-  public void startElement(StructureElement structureElement) throws Exception {
-    for (ValuePicker picker : pickers) {
-      structureElement.getValueStore().addValue(picker.getValueStoreIndex(), picker.pick(structureElement));
+    @Override
+    public PathReference addTreePath(PathReference reference, boolean hasRoot) {
+        ExpressionHelper.getSearchLocationBuilder(reference).onTextHandler(onTextHandler);
+        return reference;
     }
-  }
-
-  @Override
-  public void endElement(EndElement endElement, ValueStore valueStore, ObjectStore objectStore) throws Exception {
-
-  }
-
-  @Override
-  public void clear() {
-  }
 }

@@ -43,10 +43,10 @@ public class PartialSearchLocationBuilder<T> {
         return this;
     }
 
-    public T handler(OnStartHandler onStartHandler) {
+    public T to(OnStartHandler onStartHandler) {
         this.searchLocationBuilder.onStartHandler(onStartHandler);
         return parentTreeBuilder;
     }
 
-    // TODO: Add handler method from standard handlers
+    // TODO: Add to method from standard handlers
 }

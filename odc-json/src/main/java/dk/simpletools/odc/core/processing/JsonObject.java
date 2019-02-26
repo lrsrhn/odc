@@ -50,7 +50,7 @@ public class JsonObject implements InternalStructureElement {
     }
 
     @Override
-    public String getElementValue() {
+    public String getText() {
         if (elementValueCache == null) {
             switch (currentEvent) {
                 case VALUE_NULL:
@@ -69,7 +69,7 @@ public class JsonObject implements InternalStructureElement {
                     elementValueCache = jsonParser.getString();
                     break;
                 default:
-                    throw new RuntimeException("Unexpected event on while getElementValue: " + currentEvent.name());
+                    throw new RuntimeException("Unexpected event on while getText: " + currentEvent.name());
             }
         }
         return elementValueCache;
@@ -118,7 +118,7 @@ public class JsonObject implements InternalStructureElement {
                     return elementValuesCache;
                 default:
                     elementValueCache = null;
-                    array.add(getElementValue());
+                    array.add(getText());
                     break;
             }
         }
@@ -129,7 +129,7 @@ public class JsonObject implements InternalStructureElement {
 
     @Override
     public String getRawElementValue() {
-        return getElementValue();
+        return getText();
     }
 
     @Override
@@ -141,6 +141,16 @@ public class JsonObject implements InternalStructureElement {
     @Override
     public void skipElement() {
         // TODO
+    }
+
+    @Override
+    public void clearHasMovedForward() {
+
+    }
+
+    @Override
+    public boolean hasMovedForward() {
+        return false;
     }
 
     public void setKeyName(String keyName) {

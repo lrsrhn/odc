@@ -23,11 +23,9 @@
 package dk.simpletools.odc.core.dsl.expression;
 
 import dk.simpletools.odc.core.dsl.adders.*;
+import dk.simpletools.odc.core.finder.ElementHandler;
 import dk.simpletools.odc.core.finder.OnEndHandler;
 import dk.simpletools.odc.core.finder.OnStartHandler;
-import dk.simpletools.odc.core.picker.ValuePicker;
-import dk.simpletools.odc.core.standardhandlers.Handlers;
-import dk.simpletools.odc.core.finder.ElementHandler;
 import dk.simpletools.odc.core.predicate.Predicate;
 
 import java.util.ArrayList;
@@ -68,11 +66,6 @@ public class ExpressionBuilder {
     }
     treePathAdders.add(new TreePredicateAdder(predicate));
     return this;
-  }
-
-  public PathFragment storeValue(ValuePicker... valuePickers) {
-    treePathAdders.add(new TreeOnStartHandlerAdder(Handlers.valueToStore(valuePickers)));
-    return toFragment();
   }
 
   public ExpressionBuilder path(String path) {

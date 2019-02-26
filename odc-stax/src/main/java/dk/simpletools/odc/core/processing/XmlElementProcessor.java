@@ -1,17 +1,17 @@
 /**
  * The MIT License
  * Copyright © 2018 Lars Storm
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,30 +24,44 @@ package dk.simpletools.odc.core.processing;
 
 import dk.simpletools.odc.core.finder.ElementFinder;
 
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
 public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamReader, XMLElement> {
 
-  public XmlElementProcessor(ElementFinder nextElementFinder, XMLElement xmlElement) {
-    super(nextElementFinder, xmlElement);
-  }
-
-  public ObjectStore search(XMLStreamReader streamReader, XMLElement xmlElement) throws Exception {
-    int currentDepth = 0;
-    if (streamReader.hasNext()) {
-      for (int eventType = streamReader.next(); streamReader.hasNext(); eventType = streamReader.next()) {
-        switch (eventType) {
-          case XMLStreamReader.START_ELEMENT:
-            observablePathTraverser.startElement(xmlElement, currentDepth++);
-            if (streamReader.getEventType() == XMLStreamReader.END_ELEMENT) {
-              observablePathTraverser.endElement(xmlElement, --currentDepth);
-            }
-            continue;
-          case XMLStreamReader.END_ELEMENT:
-            observablePathTraverser.endElement(xmlElement, --currentDepth);
-        }
-      }
+    public XmlElementProcessor(ElementFinder nextElementFinder, XMLElement xmlElement) {
+        super(nextElementFinder, xmlElement);
     }
-    return xmlElement.getObjectStore();
-  }
+
+    public ObjectStore search(XMLStreamReader streamReader, XMLElement xmlElement) throws Exception {
+        int currentDepth = 0;
+        while (streamReader.hasNext()) {
+            if (xmlElement.hasMovedForward()) {
+                xmlElement.clearHasMovedForward();
+                // Do not call next when the cursor has moved
+                switch (streamReader.getEventType()) {
+                    case XMLStreamReader.START_ELEMENT:
+                        observablePathTraverser.startElement(xmlElement, currentDepth++);
+                        continue;
+                    case XMLStreamConstants.CHARACTERS:
+                        observablePathTraverser.text(xmlElement);
+                        continue;
+                    case XMLStreamReader.END_ELEMENT:
+                        observablePathTraverser.endElement(xmlElement, --currentDepth);
+                }
+            } else {
+                switch (streamReader.next()) {
+                    case XMLStreamReader.START_ELEMENT:
+                        observablePathTraverser.startElement(xmlElement, currentDepth++);
+                        continue;
+                    case XMLStreamConstants.CHARACTERS:
+                        observablePathTraverser.text(xmlElement);
+                        continue;
+                    case XMLStreamReader.END_ELEMENT:
+                        observablePathTraverser.endElement(xmlElement, --currentDepth);
+                }
+            }
+        }
+        return xmlElement.getObjectStore();
+    }
 }

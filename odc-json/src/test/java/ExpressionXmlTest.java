@@ -40,8 +40,6 @@ import java.io.StringWriter;
 import java.util.*;
 
 import static dk.simpletools.odc.core.picker.ValuePickers.valuePicker;
-import static dk.simpletools.odc.core.standardhandlers.Handlers.valueToStore;
-import static org.junit.Assert.assertEquals;
 
 public class ExpressionXmlTest {
     private JsonBuilderFactory jsonBuilderFactory;
@@ -315,7 +313,7 @@ private static class AssertElementHandler implements ElementHandler {
             startElementsActual.add(structureElement.getElementName());
             String expectedValue = elementsToRead.get(structureElement.getElementName());
             if (expectedValue != null) {
-                Assert.assertEquals(expectedValue, structureElement.getElementValue());
+                Assert.assertEquals(expectedValue, structureElement.getText());
             }
         }
 

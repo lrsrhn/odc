@@ -39,6 +39,8 @@ public interface ElementFinder {
 
   SearchLocationBuilder buildSearchLocation(Predicate predicate);
 
+
+
   ElementFinderReference getReference();
 
   SearchLocation lookupSearchLocation(StructureElement structureElement, boolean isRelative);

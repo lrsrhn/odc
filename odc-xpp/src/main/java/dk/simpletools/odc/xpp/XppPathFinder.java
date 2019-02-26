@@ -24,7 +24,7 @@ package dk.simpletools.odc.xpp;
 
 import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.ObservablePathFinder;
-import dk.simpletools.odc.core.processing.XMLElement;
+import dk.simpletools.odc.core.processing.XPPElement;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -61,9 +61,9 @@ public class XppPathFinder extends ObservablePathFinder {
     try {
       streamReader = xmlPullParserFactory.newPullParser();
       streamReader.setInput(reader);
-      XMLElement xmlElement = new XMLElement(streamReader, objectStore);
-      ElementProcessor elementProcessor = new ElementProcessor(rootElementFinder.getElementFinder(), xmlElement);
-      return elementProcessor.search(streamReader, xmlElement);
+      XPPElement XPPElement = new XPPElement(streamReader, objectStore);
+      ElementProcessor elementProcessor = new ElementProcessor(rootElementFinder.getElementFinder(), XPPElement);
+      return elementProcessor.search(streamReader, XPPElement);
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);
     } finally {

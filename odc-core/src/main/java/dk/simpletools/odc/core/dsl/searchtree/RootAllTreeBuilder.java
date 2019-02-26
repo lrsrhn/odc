@@ -67,7 +67,11 @@ public class RootAllTreeBuilder {
         return new ElementTreeBuilder<RootAllTreeBuilder>(this, referenceStore, new PathReference(newElementFinder, elementName, true));
     }
 
-    public PartialSearchLocationBuilder<RootAllTreeBuilder> observeBy() {
+    public PartialSearchTextLocationBuilder<RootAllTreeBuilder> onText() {
+        return new PartialSearchTextLocationBuilder<RootAllTreeBuilder>(this, getSearchLocationBuilder(rootReference));
+    }
+
+    public PartialSearchLocationBuilder<RootAllTreeBuilder> onStart() {
         return new PartialSearchLocationBuilder<RootAllTreeBuilder>(this, getSearchLocationBuilder(rootReference));
     }
 

@@ -24,6 +24,7 @@ package dk.simpletools.odc.core.dsl.searchtree;
 
 import dk.simpletools.odc.core.finder.ElementHandler;
 import dk.simpletools.odc.core.finder.OnStartHandler;
+import dk.simpletools.odc.core.finder.OnTextHandler;
 import dk.simpletools.odc.core.processing.*;
 import dk.simpletools.odc.core.xml.builder.XmlStreamBuilder;
 import org.junit.Assert;
@@ -62,9 +63,9 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
         observablePathFinder.treeBuilder()
-                .element("one").observeBy().handler(assertElementHandler)
-                    .element("two").observeBy().handler(assertElementHandler)
-                        .element("three").observeBy().handler(assertElementHandler)
+                .element("one").onStart().to(assertElementHandler)
+                    .element("two").onStart().to(assertElementHandler)
+                        .element("three").onStart().to(assertElementHandler)
                         .end(assertElementHandler)
                     .end(assertElementHandler)
                 .end(assertElementHandler)
@@ -96,9 +97,9 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
         observablePathFinder.treeBuilder()
-                .element("one").observeBy().handler(assertElementHandler)
-                    .element("two").observeBy().handler(assertElementHandler)
-                        .element("three").observeBy().handler(assertElementHandler)
+                .element("one").onStart().to(assertElementHandler)
+                    .element("two").onStart().to(assertElementHandler)
+                        .element("three").onStart().to(assertElementHandler)
                         .end(assertElementHandler)
                     .end(assertElementHandler)
                 .end(assertElementHandler)
@@ -126,11 +127,11 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
         observablePathFinder.treeBuilder()
-                .element("one").observeBy().handler(assertElementHandler)
-                    .element("two").observeBy().handler(assertElementHandler)
-                        .element("three").observeBy().handler(assertElementHandler)
+                .element("one").onStart().to(assertElementHandler)
+                    .element("two").onStart().to(assertElementHandler)
+                        .element("three").onStart().to(assertElementHandler)
                         .end(assertElementHandler)
-                        .element("four").observeBy().handler(assertElementHandler)
+                        .element("four").onStart().to(assertElementHandler)
                         .end(assertElementHandler)
                     .end(assertElementHandler)
                 .end(assertElementHandler)
@@ -166,11 +167,11 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
         observablePathFinder.treeBuilder()
-                .element("one").observeBy().handler(assertElementHandler)
-                    .element("two").observeBy().handler(assertElementHandler)
-                        .element("three").observeBy().handler(assertElementHandler)
+                .element("one").onStart().to(assertElementHandler)
+                    .element("two").onStart().to(assertElementHandler)
+                        .element("three").onStart().to(assertElementHandler)
                         .end(assertElementHandler)
-                        .element("four").observeBy().handler(assertElementHandler)
+                        .element("four").onStart().to(assertElementHandler)
                         .end(assertElementHandler)
                     .end(assertElementHandler)
                 .end(assertElementHandler)
@@ -196,9 +197,9 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
         observablePathFinder.treeBuilder()
-                .element("one").observeBy().filter(alwaysTrue()).handler(assertElementHandler)
-                    .element("two").observeBy().filter(alwaysTrue()).handler(assertElementHandler)
-                        .element("three").observeBy().filter(alwaysTrue()).handler(assertElementHandler)
+                .element("one").onStart().filter(alwaysTrue()).to(assertElementHandler)
+                    .element("two").onStart().filter(alwaysTrue()).to(assertElementHandler)
+                        .element("three").onStart().filter(alwaysTrue()).to(assertElementHandler)
                         .end(assertElementHandler)
                     .end(assertElementHandler)
                 .end(assertElementHandler)
@@ -226,14 +227,14 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
         observablePathFinder.treeBuilder()
-                .element("one").observeBy().handler(assertElementHandler)
-                    .element("two").observeBy().handler(assertElementHandler)
+                .element("one").onStart().to(assertElementHandler)
+                    .element("two").onStart().to(assertElementHandler)
                         .element("three")
                             .predicate(attribute("att", "one"))
-                                .observeBy().handler(assertElementHandler)
+                                .onStart().to(assertElementHandler)
                             .end()
                         .end(assertElementHandler)
-                        .element("four").observeBy().handler(assertElementHandler)
+                        .element("four").onStart().to(assertElementHandler)
                         .end(assertElementHandler)
                     .end(assertElementHandler)
                 .end(assertElementHandler)
@@ -263,16 +264,16 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedEndElements("three", "two", "five", "two", "one");
 
         observablePathFinder.treeBuilder()
-                .element("one").observeBy().handler(assertElementHandler)
-                    .element("two").observeBy().handler(assertElementHandler)
+                .element("one").onStart().to(assertElementHandler)
+                    .element("two").onStart().to(assertElementHandler)
                         .predicate(attribute("att", "bla"))
                             .element("three")
-                                .observeBy().handler(assertElementHandler)
+                                .onStart().to(assertElementHandler)
                             .end(assertElementHandler)
                         .end()
                         .predicate(attribute("att", "wee"))
                             .element("five")
-                                .observeBy().handler(assertElementHandler)
+                                .onStart().to(assertElementHandler)
                             .end(assertElementHandler)
                         .end()
                     .end(assertElementHandler)
@@ -303,16 +304,16 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedEndElements("three", "two", "five", "two", "one");
 
         observablePathFinder.treeBuilder()
-                .element("one").observeBy().handler(assertElementHandler)
-                    .element("two").observeBy().handler(assertElementHandler)
+                .element("one").onStart().to(assertElementHandler)
+                    .element("two").onStart().to(assertElementHandler)
                         .predicate(attribute("att", "bla"))
                             .element("three")
-                                .observeBy().handler(assertElementHandler)
+                                .onStart().to(assertElementHandler)
                             .end(assertElementHandler)
                         .end()
                         .predicate(attribute("att", "wee"))
                             .element("five")
-                                .observeBy().handler(assertElementHandler)
+                                .onStart().to(assertElementHandler)
                             .end(assertElementHandler)
                         .end()
                     .end(assertElementHandler)
@@ -346,10 +347,10 @@ public abstract class TreeBuilderTests {
         observablePathFinder.treeBuilder()
                 .element("one")
                     .element("two")
-                        .element("three").observeBy().handler(assertElementHandler)
+                        .element("three").onStart().to(assertElementHandler)
                         .end(assertElementHandler)
                     .end()
-                    .relativeElement("five").observeBy().handler(assertElementHandler)
+                    .relativeElement("five").onStart().to(assertElementHandler)
                     .end(assertElementHandler)
                 .end()
                 .build();
@@ -375,8 +376,41 @@ public abstract class TreeBuilderTests {
 
         observablePathFinder.treeBuilder()
                 .element("one")
-                    .relativeElement("five").observeBy().handler(assertElementHandler)
+                    .relativeElement("five").onStart().to(assertElementHandler)
                     .end(assertElementHandler)
+                .end()
+                .build();
+
+        observablePathFinder.find(new StringReader(builder.toString()));
+        assertElementHandler.verify();
+    }
+
+    @Test
+    public void onText() throws IOException {
+        StringBuilder builder = new StringBuilder();
+        withXmlBuilder(builder)
+                .element("one")
+                    .element("four")
+                        .element("five")
+                            .value("This is the value")
+                        .elementEnd()
+                    .elementEnd()
+                    .element("two")
+                    .elementShortEnd()
+                .elementEnd();
+
+        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        assertElementHandler.exptectedStartElements("five");
+        assertElementHandler.exptectedEndElements("five");
+
+        observablePathFinder.treeBuilder()
+                .element("one")
+                    .relativeElement("five").onStart().to(assertElementHandler)
+                        .onText().to(assertElementHandler)
+                    .end(assertElementHandler)
+                    .element("two")
+                        .onText().to(assertElementHandler)
+                    .end()
                 .end()
                 .build();
 
@@ -411,14 +445,14 @@ public abstract class TreeBuilderTests {
 
         String referenceName = "numberone";
         observablePathFinder.treeBuilder()
-                .element("one").observeBy().handler(assertElementHandler)
+                .element("one").onStart().to(assertElementHandler)
                     .storeReference(referenceName)
-                    .element("two").observeBy().handler(assertElementHandler)
+                    .element("two").onStart().to(assertElementHandler)
                         .element("three")
-                            .observeBy().handler(assertElementHandler)
+                            .onStart().to(assertElementHandler)
                         .end(assertElementHandler)
                         .element("five")
-                            .observeBy().handler(assertElementHandler)
+                            .onStart().to(assertElementHandler)
                         .end(assertElementHandler)
                         .recursionToReference(referenceName)
                     .end(assertElementHandler)
@@ -480,7 +514,7 @@ public abstract class TreeBuilderTests {
         observablePathFinder.treeBuilder()
                 .element("one")
                     .element("two")
-                        .observeBy().handler(new OnStartHandler() {
+                        .onStart().to(new OnStartHandler() {
             @Override
             public void startElement(StructureElement structureElement) throws Exception {
                 Assert.assertEquals(longValue.length(), structureElement.getRawElementValue().length());
@@ -508,7 +542,7 @@ public abstract class TreeBuilderTests {
         return new XmlStreamBuilder(builder);
     }
 
-    private static class AssertElementHandler implements ElementHandler {
+    private static class AssertElementHandler implements ElementHandler, OnTextHandler {
         private List<String> expectedStartElements;
         private List<String> expectedEndElements;
         private List<String> startElementsActual;
@@ -545,6 +579,11 @@ public abstract class TreeBuilderTests {
         @Override
         public void clear() {
 
+        }
+
+        @Override
+        public void onText(String elementName, String text) {
+            System.out.println(text);
         }
     }
 }

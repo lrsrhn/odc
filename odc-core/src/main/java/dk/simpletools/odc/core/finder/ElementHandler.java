@@ -22,6 +22,6 @@
  */
 package dk.simpletools.odc.core.finder;
 
-public interface ElementHandler extends OnStartHandler, OnEndHandler {
+public interface ElementHandler extends OnStartHandler, OnEndHandler, OnTextHandler {
   void clear();
 }

@@ -22,14 +22,14 @@
  */
 package dk.simpletools.odc.core.processing;
 
-import dk.simpletools.odc.core.finder.ElementFinder;
-import dk.simpletools.odc.core.finder.OnEndHandler;
-import dk.simpletools.odc.core.finder.OnStartHandler;
-import dk.simpletools.odc.core.finder.SearchLocation;
+import dk.simpletools.odc.core.finder.*;
 import dk.simpletools.odc.core.predicate.Predicate;
+import dk.simpletools.odc.core.predicate.TextPredicate;
 
 public final class ObservablePathTraverser {
     private ElementFinder currentElementFinder;
+    private TextLocation currentOnTextLocation;
+    private String currentElementName;
     private final EndElement endElement;
     private final ElementFinderStack elementFinderStack;
     private final IntStack depthStack;
@@ -39,8 +39,7 @@ public final class ObservablePathTraverser {
     private final ObjectStore objectStore;
 
     ObservablePathTraverser(final ElementFinder rootElementFinder, final StructureElement structureElement) {
-        this.endElement = new EndElement();
-        this.endElement.setStructureElement(structureElement);
+        this.endElement = new EndElement(structureElement);
         this.valueStore = structureElement.getValueStore();
         this.objectStore = structureElement.getObjectStore();
         this.currentElementFinder = rootElementFinder;
@@ -71,6 +70,8 @@ public final class ObservablePathTraverser {
     private void handleSearchLocation(final SearchLocation searchLocation, final InternalStructureElement structureElement, final int currentDepth) throws Exception {
         OnStartHandler onStartHandler = searchLocation.getOnStartHandler();
         Predicate filter = searchLocation.getFilter();
+        currentElementName = structureElement.getElementName();
+        currentOnTextLocation = searchLocation.getTextLocation();
         OnEndHandler onEndHandler = searchLocation.getOnEndHandler();
         ElementFinder nextElementFinder = searchLocation.getElementFinder();
         if (onStartHandler != null) {
@@ -113,10 +114,22 @@ public final class ObservablePathTraverser {
         }
     }
 
+    public void text(final InternalStructureElement structureElement) {
+        if (currentOnTextLocation != null) {
+            TextPredicate filter = currentOnTextLocation.getTextFilter();
+            if (filter == null) {
+                currentOnTextLocation.getOnTextHandler().onText(currentElementName, structureElement.getText());
+            } else if (filter.evaluate(structureElement.getText())) {
+                currentOnTextLocation.getOnTextHandler().onText(currentElementName, structureElement.getText());
+            }
+        }
+    }
+
     public void endElement(final InternalStructureElement structureElement, final int currentDepth) throws Exception {
         while (parentDepth == currentDepth) {
             childDepth = parentDepth;
             parentDepth = depthStack.popAndPeek();
+            currentOnTextLocation = null;
             ElementFinderStack.StackElement stackElement = elementFinderStack.pop();
             OnEndHandler onEndHandler = stackElement.getOnEndHandler();
             ElementFinder previousElementFinder = stackElement.getPreviousElementFinder();

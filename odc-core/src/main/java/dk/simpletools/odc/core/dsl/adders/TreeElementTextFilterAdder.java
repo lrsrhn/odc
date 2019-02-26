@@ -20,26 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.core.picker;
+package dk.simpletools.odc.core.dsl.adders;
 
-import dk.simpletools.odc.core.processing.StructureElement;
+import dk.simpletools.odc.core.dsl.expression.PathReference;
+import dk.simpletools.odc.core.dsl.searchtree.ExpressionHelper;
+import dk.simpletools.odc.core.predicate.Predicate;
+import dk.simpletools.odc.core.predicate.TextPredicate;
 
-public class AttributeValuePicker implements ValuePicker {
-  private Enum<?> valueStoreIndex;
-  private String attributeName;
+public class TreeElementTextFilterAdder implements TreePathAdder {
+    private TextPredicate textFilter;
 
-  public AttributeValuePicker(Enum<?> valueStoreIndex, String attributeName) {
-    this.valueStoreIndex = valueStoreIndex;
-    this.attributeName = attributeName;
-  }
+    public TreeElementTextFilterAdder(TextPredicate textFilter) {
+        this.textFilter = textFilter;
+    }
 
-  @Override
-  public String pick(StructureElement structureElement) {
-    return structureElement.getAttributeValue(attributeName);
-  }
-
-  @Override
-  public Enum<?> getValueStoreIndex() {
-    return valueStoreIndex;
-  }
+    @Override
+    public PathReference addTreePath(PathReference reference, boolean hasRoot) {
+        ExpressionHelper.getSearchLocationBuilder(reference).textFilter(textFilter);
+        return reference;
+    }
 }

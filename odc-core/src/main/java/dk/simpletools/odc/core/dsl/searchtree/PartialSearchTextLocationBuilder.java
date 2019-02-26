@@ -20,12 +20,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.core.picker;
+package dk.simpletools.odc.core.dsl.searchtree;
 
-import dk.simpletools.odc.core.processing.StructureElement;
+import dk.simpletools.odc.core.finder.OnTextHandler;
+import dk.simpletools.odc.core.finder.SearchLocationBuilder;
+import dk.simpletools.odc.core.predicate.TextPredicate;
 
-public interface ValuePicker {
-  String pick(StructureElement structureElement);
+public class PartialSearchTextLocationBuilder<T> {
+    private T parentTreeBuilder;
+    private SearchLocationBuilder searchLocationBuilder;
 
-  Enum<?> getValueStoreIndex();
+    public PartialSearchTextLocationBuilder(T parentTreeBuilder, SearchLocationBuilder searchLocationBuilder) {
+        if (searchLocationBuilder == null) {
+            throw new RuntimeException("Passed SearchLocationBuilder is null!");
+        }
+        this.searchLocationBuilder = searchLocationBuilder;
+        this.parentTreeBuilder = parentTreeBuilder;
+    }
+
+    public PartialSearchTextLocationBuilder<T> filter(TextPredicate filter) {
+        this.searchLocationBuilder.textFilter(filter);
+        return this;
+    }
+
+    public T to(OnTextHandler onTextHandler) {
+        this.searchLocationBuilder.onTextHandler(onTextHandler);
+        return parentTreeBuilder;
+    }
+
+    // TODO: Add to method from standard handlers
 }

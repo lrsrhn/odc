@@ -27,18 +27,12 @@ import dk.simpletools.odc.core.processing.StructureElement;
 import dk.simpletools.odc.core.processing.ValueStore;
 import dk.simpletools.odc.json.JsonPathFinder;
 import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 import javax.json.Json;
 import javax.json.JsonBuilderFactory;
-import javax.json.JsonWriter;
-import javax.json.JsonWriterFactory;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import static dk.simpletools.odc.core.predicate.Predicates.text;
 
@@ -120,7 +114,7 @@ public class JsonPathFinderTest {
             if (isArray) {
                 System.out.println(String.format("%s=%s", structureElement.getElementName(), Arrays.toString(structureElement.getValueArray())));
             } else {
-                System.out.println(String.format("%s=%s", structureElement.getElementName(), structureElement.getElementValue()));
+                System.out.println(String.format("%s=%s", structureElement.getElementName(), structureElement.getText()));
             }
             structureElement.getObjectStore().put("one", 123);
         }

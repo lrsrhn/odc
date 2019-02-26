@@ -27,8 +27,6 @@ public interface StructureElement {
 
     String getElementName();
 
-    String getElementValue();
-
     String getAttributeValue(String attributeName);
 
     boolean hasAttribute(String attributeName);

@@ -58,8 +58,8 @@ public class BigXmlStubBenchmark {
                 stubPathFinder = new StubPathFinder();
                 TestHandler testHandler = new TestHandler(builder);
                 stubPathFinder.addXpath("/root/row/registered").handleStartElementBy(testHandler);
-//                jsonPath.addXpath("/root/row/greeting").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getElementValue()));
-//                jsonPath.addXpath("/root/row/latitude").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getElementValue()));
+//                jsonPath.addXpath("/root/row/greeting").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getText()));
+//                jsonPath.addXpath("/root/row/latitude").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getText()));
                 stubPathFinder.addXpath("/root/row/tags").handleStartElementBy(testHandler);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
@@ -98,7 +98,7 @@ public class BigXmlStubBenchmark {
 
         @Override
         public void startElement(StructureElement structureElement) throws Exception {
-            stringBuilder.append(structureElement.getElementName()).append(": ").append(structureElement.getElementValue());
+            stringBuilder.append(structureElement.getElementName()).append(": ").append(structureElement.getText());
         }
     }
 }
