@@ -74,11 +74,6 @@ public class ElementContext implements InternalStructureElement {
     }
 
     @Override
-    public String[] getValueArray() {
-        return new String[0];
-    }
-
-    @Override
     public String getRawElementValue() {
         return currentElement.getTextValue();
     }
@@ -91,15 +86,5 @@ public class ElementContext implements InternalStructureElement {
     @Override
     public void skipElement() {
         // TODO: implement
-    }
-
-    @Override
-    public void clearHasMovedForward() {
-
-    }
-
-    @Override
-    public boolean hasMovedForward() {
-        return false;
     }
 }

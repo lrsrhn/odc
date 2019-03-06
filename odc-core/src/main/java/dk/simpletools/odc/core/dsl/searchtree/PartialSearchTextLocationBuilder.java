@@ -24,7 +24,7 @@ package dk.simpletools.odc.core.dsl.searchtree;
 
 import dk.simpletools.odc.core.finder.OnTextHandler;
 import dk.simpletools.odc.core.finder.SearchLocationBuilder;
-import dk.simpletools.odc.core.predicate.TextPredicate;
+import dk.simpletools.odc.core.predicate.Predicate;
 
 public class PartialSearchTextLocationBuilder<T> {
     private T parentTreeBuilder;
@@ -38,7 +38,7 @@ public class PartialSearchTextLocationBuilder<T> {
         this.parentTreeBuilder = parentTreeBuilder;
     }
 
-    public PartialSearchTextLocationBuilder<T> filter(TextPredicate filter) {
+    public PartialSearchTextLocationBuilder<T> filter(Predicate filter) {
         this.searchLocationBuilder.textFilter(filter);
         return this;
     }

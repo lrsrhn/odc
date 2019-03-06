@@ -25,12 +25,11 @@ package dk.simpletools.odc.core.dsl.adders;
 import dk.simpletools.odc.core.dsl.expression.PathReference;
 import dk.simpletools.odc.core.dsl.searchtree.ExpressionHelper;
 import dk.simpletools.odc.core.predicate.Predicate;
-import dk.simpletools.odc.core.predicate.TextPredicate;
 
 public class TreeElementTextFilterAdder implements TreePathAdder {
-    private TextPredicate textFilter;
+    private Predicate textFilter;
 
-    public TreeElementTextFilterAdder(TextPredicate textFilter) {
+    public TreeElementTextFilterAdder(Predicate textFilter) {
         this.textFilter = textFilter;
     }
 

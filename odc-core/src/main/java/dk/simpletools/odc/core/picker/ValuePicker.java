@@ -20,41 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.core.predicate;
+package dk.simpletools.odc.core.picker;
 
 import dk.simpletools.odc.core.processing.StructureElement;
 
-public class TextPredicate implements Predicate {
-  private String expectedText;
+public interface ValuePicker {
+  String pick(StructureElement structureElement);
 
-  public TextPredicate(String expectedText) {
-    this.expectedText = expectedText;
-  }
-
-  @Override
-  public boolean evaluate(StructureElement structureElement) {
-    return expectedText.equals(structureElement.getText());
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o)
-      return true;
-    if (o == null || getClass() != o.getClass())
-      return false;
-
-    TextPredicate that = (TextPredicate) o;
-
-    return expectedText != null ? expectedText.equals(that.expectedText) : that.expectedText == null;
-  }
-
-  @Override
-  public int hashCode() {
-    return expectedText != null ? expectedText.hashCode() : 0;
-  }
-
-  @Override
-  public String toString() {
-    return "text()='" + expectedText + "'";
-  }
+  Enum<?> getValueStoreIndex();
 }

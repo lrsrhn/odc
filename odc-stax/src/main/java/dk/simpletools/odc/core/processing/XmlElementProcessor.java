@@ -36,30 +36,19 @@ public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamRea
     public ObjectStore search(XMLStreamReader streamReader, XMLElement xmlElement) throws Exception {
         int currentDepth = 0;
         while (streamReader.hasNext()) {
-            if (xmlElement.hasMovedForward()) {
-                xmlElement.clearHasMovedForward();
-                // Do not call next when the cursor has moved
-                switch (streamReader.getEventType()) {
-                    case XMLStreamReader.START_ELEMENT:
-                        observablePathTraverser.startElement(xmlElement, currentDepth++);
-                        continue;
-                    case XMLStreamConstants.CHARACTERS:
-                        observablePathTraverser.text(xmlElement);
-                        continue;
-                    case XMLStreamReader.END_ELEMENT:
+            switch (streamReader.next()) {
+                case XMLStreamReader.START_ELEMENT:
+                    observablePathTraverser.startElement(xmlElement, currentDepth++);
+                    // Traverser may have called skipElement
+                    if (streamReader.getEventType() == XMLStreamConstants.END_ELEMENT) {
                         observablePathTraverser.endElement(xmlElement, --currentDepth);
-                }
-            } else {
-                switch (streamReader.next()) {
-                    case XMLStreamReader.START_ELEMENT:
-                        observablePathTraverser.startElement(xmlElement, currentDepth++);
-                        continue;
-                    case XMLStreamConstants.CHARACTERS:
-                        observablePathTraverser.text(xmlElement);
-                        continue;
-                    case XMLStreamReader.END_ELEMENT:
-                        observablePathTraverser.endElement(xmlElement, --currentDepth);
-                }
+                    }
+                    continue;
+                case XMLStreamConstants.CHARACTERS:
+                    observablePathTraverser.text(xmlElement);
+                    continue;
+                case XMLStreamReader.END_ELEMENT:
+                    observablePathTraverser.endElement(xmlElement, --currentDepth);
             }
         }
         return xmlElement.getObjectStore();

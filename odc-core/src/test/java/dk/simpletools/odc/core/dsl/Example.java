@@ -22,11 +22,11 @@
  */
 package dk.simpletools.odc.core.dsl;
 
+import dk.simpletools.odc.core.finder.OnEndHandler;
 import dk.simpletools.odc.core.finder.OnStartHandler;
 import dk.simpletools.odc.core.finder.OnTextHandler;
 import dk.simpletools.odc.core.predicate.Predicates;
-import dk.simpletools.odc.core.processing.ObservablePathFinder;
-import dk.simpletools.odc.core.processing.StructureElement;
+import dk.simpletools.odc.core.processing.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -115,8 +115,8 @@ public abstract class Example {
         }
 
         @Override
-        public void onText(String elementName, String text) {
-            System.out.println(prefix + ": " + text);
+        public void onText(StructureElement structureElement) {
+            System.out.println(prefix + ": " + structureElement.getText());
         }
     }
 }

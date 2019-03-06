@@ -20,41 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.core.predicate;
+package dk.simpletools.odc.json;
 
-import dk.simpletools.odc.core.processing.StructureElement;
+import java.util.Arrays;
 
-public class TextPredicate implements Predicate {
-  private String expectedText;
+final class StringStack {
+  private String[] array;
+  private int head;
 
-  public TextPredicate(String expectedText) {
-    this.expectedText = expectedText;
+  StringStack(int size) {
+    this.array = new String[size];
+    this.head = -1;
   }
 
-  @Override
-  public boolean evaluate(StructureElement structureElement) {
-    return expectedText.equals(structureElement.getText());
+  String pop() {
+    if (head == -1) {
+      throw new ArrayIndexOutOfBoundsException();
+    }
+    return array[head--];
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o)
-      return true;
-    if (o == null || getClass() != o.getClass())
-      return false;
-
-    TextPredicate that = (TextPredicate) o;
-
-    return expectedText != null ? expectedText.equals(that.expectedText) : that.expectedText == null;
-  }
-
-  @Override
-  public int hashCode() {
-    return expectedText != null ? expectedText.hashCode() : 0;
-  }
-
-  @Override
-  public String toString() {
-    return "text()='" + expectedText + "'";
+  void push(String value) {
+    if (head == array.length - 1) {
+      array = Arrays.copyOf(array, array.length * 2);
+    }
+    array[++head] = value;
   }
 }

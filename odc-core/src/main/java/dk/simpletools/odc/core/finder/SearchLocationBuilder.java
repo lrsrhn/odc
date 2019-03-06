@@ -23,7 +23,6 @@
 package dk.simpletools.odc.core.finder;
 
 import dk.simpletools.odc.core.predicate.Predicate;
-import dk.simpletools.odc.core.predicate.TextPredicate;
 
 public class SearchLocationBuilder {
     private SearchLocation searchLocation;
@@ -51,11 +50,11 @@ public class SearchLocationBuilder {
     }
 
     public SearchLocationBuilder onTextHandler(OnTextHandler onTextHandler) {
-        this.searchLocation.getTextLocation().setOnTextHandler(onTextHandler);
+        this.searchLocation.getOrCreateTextLocation().setOnTextHandler(onTextHandler);
         return this;
     }
 
-    public SearchLocationBuilder textFilter(TextPredicate textFilter) {
+    public SearchLocationBuilder textFilter(Predicate textFilter) {
         this.searchLocation.getTextLocation().setTextFilter(textFilter);
         return this;
     }

@@ -52,12 +52,12 @@ public class BigJsonBenchmark {
                 jsonPath.addXpath("/$/{}/registered").handleStartElementBy(element -> {
                     builder.append(element.getElementName()).append(": ").append(element.getText());
                 });
-                jsonPath.addXpath("/$/{}/tags").handleStartElementBy(element -> {
-                    String[] values = element.getValueArray();
-                    for (String value : values) {
-                        builder.append(element.getElementName()).append(": ").append(value);
-                    }
-                });
+//                jsonPath.addXpath("/$/{}/tags").handleStartElementBy(element -> {
+//                    String[] values = element.getValueArray();
+//                    for (String value : values) {
+//                        builder.append(element.getElementName()).append(": ").append(value);
+//                    }
+//                });
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }

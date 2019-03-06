@@ -73,6 +73,10 @@ public final class SearchLocation {
     }
 
     public TextLocation getTextLocation() {
+        return textLocation;
+    }
+
+    public TextLocation getOrCreateTextLocation() {
         if (textLocation == null) {
             this.textLocation = new TextLocation();
         }

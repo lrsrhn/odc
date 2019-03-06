@@ -93,6 +93,7 @@ public class ExpressionBuilder {
     }
     treePathAdders.add(new TreeOnStartHandlerAdder(elementHandler));
     treePathAdders.add(new TreeOnEndHandlerAdder(elementHandler));
+    treePathAdders.add(new TreeOnTextHandlerAdder(elementHandler));
     return toFragment();
   }
 

@@ -22,10 +22,10 @@
  */
 package dk.simpletools.odc.json;
 
+import dk.simpletools.odc.core.finder.ElementHandler;
 import dk.simpletools.odc.core.processing.EndElement;
 import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.StructureElement;
-import dk.simpletools.odc.core.finder.ElementHandler;
 import dk.simpletools.odc.core.processing.ValueStore;
 
 public class SimpleHandler implements ElementHandler {
@@ -46,7 +46,7 @@ public class SimpleHandler implements ElementHandler {
     }
 
     @Override
-    public void onText(String elementName, String text) {
+    public void onText(StructureElement structureElement) {
 
     }
 }

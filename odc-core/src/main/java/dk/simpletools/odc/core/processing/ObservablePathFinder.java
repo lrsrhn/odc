@@ -27,6 +27,7 @@ import dk.simpletools.odc.core.dsl.expression.PathReference;
 import dk.simpletools.odc.core.dsl.searchtree.RootTreeBuilder;
 import dk.simpletools.odc.core.finder.ElementFinder;
 import dk.simpletools.odc.core.finder.RootElementFinder;
+import dk.simpletools.odc.core.finder.SingleElementFinder;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -37,7 +38,7 @@ public abstract class ObservablePathFinder {
   protected PathReference rootElementFinder;
 
   public ObservablePathFinder() {
-    this.rootElementFinder = new PathReference(new RootElementFinder().getReference(), false);
+    this.rootElementFinder = new PathReference(new SingleElementFinder().getReference(), false);
   }
 
   ElementFinder getRootElementFinder() {

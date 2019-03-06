@@ -1,5 +1,7 @@
 package dk.simpletools.odc.core.finder;
 
+import dk.simpletools.odc.core.processing.StructureElement;
+
 public interface OnTextHandler {
-    void onText(String elementName, String text);
+    void onText(StructureElement structureElement);
 }

@@ -22,6 +22,7 @@
  */
 package dk.simpletools.odc.core.dsl.expression;
 
+import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
 import dk.simpletools.odc.core.predicate.Predicates;
 import dk.simpletools.odc.core.processing.*;
 import dk.simpletools.odc.core.finder.ElementHandler;
@@ -83,6 +84,28 @@ public abstract class ExpressionXmlTests {
         observablePathFinder.addXpath("/one").handleElementBy(assertElementHandler);
         observablePathFinder.addXpath("/one/two").handleElementBy(assertElementHandler);
         observablePathFinder.addXpath("/one/two/three").handleElementBy(assertElementHandler);
+
+        observablePathFinder.find(new StringReader(builder.toString()));
+        assertElementHandler.verify();
+    }
+
+    @Test
+    public void multipleRoot() throws IOException {
+        StringBuilder builder = new StringBuilder();
+        withXmlBuilder(builder)
+                .element("one")
+                    .element("four")
+                        .element("five")
+                        .elementEnd()
+                    .elementEnd()
+                .elementEnd();
+
+        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        assertElementHandler.exptectedStartElements("five");
+        assertElementHandler.exptectedEndElements("five");
+
+        observablePathFinder.addXpath("/one/four/five").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/two/four/five").handleElementBy(assertElementHandler);
 
         observablePathFinder.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
@@ -367,10 +390,10 @@ public abstract class ExpressionXmlTests {
         }
 
         @Override
-        public void onText(String elementName, String text) {
-            String expectedValue = elementsToRead.get(elementName);
+        public void onText(StructureElement structureElement) {
+            String expectedValue = elementsToRead.get(structureElement.getElementName());
             if (expectedValue != null) {
-                Assert.assertEquals(expectedValue, text);
+                Assert.assertEquals(expectedValue, structureElement.getText());
             }
         }
     }

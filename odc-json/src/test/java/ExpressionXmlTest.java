@@ -25,6 +25,7 @@ import dk.simpletools.odc.core.dsl.expression.PathFragment;
 import dk.simpletools.odc.core.finder.ElementHandler;
 import dk.simpletools.odc.core.predicate.Predicates;
 import dk.simpletools.odc.core.processing.*;
+import dk.simpletools.odc.core.standardhandlers.Handlers;
 import dk.simpletools.odc.json.JsonPathFinder;
 import org.junit.Assert;
 import org.junit.Before;
@@ -234,7 +235,7 @@ public class ExpressionXmlTest {
 
         observablePathFinder.addXpath("/$/one").handleElementBy(assertElementHandler);
         observablePathFinder.addXpath("/$/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/att").storeValue(valuePicker(Values.ATTRIBUTE));
+        observablePathFinder.addXpath("/$/one/two/att").handleElementBy(Handlers.valueToStore(valuePicker(Values.ATTRIBUTE)));
         observablePathFinder.addXpath("/$/one/two/three").predicate(Predicates.storedValue(Values.ATTRIBUTE, "one")).handleElementBy(assertElementHandler);
         observablePathFinder.addXpath("/$/one/two/four").handleElementBy(assertElementHandler);
 
@@ -282,7 +283,7 @@ public class ExpressionXmlTest {
         return writer.toString();
     }
 
-private static class AssertElementHandler implements ElementHandler {
+    private static class AssertElementHandler implements ElementHandler {
         private List<String> expectedStartElements;
         private List<String> expectedEndElements;
         private List<String> startElementsActual;
@@ -311,10 +312,6 @@ private static class AssertElementHandler implements ElementHandler {
         @Override
         public void startElement(StructureElement structureElement) throws Exception {
             startElementsActual.add(structureElement.getElementName());
-            String expectedValue = elementsToRead.get(structureElement.getElementName());
-            if (expectedValue != null) {
-                Assert.assertEquals(expectedValue, structureElement.getText());
-            }
         }
 
         @Override
@@ -329,6 +326,14 @@ private static class AssertElementHandler implements ElementHandler {
 
         public void expectedValue(String key, String value) {
             elementsToRead.put(key, value);
+        }
+
+        @Override
+        public void onText(StructureElement structureElement) {
+            String expectedValue = elementsToRead.get(structureElement.getElementName());
+            if (expectedValue != null) {
+                Assert.assertEquals(expectedValue, structureElement.getText());
+            }
         }
     }
 }

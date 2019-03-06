@@ -1,16 +1,16 @@
 package dk.simpletools.odc.core.finder;
 
-import dk.simpletools.odc.core.predicate.TextPredicate;
+import dk.simpletools.odc.core.predicate.Predicate;
 
 public class TextLocation {
-    private TextPredicate textFilter;
+    private Predicate textFilter;
     private OnTextHandler onTextHandler;
 
-    public TextPredicate getTextFilter() {
+    public Predicate getTextFilter() {
         return textFilter;
     }
 
-    public void setTextFilter(TextPredicate textFilter) {
+    public void setTextFilter(Predicate textFilter) {
         this.textFilter = textFilter;
     }
 

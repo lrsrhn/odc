@@ -29,93 +29,83 @@ import dk.simpletools.odc.core.processing.ObjectStore;
 
 import javax.json.stream.JsonParser;
 
-import static javax.json.stream.JsonParser.Event.END_ARRAY;
-
 class ObjectProcessor extends BaseElementProcessor<JsonParser, JsonObject>{
+
+    private StringStack stringStack;
+    private JsonEventStack jsonEventStack;
 
     public ObjectProcessor(ElementFinder nextElementFinder, JsonObject jsonObject) {
         super(nextElementFinder, jsonObject);
+        this.stringStack = new StringStack(10);
+        this.jsonEventStack = new JsonEventStack(10);
     }
 
     public ObjectStore search(JsonParser jsonParser, JsonObject jsonObject) throws Exception {
-        int currentDepth = -1;
+        int currentDepth = 0;
         while (jsonParser.hasNext()) {
             JsonParser.Event currentEvent = jsonParser.next();
             jsonObject.setCurrentEvent(currentEvent);
             switch (currentEvent) {
                 case START_OBJECT:
-                    currentDepth = processObject("$", currentDepth, jsonObject, jsonParser);
-                    continue;
                 case START_ARRAY:
-                    currentDepth = processArray("$", currentDepth, jsonObject, jsonParser);
+                    jsonObject.setKeyName("$");
+                    jsonEventStack.push(currentEvent);
+                    observablePathTraverser.startElement(jsonObject, currentDepth++);
+                    process(currentDepth, jsonObject, jsonParser);
             }
         }
         return jsonObject.getObjectStore();
     }
 
-    private int processArray(String currentKey, int currentDepth, JsonObject jsonObject, JsonParser jsonParser) throws Exception {
-        currentDepth++;
-        jsonObject.setKeyName(currentKey);
-        observablePathTraverser.startElement(jsonObject, currentDepth);
-        if (jsonObject.getCurrentEvent() == END_ARRAY) {
-            jsonObject.setKeyName(currentKey);
-            observablePathTraverser.endElement(jsonObject, currentDepth);
-            return --currentDepth;
-        }
-        while (jsonParser.hasNext()) {
-            JsonParser.Event currentEvent = jsonParser.next();
-            jsonObject.setCurrentEvent(currentEvent);
-            switch (currentEvent) {
-                case START_ARRAY:
-                    processArray("[]", currentDepth, jsonObject, jsonParser);
-                    break;
-                case START_OBJECT:
-                    currentDepth = processObject("{}", currentDepth, jsonObject, jsonParser);
-                    break;
-                case END_ARRAY:
-                    jsonObject.setKeyName(currentKey);
-                    observablePathTraverser.endElement(jsonObject, currentDepth);
-                    return --currentDepth;
-            }
-        }
-        return --currentDepth;
-    }
-
-    private int processObject(String currentKey, int currentDepth, JsonObject jsonObject, JsonParser jsonParser) throws Exception {
-        currentDepth++;
-        jsonObject.setKeyName(currentKey);
-        observablePathTraverser.startElement(jsonObject, currentDepth);
-        String nextKey = "noKey";
+    private int process(int currentDepth, JsonObject jsonObject, JsonParser jsonParser) throws Exception {
         while (jsonParser.hasNext()) {
             JsonParser.Event currentEvent = jsonParser.next();
             jsonObject.setCurrentEvent(currentEvent);
             switch (currentEvent) {
                 case KEY_NAME:
-                    nextKey = jsonParser.getString();
-                    jsonObject.setKeyName(nextKey);
+                    stringStack.push(jsonObject.getElementName());
+                    jsonEventStack.push(currentEvent);
+                    jsonObject.setKeyName(jsonParser.getString());
+                    observablePathTraverser.startElement(jsonObject, currentDepth++);
                     break;
                 case START_ARRAY:
-                    currentDepth = processArray(nextKey, currentDepth, jsonObject, jsonParser);
+                    if (jsonEventStack.peek() != JsonParser.Event.KEY_NAME) {
+                        stringStack.push(jsonObject.getElementName());
+                        jsonObject.setKeyName("[]");
+                        observablePathTraverser.startElement(jsonObject, currentDepth++);
+                    }
+                    jsonEventStack.push(currentEvent);
                     break;
                 case START_OBJECT:
-                    currentDepth = processObject(nextKey, currentDepth, jsonObject, jsonParser);
+                   if (jsonEventStack.peek() != JsonParser.Event.KEY_NAME) {
+                       stringStack.push(jsonObject.getElementName());
+                        jsonObject.setKeyName("{}");
+                        observablePathTraverser.startElement(jsonObject, currentDepth++);
+                    }
+                    jsonEventStack.push(currentEvent);
                     break;
                 case VALUE_NULL:
                 case VALUE_TRUE:
                 case VALUE_FALSE:
                 case VALUE_NUMBER:
                 case VALUE_STRING:
-                    currentDepth++;
-                    observablePathTraverser.startElement(jsonObject, currentDepth);
-                    observablePathTraverser.endElement(jsonObject, currentDepth);
-                    currentDepth--;
+                    observablePathTraverser.text(jsonObject);
+                    jsonObject.clearCache();
+                    if (jsonEventStack.peek() == JsonParser.Event.KEY_NAME) {
+                        observablePathTraverser.endElement(jsonObject, --currentDepth);
+                        jsonEventStack.pop();
+                        jsonObject.setKeyName(stringStack.pop());
+                    }
                     break;
+                case END_ARRAY:
                 case END_OBJECT:
-                    jsonObject.setKeyName(currentKey);
-                    observablePathTraverser.endElement(jsonObject, currentDepth);
-                    return --currentDepth;
+                    jsonEventStack.pop();
+                    observablePathTraverser.endElement(jsonObject, --currentDepth);
+                    if (currentDepth != 0) {
+                        jsonObject.setKeyName(stringStack.pop());
+                    }
             }
         }
-        return --currentDepth;
+        return currentDepth;
     }
 }

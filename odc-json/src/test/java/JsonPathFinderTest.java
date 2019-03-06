@@ -20,6 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import dk.simpletools.odc.core.finder.ElementHandler;
 import dk.simpletools.odc.core.processing.EndElement;
 import dk.simpletools.odc.core.processing.ObjectStore;
@@ -32,7 +33,6 @@ import javax.json.Json;
 import javax.json.JsonBuilderFactory;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
 import static dk.simpletools.odc.core.predicate.Predicates.text;
 
@@ -75,7 +75,6 @@ public class JsonPathFinderTest {
         JsonPathFinder jsonPathFinder = new JsonPathFinder();
         TestingHandler testingHandler = new TestingHandler(false);
         jsonPathFinder.addXpath("/$/members/{}/name")
-                .predicate(text("Madame Uppercut"))
                 .handleElementBy(testingHandler);
         jsonPathFinder.find(readFile());
     }
@@ -111,11 +110,6 @@ public class JsonPathFinderTest {
         @Override
         public void startElement(StructureElement structureElement) throws Exception {
             structureElement.getObjectStore().put("something", structureElement.getElementName());
-            if (isArray) {
-                System.out.println(String.format("%s=%s", structureElement.getElementName(), Arrays.toString(structureElement.getValueArray())));
-            } else {
-                System.out.println(String.format("%s=%s", structureElement.getElementName(), structureElement.getText()));
-            }
             structureElement.getObjectStore().put("one", 123);
         }
 
@@ -132,6 +126,11 @@ public class JsonPathFinderTest {
         @Override
         public String toString() {
             return super.toString();
+        }
+
+        @Override
+        public void onText(StructureElement structureElement) {
+            System.out.println(String.format("%s=%s", structureElement.getElementName(), structureElement.getText()));
         }
     }
 }

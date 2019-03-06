@@ -62,7 +62,6 @@ final class ElementFinderStack {
     static final class StackElement {
         private OnEndHandler onEndHandler;
         private ElementFinder previousElementFinder;
-        private String elementName;
 
         OnEndHandler getOnEndHandler() {
             return onEndHandler;
@@ -75,7 +74,6 @@ final class ElementFinderStack {
         void setValues(OnEndHandler onEndHandler, ElementFinder previousElementFinder) {
             this.onEndHandler = onEndHandler;
             this.previousElementFinder = previousElementFinder;
-            this.elementName = elementName;
         }
     }
 }

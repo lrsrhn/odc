@@ -386,6 +386,34 @@ public abstract class TreeBuilderTests {
     }
 
     @Test
+    public void multipleRoot() throws IOException {
+        StringBuilder builder = new StringBuilder();
+        withXmlBuilder(builder)
+                .element("one")
+                    .element("four")
+                        .element("five")
+                        .elementEnd()
+                    .elementEnd()
+                .elementEnd();
+
+        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        assertElementHandler.exptectedStartElements("five");
+        assertElementHandler.exptectedEndElements("five");
+
+        observablePathFinder.treeBuilder()
+                .element("two")
+                .end()
+                .element("one")
+                    .relativeElement("five").onStart().to(assertElementHandler)
+                        .end(assertElementHandler)
+                .end()
+                .build();
+
+        observablePathFinder.find(new StringReader(builder.toString()));
+        assertElementHandler.verify();
+    }
+
+    @Test
     public void onText() throws IOException {
         StringBuilder builder = new StringBuilder();
         withXmlBuilder(builder)
@@ -484,6 +512,10 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedEndElements("three", "two", "five", "two");
 
         observablePathFinder.treeBuilder()
+                .element("")
+                .end()
+                .element("")
+                .end()
                 .element("one")
                     .all(assertElementHandler, assertElementHandler)
                 .end()
@@ -582,8 +614,8 @@ public abstract class TreeBuilderTests {
         }
 
         @Override
-        public void onText(String elementName, String text) {
-            System.out.println(text);
+        public void onText(StructureElement structureElement) {
+            System.out.println(structureElement.getText());
         }
     }
 }

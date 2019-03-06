@@ -33,7 +33,6 @@ public class JsonObject implements InternalStructureElement {
     private ValueStore valueStore;
     private ObjectStore objectStore;
     private String elementValueCache;
-    private String[] elementValuesCache;
 
     public JsonObject(JsonParser jsonParser, ObjectStore objectStore) {
         this.objectStore = objectStore == null ? new ObjectStore() : objectStore;
@@ -77,7 +76,7 @@ public class JsonObject implements InternalStructureElement {
 
     @Override
     public String getElementNS() {
-        throw new UnsupportedOperationException();
+        return "";
     }
 
     @Override
@@ -105,27 +104,27 @@ public class JsonObject implements InternalStructureElement {
         return objectStore;
     }
 
-    public String[] getValueArray() {
-        if (elementValuesCache != null) {
-            return elementValuesCache;
-        }
-        List<String> array = new ArrayList<String>();
-        while(jsonParser.hasNext()) {
-            currentEvent = jsonParser.next();
-            switch (currentEvent) {
-                case END_ARRAY:
-                    elementValuesCache = array.toArray(new String[array.size()]);
-                    return elementValuesCache;
-                default:
-                    elementValueCache = null;
-                    array.add(getText());
-                    break;
-            }
-        }
-        elementValueCache = null;
-        elementValuesCache = array.toArray(new String[array.size()]);
-        return elementValuesCache;
-    }
+//    public String[] getValueArray() {
+//        if (elementValuesCache != null) {
+//            return elementValuesCache;
+//        }
+//        List<String> array = new ArrayList<String>();
+//        while(jsonParser.hasNext()) {
+//            currentEvent = jsonParser.next();
+//            switch (currentEvent) {
+//                case END_ARRAY:
+//                    elementValuesCache = array.toArray(new String[array.size()]);
+//                    return elementValuesCache;
+//                default:
+//                    elementValueCache = null;
+//                    array.add(getText());
+//                    break;
+//            }
+//        }
+//        elementValueCache = null;
+//        elementValuesCache = array.toArray(new String[array.size()]);
+//        return elementValuesCache;
+//    }
 
     @Override
     public String getRawElementValue() {
@@ -134,23 +133,12 @@ public class JsonObject implements InternalStructureElement {
 
     @Override
     public void clearCache() {
-        elementValuesCache = null;
         elementValueCache = null;
     }
 
     @Override
     public void skipElement() {
         // TODO
-    }
-
-    @Override
-    public void clearHasMovedForward() {
-
-    }
-
-    @Override
-    public boolean hasMovedForward() {
-        return false;
     }
 
     public void setKeyName(String keyName) {

@@ -20,8 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import dk.simpletools.odc.core.finder.ElementHandler;
 import dk.simpletools.odc.core.finder.OnStartHandler;
+import dk.simpletools.odc.core.finder.OnTextHandler;
 import dk.simpletools.odc.core.processing.*;
 import dk.simpletools.odc.json.JsonPathFinder;
 import org.junit.Assert;
@@ -32,13 +34,16 @@ import javax.json.Json;
 import javax.json.JsonBuilderFactory;
 import javax.json.JsonStructure;
 import javax.json.JsonWriter;
-import java.io.*;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static dk.simpletools.odc.core.picker.ValuePickers.valuePicker;
-import static dk.simpletools.odc.core.predicate.Predicates.*;
+import static dk.simpletools.odc.core.predicate.Predicates.alwaysTrue;
+import static dk.simpletools.odc.core.predicate.Predicates.storedValue;
 import static dk.simpletools.odc.core.standardhandlers.Handlers.valueToStore;
 import static org.junit.Assert.assertEquals;
 
@@ -222,10 +227,6 @@ public class TreeBuilderTest {
         assertElementHandler.verify();
     }
 
-    private enum Values {
-        ATTRIBUTE
-    }
-
     @Test
     public void multipleElementFinderForAllWithPredicate() throws IOException {
         String jsonText = jsonStructureToString(
@@ -248,10 +249,11 @@ public class TreeBuilderTest {
                 .element("$")
                     .element("one").onStart().to(assertElementHandler)
                         .element("two").onStart().to(assertElementHandler)
-                            .element("att").onStart().to(valueToStore(valuePicker(Values.ATTRIBUTE)))
+                            .element("att")
+                                .onText().to(valueToStore(valuePicker(DefaultEnum.VALUE01)))
                             .end()
                             .element("three")
-                                .predicate(storedValue(Values.ATTRIBUTE, "one"))
+                                .predicate(storedValue(DefaultEnum.VALUE01, "one"))
                                     .onStart().to(assertElementHandler)
                                 .end(assertElementHandler)
                             .end()
@@ -415,18 +417,18 @@ public class TreeBuilderTest {
         String jsonText = jsonStructureToString(
             jsonBuilderFactory
                 .createObjectBuilder()
-                .addNull("isnull")
-                .add("isinteger", 2)
-                .add("islong", 3L)
-                .add("isdouble", 2.3)
-                .add("isboolean", true)
-                .add("isstring", "text")
+                    .addNull("isnull")
+                    .add("isinteger", 2)
+                    .add("islong", 3L)
+                    .add("isdouble", 2.3)
+                    .add("isboolean", true)
+                    .add("isstring", "text")
                 .build()
         );
 
-        OnStartHandler valueTester = new OnStartHandler() {
+        OnTextHandler valueTester = new OnTextHandler() {
             @Override
-            public void startElement(StructureElement structureElement) throws Exception {
+            public void onText(StructureElement structureElement) {
                 String value = structureElement.getText();
                 if(value == null) {
                     assertEquals("isnull", structureElement.getElementName());
@@ -448,17 +450,17 @@ public class TreeBuilderTest {
 
         observablePathFinder.treeBuilder()
             .element("$")
-                .element("isnull").onStart().to(valueTester)
+                .element("isnull").onText().to(valueTester)
                 .end()
-                .element("isinteger").onStart().to(valueTester)
+                .element("isinteger").onText().to(valueTester)
                 .end()
-                .element("islong").onStart().to(valueTester)
+                .element("islong").onText().to(valueTester)
                 .end()
-                .element("isdouble").onStart().to(valueTester)
+                .element("isdouble").onText().to(valueTester)
                 .end()
-                .element("isboolean").onStart().to(valueTester)
+                .element("isboolean").onText().to(valueTester)
                 .end()
-                .element("isstring").onStart().to(valueTester)
+                .element("isstring").onText().to(valueTester)
                 .end()
             .end()
             .build();
@@ -510,6 +512,11 @@ public class TreeBuilderTest {
 
         @Override
         public void clear() {
+
+        }
+
+        @Override
+        public void onText(StructureElement structureElement) {
 
         }
     }

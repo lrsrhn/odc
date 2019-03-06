@@ -39,6 +39,10 @@ public class Predicates {
     return new ValueStorePredicate(enumValueIndex, value);
   }
 
+  public static Predicate text(String text) {
+    return new TextPredicate(text);
+  }
+
   public static Predicate namespace(String namespace) {
     return new NamespacePredicate(namespace);
   }

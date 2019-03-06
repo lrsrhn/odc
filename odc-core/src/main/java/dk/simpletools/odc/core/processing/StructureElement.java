@@ -35,11 +35,9 @@ public interface StructureElement {
 
     ObjectStore getObjectStore();
 
-    String[] getValueArray();
+//    String[] getValueArray();
 
     String getRawElementValue();
 
-    void clearCache();
-
-
+    String getText();
 }

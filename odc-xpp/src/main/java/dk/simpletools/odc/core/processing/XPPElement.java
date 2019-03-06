@@ -28,19 +28,22 @@ import org.xmlpull.v1.XmlPullParserException;
 public class XPPElement implements InternalStructureElement {
   private XmlPullParser xmlPullParser;
   private String elementTextCache;
+  private String elementNameCache;
   private ValueStore valueStore;
   private ObjectStore objectStore;
-  private boolean hasMovedForward;
 
   public XPPElement(XmlPullParser xmlStreamReader, ObjectStore objectStore) {
     this.objectStore = objectStore == null ? new ObjectStore() : objectStore;
     this.xmlPullParser = xmlStreamReader;
     this.valueStore = new ValueStore();
-    this.hasMovedForward = false;
+    this.elementNameCache = null;
   }
 
   public String getElementName() {
-    return xmlPullParser.getName();
+    if (elementNameCache == null) {
+      elementNameCache = xmlPullParser.getName();
+    }
+    return elementNameCache;
   }
 
   public String getAttributeValue(String attributeName) {
@@ -75,29 +78,19 @@ public class XPPElement implements InternalStructureElement {
     return objectStore;
   }
 
-  @Override
-  public String[] getValueArray() {
-    throw new UnsupportedOperationException();
-  }
-
   /**
    * NB: Only use this after all attributes have been read - Calling this will
    * move the XML parser forward
    * 
    */
   public String getText() {
-    if (elementTextCache != null || hasMovedForward) {
+    if (elementTextCache != null) {
       return elementTextCache;
     }
     try {
-      StringBuilder stringBuilder = new StringBuilder(128);
-      if (xmlPullParser.getEventType() == XmlPullParser.START_TAG) {
-        while(xmlPullParser.next() == XmlPullParser.TEXT) {
-          stringBuilder.append(xmlPullParser.getText());
-        }
-        hasMovedForward = true;
+      if (xmlPullParser.getEventType() == XmlPullParser.TEXT && xmlPullParser.getEventType() != XmlPullParser.IGNORABLE_WHITESPACE) {
+        elementTextCache = xmlPullParser.getText();
       }
-      elementTextCache = stringBuilder.toString();
       return elementTextCache;
     } catch (Exception e) {
       // Element has children and does not have a value/text
@@ -118,7 +111,6 @@ public class XPPElement implements InternalStructureElement {
           throw new RuntimeException("Cannot retrieve raw value from other event then Start_element");
         }
         elementTextCache = moveCursorToEndElement();
-        hasMovedForward = true;
       }
       return elementTextCache;
     } catch (Exception xse) {
@@ -152,7 +144,8 @@ public class XPPElement implements InternalStructureElement {
   }
 
   public void clearCache() {
-    elementTextCache = null;
+    this.elementTextCache = null;
+    this.elementNameCache = null;
   }
 
 
@@ -175,20 +168,9 @@ public class XPPElement implements InternalStructureElement {
         }
         xmlPullParser.next();
       }
-      hasMovedForward = true;
     } catch (Exception xse) {
       throw new RuntimeException(xse);
     }
-  }
-
-  @Override
-  public void clearHasMovedForward() {
-    this.hasMovedForward = false;
-  }
-
-  @Override
-  public boolean hasMovedForward() {
-    return hasMovedForward;
   }
 
   public String getElementNS() {

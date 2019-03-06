@@ -1,3 +1,5 @@
+package dk.simpletools.odc.json;
+
 /**
  * The MIT License
  * Copyright © 2018 Lars Storm
@@ -20,41 +22,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.core.predicate;
 
-import dk.simpletools.odc.core.processing.StructureElement;
+import javax.json.stream.JsonParser.Event;
+import java.util.Arrays;
 
-public class TextPredicate implements Predicate {
-  private String expectedText;
+final class JsonEventStack {
+  private Event[] array;
+  private int head;
 
-  public TextPredicate(String expectedText) {
-    this.expectedText = expectedText;
+  JsonEventStack(int size) {
+    this.array = new Event[size];
+    this.head = -1;
   }
 
-  @Override
-  public boolean evaluate(StructureElement structureElement) {
-    return expectedText.equals(structureElement.getText());
+  Event pop() {
+    if (head == -1) {
+      throw new ArrayIndexOutOfBoundsException();
+    }
+    return array[head--];
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o)
-      return true;
-    if (o == null || getClass() != o.getClass())
-      return false;
-
-    TextPredicate that = (TextPredicate) o;
-
-    return expectedText != null ? expectedText.equals(that.expectedText) : that.expectedText == null;
+  Event peek() {
+    if (head == -1) {
+      throw new ArrayIndexOutOfBoundsException();
+    }
+    return array[head];
   }
 
-  @Override
-  public int hashCode() {
-    return expectedText != null ? expectedText.hashCode() : 0;
-  }
-
-  @Override
-  public String toString() {
-    return "text()='" + expectedText + "'";
+  void push(Event value) {
+    if (head == array.length - 1) {
+      array = Arrays.copyOf(array, array.length * 2);
+    }
+    array[++head] = value;
   }
 }

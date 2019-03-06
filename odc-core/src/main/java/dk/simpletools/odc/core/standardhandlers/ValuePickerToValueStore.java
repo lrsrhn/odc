@@ -20,41 +20,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.core.predicate;
+package dk.simpletools.odc.core.standardhandlers;
 
+import dk.simpletools.odc.core.finder.ElementHandler;
+import dk.simpletools.odc.core.picker.ValuePicker;
+import dk.simpletools.odc.core.processing.EndElement;
+import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.StructureElement;
+import dk.simpletools.odc.core.processing.ValueStore;
 
-public class TextPredicate implements Predicate {
-  private String expectedText;
+public class ValuePickerToValueStore implements ElementHandler {
+  private ValuePicker[] pickers;
 
-  public TextPredicate(String expectedText) {
-    this.expectedText = expectedText;
+  public ValuePickerToValueStore(ValuePicker... pickers) {
+    if (pickers == null || pickers.length == 0) {
+      throw new IllegalArgumentException("ValuePickers must be set");
+    }
+    this.pickers = pickers;
   }
 
   @Override
-  public boolean evaluate(StructureElement structureElement) {
-    return expectedText.equals(structureElement.getText());
+  public void startElement(StructureElement structureElement) throws Exception {
+
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o)
-      return true;
-    if (o == null || getClass() != o.getClass())
-      return false;
+  public void endElement(EndElement endElement, ValueStore valueStore, ObjectStore objectStore) throws Exception {
 
-    TextPredicate that = (TextPredicate) o;
-
-    return expectedText != null ? expectedText.equals(that.expectedText) : that.expectedText == null;
   }
 
   @Override
-  public int hashCode() {
-    return expectedText != null ? expectedText.hashCode() : 0;
+  public void clear() {
   }
 
-  @Override
-  public String toString() {
-    return "text()='" + expectedText + "'";
-  }
+    @Override
+    public void onText(StructureElement structureElement) {
+      for (ValuePicker picker : pickers) {
+        structureElement.getValueStore().addValue(picker.getValueStoreIndex(), picker.pick(structureElement));
+      }
+    }
 }
