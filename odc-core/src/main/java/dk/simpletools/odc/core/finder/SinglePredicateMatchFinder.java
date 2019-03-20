@@ -25,6 +25,7 @@ package dk.simpletools.odc.core.finder;
 import dk.simpletools.odc.core.dsl.expression.SearchLocationReference;
 import dk.simpletools.odc.core.predicate.Predicate;
 import dk.simpletools.odc.core.processing.ElementFinderReference;
+import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.StructureElement;
 
 import java.util.Collections;
@@ -96,8 +97,8 @@ public class SinglePredicateMatchFinder implements ElementFinder {
   }
 
   @Override
-  public SearchLocation lookupSearchLocation(StructureElement structureElement, boolean isRelative) {
-    if (!isRelative && predicate.evaluate(structureElement)) {
+  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean isRelative) {
+    if (!isRelative && predicate.evaluate(structureElement, objectStore)) {
       return searchLocation;
     }
     return null;

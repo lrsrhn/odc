@@ -94,16 +94,6 @@ public class JsonObject implements InternalStructureElement {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public ValueStore getValueStore() {
-        return valueStore;
-    }
-
-    @Override
-    public ObjectStore getObjectStore() {
-        return objectStore;
-    }
-
 //    public String[] getValueArray() {
 //        if (elementValuesCache != null) {
 //            return elementValuesCache;

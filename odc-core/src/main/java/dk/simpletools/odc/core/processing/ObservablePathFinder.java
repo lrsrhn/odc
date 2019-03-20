@@ -26,7 +26,6 @@ import dk.simpletools.odc.core.dsl.expression.ExpressionBuilder;
 import dk.simpletools.odc.core.dsl.expression.PathReference;
 import dk.simpletools.odc.core.dsl.searchtree.RootTreeBuilder;
 import dk.simpletools.odc.core.finder.ElementFinder;
-import dk.simpletools.odc.core.finder.RootElementFinder;
 import dk.simpletools.odc.core.finder.SingleElementFinder;
 
 import java.io.Reader;

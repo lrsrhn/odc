@@ -26,6 +26,7 @@ import dk.simpletools.odc.core.dsl.adders.*;
 import dk.simpletools.odc.core.finder.ElementHandler;
 import dk.simpletools.odc.core.finder.OnEndHandler;
 import dk.simpletools.odc.core.finder.OnStartHandler;
+import dk.simpletools.odc.core.finder.OnTextHandler;
 import dk.simpletools.odc.core.predicate.Predicate;
 
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ public class ExpressionBuilder {
     return toFragment();
   }
 
-  public PathFragment handleElementBy(ElementHandler elementHandler) {
+  public PathFragment handle(ElementHandler elementHandler) {
     if (filter != null) {
       treePathAdders.add(new TreeElementFilterAdder(filter));
     }
@@ -97,7 +98,7 @@ public class ExpressionBuilder {
     return toFragment();
   }
 
-  public PathFragment handleStartElementBy(OnStartHandler onStartHandler) {
+  public PathFragment onStart(OnStartHandler onStartHandler) {
     if (filter != null) {
       treePathAdders.add(new TreeElementFilterAdder(filter));
     }
@@ -105,7 +106,15 @@ public class ExpressionBuilder {
     return toFragment();
   }
 
-  public PathFragment handleEndElementBy(OnEndHandler onEndHandler) {
+  public PathFragment onText(OnTextHandler onTextHandler) {
+    if (filter != null) {
+      treePathAdders.add(new TreeElementTextFilterAdder(filter));
+    }
+    treePathAdders.add(new TreeOnTextHandlerAdder(onTextHandler));
+    return toFragment();
+  }
+
+  public PathFragment onEnd(OnEndHandler onEndHandler) {
     if (filter != null) {
       treePathAdders.add(new TreeElementFilterAdder(filter));
     }

@@ -35,7 +35,7 @@ import java.io.StringReader;
 @Warmup(iterations = 1)
 @Measurement(iterations = 5, time = 10)
 @BenchmarkMode(Mode.SampleTime)
-public class BigXmlStaxBenchmark {
+public class BigStaxBenchmark {
 
     @State(Scope.Benchmark)
     public static class BenchmarkState {
@@ -140,7 +140,7 @@ public class BigXmlStaxBenchmark {
 
     private static String readFile() throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(
-                BigXmlStaxBenchmark.class.getClassLoader().getResourceAsStream("bigjson.xml")));
+                BigStaxBenchmark.class.getClassLoader().getResourceAsStream("bigjson.xml")));
         StringBuilder builder = new StringBuilder();
         while (reader.ready()) {
             builder.append(reader.readLine());

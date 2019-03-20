@@ -22,6 +22,7 @@
  */
 package dk.simpletools.odc.core.predicate;
 
+import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.StructureElement;
 
 import java.util.Arrays;
@@ -34,9 +35,9 @@ public class AndPredicate implements Predicate {
   }
 
   @Override
-  public boolean evaluate(StructureElement structureElement) {
+  public boolean evaluate(StructureElement structureElement, ObjectStore objectStore) {
     for (Predicate predicate : predicates) {
-      if (!predicate.evaluate(structureElement)) {
+      if (!predicate.evaluate(structureElement, objectStore)) {
         return false;
       }
     }

@@ -28,18 +28,14 @@ import dk.simpletools.odc.core.predicate.Predicate;
 public final class ObservablePathTraverser {
     private ElementFinder currentElementFinder;
     private TextLocation currentOnTextLocation;
-    private final EndElement endElement;
     private final ElementFinderStack elementFinderStack;
     private final IntStack depthStack;
     private int parentDepth;
     private int childDepth;
-    private final ValueStore valueStore;
     private final ObjectStore objectStore;
 
-    ObservablePathTraverser(final ElementFinder rootElementFinder, final StructureElement structureElement) {
-        this.endElement = new EndElement(structureElement);
-        this.valueStore = structureElement.getValueStore();
-        this.objectStore = structureElement.getObjectStore();
+    ObservablePathTraverser(final ElementFinder rootElementFinder, final StructureElement structureElement, ObjectStore objectStore) {
+        this.objectStore = objectStore;
         this.currentElementFinder = rootElementFinder;
         this.elementFinderStack = new ElementFinderStack(15);
         this.depthStack = new IntStack(15);
@@ -53,7 +49,7 @@ public final class ObservablePathTraverser {
         structureElement.getElementName();
         structureElement.getElementNS();
         if (childDepth == currentDepth) {
-            SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, false);
+            SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, objectStore, false);
             if (searchLocation != null) {
                 handleSearchLocation(searchLocation, structureElement, currentDepth);
                 return;
@@ -62,7 +58,7 @@ public final class ObservablePathTraverser {
                 return;
             }
         }
-        SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, true);
+        SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, objectStore, true);
         if (searchLocation != null) {
             handleSearchLocation( searchLocation, structureElement, currentDepth);
         }
@@ -76,17 +72,21 @@ public final class ObservablePathTraverser {
         ElementFinder nextElementFinder = searchLocation.getElementFinder();
         if (onStartHandler != null) {
             if (filter == null) {
-                onStartHandler.startElement(structureElement);
+                onStartHandler.startElement(structureElement, objectStore);
             } else {
-                if (filter.evaluate(structureElement)) {
-                    onStartHandler.startElement(structureElement);
+                if (filter.evaluate(structureElement, objectStore)) {
+                    onStartHandler.startElement(structureElement, objectStore);
                 }
             }
         }
         if (onEndHandler == null) {
-            handleStacks(currentDepth, null);
+
             if (nextElementFinder != null) {
+                handleStacks(currentDepth, null);
                 handleNextElementFinder(structureElement, currentDepth, nextElementFinder);
+            }
+            else if (currentOnTextLocation != null) {
+                handleStacks(currentDepth, null);
             }
         } else {
             handleStacks(currentDepth, onEndHandler);
@@ -106,23 +106,22 @@ public final class ObservablePathTraverser {
     private void handleNextElementFinder(final InternalStructureElement structureElement, final int currentDepth, final ElementFinder nextElementFinder) throws Exception {
         currentElementFinder = nextElementFinder;
         if (currentElementFinder.isPredicate()) {
-            SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, false);
+            SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, objectStore, false);
             if (searchLocation != null) {
                 handleSearchLocation(searchLocation, structureElement, currentDepth);
             }
         }
     }
 
-    public void text(final InternalStructureElement structureElement) {
+    public void text(final InternalStructureElement structureElement) throws Exception {
         if (currentOnTextLocation != null) {
             Predicate filter = currentOnTextLocation.getTextFilter();
             if (filter == null) {
-                currentOnTextLocation.getOnTextHandler().onText(structureElement);
-            } else if (filter.evaluate(structureElement)) {
-                currentOnTextLocation.getOnTextHandler().onText(structureElement);
+                currentOnTextLocation.getOnTextHandler().onText(structureElement, objectStore);
+            } else if (filter.evaluate(structureElement, objectStore)) {
+                currentOnTextLocation.getOnTextHandler().onText(structureElement, objectStore);
             }
         }
-        structureElement.clearCache();
     }
 
     public void endElement(final InternalStructureElement structureElement, final int currentDepth) throws Exception {
@@ -133,9 +132,9 @@ public final class ObservablePathTraverser {
             ElementFinderStack.StackElement stackElement = elementFinderStack.pop();
             OnEndHandler onEndHandler = stackElement.getOnEndHandler();
             ElementFinder previousElementFinder = stackElement.getPreviousElementFinder();
+            structureElement.clearCache();
             if (onEndHandler != null) {
-                structureElement.clearCache();
-                onEndHandler.endElement(endElement, valueStore, objectStore);
+                onEndHandler.endElement(structureElement, objectStore);
             }
             currentElementFinder = previousElementFinder;
         }

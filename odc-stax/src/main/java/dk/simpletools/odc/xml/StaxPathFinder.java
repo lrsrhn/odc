@@ -73,9 +73,14 @@ public class StaxPathFinder extends ObservablePathFinder {
   @Override
   public ObjectStore find(Reader reader, ObjectStore objectStore) {
     XMLStreamReader2 streamReader = null;
+    XmlRawTextReader2 xmlRawTextReader = null;
     try {
-      XmlRawTextReader2 xmlRawTextReader = isRawTextReadingEnabled ? new XmlRawTextReader2(reader) : null;
-      streamReader = (XMLStreamReader2) xmlInputFactory.createXMLStreamReader(xmlRawTextReader);
+      if (isRawTextReadingEnabled) {
+        xmlRawTextReader = new XmlRawTextReader2(reader);
+        streamReader = (XMLStreamReader2) xmlInputFactory.createXMLStreamReader(xmlRawTextReader);
+      } else {
+        streamReader = (XMLStreamReader2) xmlInputFactory.createXMLStreamReader(reader);
+      }
       if (xmlValidationSchema != null) {
         streamReader.validateAgainst(xmlValidationSchema);
       }

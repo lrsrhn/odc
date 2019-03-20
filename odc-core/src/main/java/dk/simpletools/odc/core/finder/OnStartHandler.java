@@ -22,9 +22,9 @@
  */
 package dk.simpletools.odc.core.finder;
 
+import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.StructureElement;
 
 public interface OnStartHandler {
-
-    void startElement(StructureElement structureElement) throws Exception;
+    void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception;
 }

@@ -34,14 +34,12 @@ public class XMLElement implements InternalStructureElement {
   private String elementTextCache;
   private String elementNameCache;
   private String elementNamespaceCache;
-  private ValueStore valueStore;
   private ObjectStore objectStore;
   private XmlRawTextReader2 xmlRawTextReader;
 
   public XMLElement(XMLStreamReader2 xmlStreamReader, XmlRawTextReader2 xmlRawTextReader, ObjectStore objectStore) {
-    this.objectStore = objectStore == null ? new ObjectStore() : objectStore;
+    this.objectStore = objectStore;
     this.xmlStreamReader = xmlStreamReader;
-    this.valueStore = new ValueStore();
     this.xmlRawTextReader = xmlRawTextReader;
   }
 
@@ -70,18 +68,11 @@ public class XMLElement implements InternalStructureElement {
     return false;
   }
 
-  @Override
-  public ValueStore getValueStore() {
-    return valueStore;
-  }
-
-  @Override
-  public ObjectStore getObjectStore() {
-    return objectStore;
-  }
-
   public String getText() {
-    if (elementTextCache == null &&  (xmlStreamReader.getEventType() == XMLStreamConstants.CHARACTERS || xmlStreamReader.getEventType() == XMLStreamConstants.CDATA)) {
+    if (elementTextCache != null) {
+      return elementTextCache;
+    }
+    if (xmlStreamReader.getEventType() == XMLStreamConstants.CHARACTERS || xmlStreamReader.getEventType() == XMLStreamConstants.CDATA) {
       try {
         elementTextCache = xmlStreamReader.getText();
       } catch (IllegalStateException e) {
@@ -129,7 +120,7 @@ public class XMLElement implements InternalStructureElement {
   }
 
   public String getElementNS() {
-      if (elementNamespaceCache == null) {
+    if (elementNamespaceCache == null) {
       elementNamespaceCache = xmlStreamReader.getNamespaceURI();
     }
     return elementNamespaceCache;

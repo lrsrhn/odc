@@ -26,12 +26,14 @@ import dk.simpletools.odc.core.finder.ElementFinder;
 
 public abstract class BaseElementProcessor<E,T extends StructureElement> {
     protected ObservablePathTraverser observablePathTraverser;
+    protected ObjectStore objectStore;
 
     public BaseElementProcessor(ElementFinder rootElementFinder, StructureElement structureElement) {
         if (rootElementFinder == null) {
             throw new IllegalArgumentException("The root xml element finder cannot be null");
         }
-        this.observablePathTraverser = new ObservablePathTraverser(rootElementFinder, structureElement);
+        this.objectStore = new ObjectStore();
+        this.observablePathTraverser = new ObservablePathTraverser(rootElementFinder, structureElement, objectStore);
     }
 
     public abstract ObjectStore search(E parser, T structureElement) throws Exception;

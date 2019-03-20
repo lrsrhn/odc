@@ -55,7 +55,7 @@ public class StaxAlgorithmTest {
     }
 
 //    @Benchmark
-    public void normalAlgorithm(BigXmlStaxBenchmark.BenchmarkState benchmarkState, final Blackhole blackhole) throws Exception {
+    public void normalAlgorithm(BigStaxBenchmark.BenchmarkState benchmarkState, final Blackhole blackhole) throws Exception {
         XMLStreamReader streamReader = benchmarkState.xmlInputFactory.createXMLStreamReader(new StringReader(benchmarkState.xmlContent));
         while (streamReader.hasNext()) {
             switch (streamReader.next()) {
@@ -74,7 +74,7 @@ public class StaxAlgorithmTest {
     }
 
 //    @Benchmark
-    public void alternteAlgorithm(BigXmlStaxBenchmark.BenchmarkState benchmarkState, final Blackhole blackhole) throws Exception {
+    public void alternteAlgorithm(BigStaxBenchmark.BenchmarkState benchmarkState, final Blackhole blackhole) throws Exception {
         XMLStreamReader streamReader = benchmarkState.xmlInputFactory.createXMLStreamReader(new StringReader(benchmarkState.xmlContent));
         if (streamReader.hasNext()) {
             for (int eventType = streamReader.next(); streamReader.hasNext(); eventType = streamReader.next()) {

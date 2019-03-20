@@ -22,53 +22,59 @@
  */
 package dk.simpletools.odc.benchmark;
 
-import dk.simpletools.odc.core.processing.ObservablePathFinder;
-import dk.simpletools.odc.xpp.XppPathFinder;
+import dk.simpletools.odc.xml.StaxPathFinder;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
 //,jvmArgsAppend={"-XX:MaxInlineSize=0", "-Xverify:none"}
 // jvmArgsAppend = {"-XX:+UnlockDiagnosticVMOptions", "-XX:+PrintInlining"}
 @Fork(value = 1)
 @Warmup(iterations = 1)
+//@Measurement(iterations = 100, time = 30)
 @Measurement(iterations = 5, time = 10)
 @BenchmarkMode(Mode.SampleTime)
-public class BigXmlXPPBenchmark {
+public class BigStaxPathFinderBenchmark {
 
     @State(Scope.Benchmark)
     public static class BenchmarkState {
         String xmlContent;
-        ObservablePathFinder jsonPath;
+        StaxPathFinder staxPathFinder;
         private StringBuilder builder = new StringBuilder(2000000);
 
         public BenchmarkState() {
             try {
 
                 xmlContent = readFile();
-                jsonPath = new XppPathFinder();
-                jsonPath.addXpath("/root/row/registered").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getText()));
-                jsonPath.addXpath("/root/row/tags").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getText()));
+                staxPathFinder = new StaxPathFinder();
+                staxPathFinder.disableRawTextReading();
+                ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
+                staxPathFinder.addXpath("/root/row/registered").onText(testHandler);
+//                staxPathFinder.addXpath("/root/row/greeting").onText(testHandler);
+//                staxPathFinder.addXpath("/root/row/latitude").onText(testHandler);
+                staxPathFinder.addXpath("/root/row/tags").onText(testHandler);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
         }
     }
 
-
     @Benchmark
     public void testBigXml(BenchmarkState benchmarkState, final Blackhole blackhole) {
-        blackhole.consume(benchmarkState.jsonPath.find(benchmarkState.xmlContent));
-//        System.out.println("Length: " + benchmarkState.builder.length());
-        benchmarkState.builder.setLength(0);
+//        if (!run) {
+            blackhole.consume(benchmarkState.staxPathFinder.find(benchmarkState.xmlContent));
+//            System.out.println("Length: " + benchmarkState.builder.length());
+//            System.out.println(benchmarkState.builder.toString());
+            benchmarkState.builder.setLength(0);
+//            run = true;
+//        }
 
     }
 
     private static String readFile() throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(
-                BigXmlXPPBenchmark.class.getClassLoader().getResourceAsStream("bigjson.xml")));
+                BigStaxPathFinderBenchmark.class.getClassLoader().getResourceAsStream("bigjson.xml")));
         StringBuilder builder = new StringBuilder();
         while (reader.ready()) {
             builder.append(reader.readLine());

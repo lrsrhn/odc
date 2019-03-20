@@ -25,7 +25,7 @@ import dk.simpletools.odc.core.dsl.expression.PathFragment;
 import dk.simpletools.odc.core.finder.ElementHandler;
 import dk.simpletools.odc.core.predicate.Predicates;
 import dk.simpletools.odc.core.processing.*;
-import dk.simpletools.odc.core.standardhandlers.Handlers;
+import dk.simpletools.odc.core.standardhandlers.EventForwarderBuilder;
 import dk.simpletools.odc.json.JsonPathFinder;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,8 +39,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.*;
-
-import static dk.simpletools.odc.core.picker.ValuePickers.valuePicker;
 
 public class ExpressionXmlTest {
     private JsonBuilderFactory jsonBuilderFactory;
@@ -69,9 +67,9 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observablePathFinder.addXpath("/$/one").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/three").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/$/one").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two/three").handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(jsonText));
         assertElementHandler.verify();
@@ -95,9 +93,9 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observablePathFinder.addXpath("/$/one").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/three").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/$/one").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two/three").handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(jsonText));
         assertElementHandler.verify();
@@ -122,9 +120,9 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observablePathFinder.addXpath("/$/one").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/three").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/$/one").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two/three").handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(jsonText));
         assertElementHandler.verify();
@@ -147,10 +145,10 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observablePathFinder.addXpath("/$/one").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/three").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/four").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/$/one").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two/three").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two/four").handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(jsonText));
         assertElementHandler.verify();
@@ -178,10 +176,10 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observablePathFinder.addXpath("/$/one").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/three").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/four").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/$/one").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two/three").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two/four").handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(jsonText));
         assertElementHandler.verify();
@@ -203,16 +201,12 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observablePathFinder.addXpath("/$/one").filter(Predicates.alwaysTrue()).handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").filter(Predicates.alwaysTrue()).handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/three").filter(Predicates.alwaysTrue()).handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/$/one").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two/three").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(jsonText));
         assertElementHandler.verify();
-    }
-
-    private enum Values {
-        ATTRIBUTE
     }
 
     @Test
@@ -233,11 +227,11 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observablePathFinder.addXpath("/$/one").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/att").handleElementBy(Handlers.valueToStore(valuePicker(Values.ATTRIBUTE)));
-        observablePathFinder.addXpath("/$/one/two/three").predicate(Predicates.storedValue(Values.ATTRIBUTE, "one")).handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/four").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/$/one").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two/att").onText(EventForwarderBuilder.builder().textValueCollector("att").build());
+        observablePathFinder.addXpath("/$/one/two/three").predicate(Predicates.storedValue("att", "one")).handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two/four").handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(jsonText));
         assertElementHandler.verify();
@@ -265,10 +259,10 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three", "one", "two", "three", "five");
         assertElementHandler.exptectedEndElements("three", "three", "two", "one", "five", "two", "one");
 
-        PathFragment recursion = observablePathFinder.addXpath("/$/one").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").elementsAbsolute("three").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").elementsAbsolute("five").handleElementBy(assertElementHandler);
+        PathFragment recursion = observablePathFinder.addXpath("/$/one").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two").elementsAbsolute("three").handle(assertElementHandler);
+        observablePathFinder.addXpath("/$/one/two").elementsAbsolute("five").handle(assertElementHandler);
         observablePathFinder.addXpath("/$/one/two").recursion(recursion);
 
         observablePathFinder.find(new StringReader(jsonText));
@@ -310,18 +304,13 @@ public class ExpressionXmlTest {
         }
 
         @Override
-        public void startElement(StructureElement structureElement) throws Exception {
+        public void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
             startElementsActual.add(structureElement.getElementName());
         }
 
         @Override
-        public void endElement(EndElement endElement, ValueStore valueStore, ObjectStore objectStore) throws Exception {
-            endElementsActual.add(endElement.getElementName());
-        }
-
-        @Override
-        public void clear() {
-
+        public void endElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+            endElementsActual.add(structureElement.getElementName());
         }
 
         public void expectedValue(String key, String value) {
@@ -329,7 +318,7 @@ public class ExpressionXmlTest {
         }
 
         @Override
-        public void onText(StructureElement structureElement) {
+        public void onText(StructureElement structureElement, ObjectStore objectStore) {
             String expectedValue = elementsToRead.get(structureElement.getElementName());
             if (expectedValue != null) {
                 Assert.assertEquals(expectedValue, structureElement.getText());

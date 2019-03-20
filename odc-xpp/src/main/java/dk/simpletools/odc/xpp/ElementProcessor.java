@@ -28,8 +28,6 @@ import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.XPPElement;
 import org.xmlpull.v1.XmlPullParser;
 
-import javax.xml.stream.XMLStreamConstants;
-
 public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XPPElement> {
 
   public ElementProcessor(ElementFinder nextElementFinder, XPPElement XPPElement) {
@@ -57,6 +55,6 @@ public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XPPEle
                   continueLoop = false;
           }
       }
-    return XPPElement.getObjectStore();
+    return objectStore;
   }
 }

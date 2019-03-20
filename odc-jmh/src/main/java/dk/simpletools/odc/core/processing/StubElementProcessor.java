@@ -44,6 +44,6 @@ public class StubElementProcessor extends BaseElementProcessor<InputReader, Elem
             }
             super.observablePathTraverser.endElement(structureElement, --currentDepth);
         }
-        return structureElement.getObjectStore();
+        return objectStore;
     }
 }

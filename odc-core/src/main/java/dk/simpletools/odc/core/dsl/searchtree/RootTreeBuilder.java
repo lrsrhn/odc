@@ -22,9 +22,10 @@
  */
 package dk.simpletools.odc.core.dsl.searchtree;
 
-import dk.simpletools.odc.core.dsl.expression.PathReference;
 import dk.simpletools.odc.core.dsl.adders.TreePathAdder;
+import dk.simpletools.odc.core.dsl.expression.PathReference;
 import dk.simpletools.odc.core.dsl.expression.XpathParser;
+import dk.simpletools.odc.core.finder.SingleElementFinder;
 import dk.simpletools.odc.core.processing.ElementFinderReference;
 
 import java.util.HashMap;
@@ -62,7 +63,11 @@ public class RootTreeBuilder {
         return new ElementTreeBuilder<RootTreeBuilder>(this, referenceStore, new PathReference(elementFinderReference, elementName, true));
     }
 
-    // Present for builder symmetry
+    // Present for handlerBuilder symmetry
     public void build() {
+    }
+
+    public static RootTreeBuilder newTreeBuilder() {
+        return new RootTreeBuilder(new SingleElementFinder().getReference());
     }
 }

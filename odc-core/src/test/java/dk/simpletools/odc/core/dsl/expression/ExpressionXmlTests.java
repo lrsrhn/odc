@@ -22,7 +22,6 @@
  */
 package dk.simpletools.odc.core.dsl.expression;
 
-import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
 import dk.simpletools.odc.core.predicate.Predicates;
 import dk.simpletools.odc.core.processing.*;
 import dk.simpletools.odc.core.finder.ElementHandler;
@@ -56,9 +55,9 @@ public abstract class ExpressionXmlTests {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observablePathFinder.addXpath("/one").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two/three").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/one").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two/three").handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
@@ -81,9 +80,9 @@ public abstract class ExpressionXmlTests {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observablePathFinder.addXpath("/one").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two/three").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/one").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two/three").handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
@@ -104,8 +103,8 @@ public abstract class ExpressionXmlTests {
         assertElementHandler.exptectedStartElements("five");
         assertElementHandler.exptectedEndElements("five");
 
-        observablePathFinder.addXpath("/one/four/five").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/two/four/five").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/one/four/five").handle(assertElementHandler);
+        observablePathFinder.addXpath("/two/four/five").handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
@@ -132,9 +131,9 @@ public abstract class ExpressionXmlTests {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observablePathFinder.addXpath("/one").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two/three").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/one").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two/three").handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
@@ -157,10 +156,10 @@ public abstract class ExpressionXmlTests {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observablePathFinder.addXpath("/one").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two/three").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two/four").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/one").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two/three").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two/four").handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
@@ -191,10 +190,10 @@ public abstract class ExpressionXmlTests {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observablePathFinder.addXpath("/one").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two/three").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two/four").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/one").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two/three").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two/four").handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
@@ -215,9 +214,9 @@ public abstract class ExpressionXmlTests {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observablePathFinder.addXpath("/one").filter(Predicates.alwaysTrue()).handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two").filter(Predicates.alwaysTrue()).handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two/three").filter(Predicates.alwaysTrue()).handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/one").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two/three").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
@@ -240,10 +239,10 @@ public abstract class ExpressionXmlTests {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observablePathFinder.addXpath("/one").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two/three").predicate(Predicates.attribute("att", "one")).handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two/four").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/one").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two/three").predicate(Predicates.attribute("att", "one")).handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two/four").handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
@@ -268,10 +267,10 @@ public abstract class ExpressionXmlTests {
         assertElementHandler.exptectedStartElements("one", "two", "three", "two", "five");
         assertElementHandler.exptectedEndElements("three", "two", "five", "two", "one");
 
-        observablePathFinder.addXpath("/one").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two").predicate(Predicates.attribute("att", "bla")).elementsAbsolute("three").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two").predicate(Predicates.attribute("att", "wee")).elementsAbsolute("five").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/one").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").predicate(Predicates.attribute("att", "bla")).elementsAbsolute("three").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").predicate(Predicates.attribute("att", "wee")).elementsAbsolute("five").handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
@@ -296,10 +295,10 @@ public abstract class ExpressionXmlTests {
         assertElementHandler.exptectedStartElements("one", "two", "three", "two", "five");
         assertElementHandler.exptectedEndElements("three", "two", "five", "two", "one");
 
-        observablePathFinder.addXpath("/one").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two").predicate(Predicates.attribute("att", "bla")).elementsAbsolute("three").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two").predicate(Predicates.attribute("att", "wee")).elementsAbsolute("five").handleElementBy(assertElementHandler);
+        observablePathFinder.addXpath("/one").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").predicate(Predicates.attribute("att", "bla")).elementsAbsolute("three").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").predicate(Predicates.attribute("att", "wee")).elementsAbsolute("five").handle(assertElementHandler);
 
         observablePathFinder.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
@@ -330,10 +329,10 @@ public abstract class ExpressionXmlTests {
         assertElementHandler.exptectedStartElements("one", "two", "three", "one", "two", "three", "two", "five");
         assertElementHandler.exptectedEndElements("three", "three", "two", "one", "two", "five", "two", "one");
 
-        PathFragment recursion = observablePathFinder.addXpath("/one").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two").elementsAbsolute("three").handleElementBy(assertElementHandler);
-        observablePathFinder.addXpath("/one/two").elementsAbsolute("five").handleElementBy(assertElementHandler);
+        PathFragment recursion = observablePathFinder.addXpath("/one").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").elementsAbsolute("three").handle(assertElementHandler);
+        observablePathFinder.addXpath("/one/two").elementsAbsolute("five").handle(assertElementHandler);
         observablePathFinder.addXpath("/one/two").recursion(recursion);
 
         observablePathFinder.find(new StringReader(builder.toString()));
@@ -371,18 +370,13 @@ public abstract class ExpressionXmlTests {
         }
 
         @Override
-        public void startElement(StructureElement structureElement) throws Exception {
+        public void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
             startElementsActual.add(structureElement.getElementName());
         }
 
         @Override
-        public void endElement(EndElement endElement, ValueStore valueStore, ObjectStore objectStore) throws Exception {
-            endElementsActual.add(endElement.getElementName());
-        }
-
-        @Override
-        public void clear() {
-
+        public void endElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+            endElementsActual.add(structureElement.getElementName());
         }
 
         public void expectedValue(String key, String value) {
@@ -390,7 +384,7 @@ public abstract class ExpressionXmlTests {
         }
 
         @Override
-        public void onText(StructureElement structureElement) {
+        public void onText(StructureElement structureElement, ObjectStore objectStore) {
             String expectedValue = elementsToRead.get(structureElement.getElementName());
             if (expectedValue != null) {
                 Assert.assertEquals(expectedValue, structureElement.getText());

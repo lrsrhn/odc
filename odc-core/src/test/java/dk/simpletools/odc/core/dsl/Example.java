@@ -22,7 +22,6 @@
  */
 package dk.simpletools.odc.core.dsl;
 
-import dk.simpletools.odc.core.finder.OnEndHandler;
 import dk.simpletools.odc.core.finder.OnStartHandler;
 import dk.simpletools.odc.core.finder.OnTextHandler;
 import dk.simpletools.odc.core.predicate.Predicates;
@@ -108,14 +107,14 @@ public abstract class Example {
         }
 
         @Override
-        public void startElement(StructureElement structureElement) throws Exception {
+        public void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
             if (isRaw) {
                 System.out.println(prefix + ": " + structureElement.getRawElementValue());
             }
         }
 
         @Override
-        public void onText(StructureElement structureElement) {
+        public void onText(StructureElement structureElement, ObjectStore objectStore) {
             System.out.println(prefix + ": " + structureElement.getText());
         }
     }

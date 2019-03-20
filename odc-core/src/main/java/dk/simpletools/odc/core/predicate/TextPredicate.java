@@ -22,6 +22,7 @@
  */
 package dk.simpletools.odc.core.predicate;
 
+import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.StructureElement;
 
 public class TextPredicate implements Predicate {
@@ -32,7 +33,7 @@ public class TextPredicate implements Predicate {
   }
 
   @Override
-  public boolean evaluate(StructureElement structureElement) {
+  public boolean evaluate(StructureElement structureElement, ObjectStore objectStore) {
     return expectedText.equals(structureElement.getText());
   }
 

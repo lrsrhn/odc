@@ -29,13 +29,9 @@ public class XPPElement implements InternalStructureElement {
   private XmlPullParser xmlPullParser;
   private String elementTextCache;
   private String elementNameCache;
-  private ValueStore valueStore;
-  private ObjectStore objectStore;
 
-  public XPPElement(XmlPullParser xmlStreamReader, ObjectStore objectStore) {
-    this.objectStore = objectStore == null ? new ObjectStore() : objectStore;
+  public XPPElement(XmlPullParser xmlStreamReader) {
     this.xmlPullParser = xmlStreamReader;
-    this.valueStore = new ValueStore();
     this.elementNameCache = null;
   }
 
@@ -66,16 +62,6 @@ public class XPPElement implements InternalStructureElement {
       }
     }
     return false;
-  }
-
-  @Override
-  public ValueStore getValueStore() {
-    return valueStore;
-  }
-
-  @Override
-  public ObjectStore getObjectStore() {
-    return objectStore;
   }
 
   /**

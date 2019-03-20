@@ -22,6 +22,10 @@
  */
 package dk.simpletools.odc.core.processing;
 
+/**
+ * May be used in the future - otherwise delete
+ */
+@Deprecated()
 public class ValueStore {
   private Object[] values;
 

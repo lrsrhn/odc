@@ -35,8 +35,8 @@ public class Predicates {
     return new AttributePredicate(attributeName, attributeValue);
   }
 
-  public static Predicate storedValue(Enum<?> enumValueIndex, String value) {
-    return new ValueStorePredicate(enumValueIndex, value);
+  public static Predicate storedValue(String storeKey, String value) {
+    return new ValueStorePredicate(storeKey, value);
   }
 
   public static Predicate text(String text) {

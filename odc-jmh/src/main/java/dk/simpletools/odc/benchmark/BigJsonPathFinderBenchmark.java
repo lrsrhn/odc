@@ -22,15 +22,14 @@
  */
 package dk.simpletools.odc.benchmark;
 
-import dk.simpletools.odc.core.finder.OnStartHandler;
 import dk.simpletools.odc.core.processing.ObservablePathFinder;
-import dk.simpletools.odc.core.processing.StructureElement;
-import dk.simpletools.odc.xml.StaxPathFinder;
+import dk.simpletools.odc.json.JsonPathFinder;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
 //,jvmArgsAppend={"-XX:MaxInlineSize=0", "-Xverify:none"}
 // jvmArgsAppend = {"-XX:+UnlockDiagnosticVMOptions", "-XX:+PrintInlining"}
 @Fork(value = 1)
@@ -38,7 +37,7 @@ import java.io.InputStreamReader;
 //@Measurement(iterations = 100, time = 30)
 @Measurement(iterations = 5, time = 10)
 @BenchmarkMode(Mode.SampleTime)
-public class BigXmlBenchmark {
+public class BigJsonPathFinderBenchmark {
 
     @State(Scope.Benchmark)
     public static class BenchmarkState {
@@ -48,14 +47,11 @@ public class BigXmlBenchmark {
 
         public BenchmarkState() {
             try {
-
                 xmlContent = readFile();
-                jsonPath = new StaxPathFinder();
-                TestHandler testHandler = new TestHandler(builder);
-                jsonPath.addXpath("/root/row/registered").handleStartElementBy(testHandler);
-//                jsonPath.addXpath("/root/row/greeting").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getText()));
-//                jsonPath.addXpath("/root/row/latitude").handleStartElementBy(element -> builder.append(element.getElementName()).append(": ").append(element.getText()));
-                jsonPath.addXpath("/root/row/tags").handleStartElementBy(testHandler);
+                jsonPath = new JsonPathFinder();
+                ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
+                jsonPath.addXpath("/$/{}/registered").onText(testHandler);
+                jsonPath.addXpath("/$/{}/tags").onText(testHandler);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -63,23 +59,17 @@ public class BigXmlBenchmark {
     }
 
 
-    private static boolean run = false;
-//
-    @Benchmark
+//    @Benchmark
     public void testBigXml(BenchmarkState benchmarkState, final Blackhole blackhole) {
-//        if (!run) {
-            blackhole.consume(benchmarkState.jsonPath.find(benchmarkState.xmlContent));
-//            System.out.println("Length: " + benchmarkState.builder.length());
-//            System.out.println(benchmarkState.builder.toString());
-            benchmarkState.builder.setLength(0);
-//            run = true;
-//        }
+        blackhole.consume(benchmarkState.jsonPath.find(benchmarkState.xmlContent));
+//        System.out.println("Length: " + benchmarkState.builder.length());
+        benchmarkState.builder.setLength(0);
 
     }
 
     private static String readFile() throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(
-                BigXmlBenchmark.class.getClassLoader().getResourceAsStream("bigjson.xml")));
+                BigJsonPathFinderBenchmark.class.getClassLoader().getResourceAsStream("bigjson.json")));
         StringBuilder builder = new StringBuilder();
         while (reader.ready()) {
             builder.append(reader.readLine());
@@ -88,18 +78,5 @@ public class BigXmlBenchmark {
         reader.close();
         builder.setLength(builder.length() - 1);
         return builder.toString();
-    }
-
-    private static final class TestHandler implements OnStartHandler {
-        private StringBuilder stringBuilder;
-
-        TestHandler(StringBuilder stringBuilder) {
-            this.stringBuilder = stringBuilder;
-        }
-
-        @Override
-        public void startElement(StructureElement structureElement) throws Exception {
-            stringBuilder.append(structureElement.getElementName()).append(": ").append(structureElement.getText());
-        }
     }
 }

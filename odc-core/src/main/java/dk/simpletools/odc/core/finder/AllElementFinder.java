@@ -25,6 +25,7 @@ package dk.simpletools.odc.core.finder;
 import dk.simpletools.odc.core.dsl.expression.SearchLocationReference;
 import dk.simpletools.odc.core.predicate.Predicate;
 import dk.simpletools.odc.core.processing.ElementFinderReference;
+import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.StructureElement;
 
 import java.util.List;
@@ -65,7 +66,7 @@ public class AllElementFinder implements ElementFinder {
     }
 
     @Override
-    public SearchLocation lookupSearchLocation(StructureElement structureElement, boolean isRelative) {
+    public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean isRelative) {
         return searchLocation;
     }
 

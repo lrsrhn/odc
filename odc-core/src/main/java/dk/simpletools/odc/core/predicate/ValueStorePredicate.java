@@ -22,24 +22,25 @@
  */
 package dk.simpletools.odc.core.predicate;
 
+import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.StructureElement;
 
 public class ValueStorePredicate implements Predicate {
-  private Enum<?> enumValueIndex;
+  private String storeKey;
   private String expectedValue;
 
-  public ValueStorePredicate(Enum<?> enumValueIndex, String expectedValue) {
-    this.enumValueIndex = enumValueIndex;
+  public ValueStorePredicate(String storeKey, String expectedValue) {
+    this.storeKey = storeKey;
     this.expectedValue = expectedValue;
   }
 
   @Override
-  public boolean evaluate(StructureElement structureElement) {
-    return expectedValue.equals(structureElement.getValueStore().lookupValue(enumValueIndex));
+  public boolean evaluate(StructureElement structureElement, ObjectStore objectStore) {
+    return expectedValue.equals(objectStore.get(storeKey, String.class));
   }
 
   @Override
   public String toString() {
-    return "store[" + enumValueIndex.name() + "]='" + expectedValue + "'";
+    return "store[" + storeKey + "]='" + expectedValue + "'";
   }
 }

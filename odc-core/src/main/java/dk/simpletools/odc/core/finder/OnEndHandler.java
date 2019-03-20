@@ -22,10 +22,9 @@
  */
 package dk.simpletools.odc.core.finder;
 
-import dk.simpletools.odc.core.processing.EndElement;
 import dk.simpletools.odc.core.processing.ObjectStore;
-import dk.simpletools.odc.core.processing.ValueStore;
+import dk.simpletools.odc.core.processing.StructureElement;
 
 public interface OnEndHandler {
-    void endElement(EndElement endElement, ValueStore valueStore, ObjectStore objectStore) throws Exception;
+    void endElement(StructureElement structureElement, ObjectStore objectStore) throws Exception;
 }

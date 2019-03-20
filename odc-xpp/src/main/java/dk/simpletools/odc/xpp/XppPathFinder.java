@@ -61,7 +61,7 @@ public class XppPathFinder extends ObservablePathFinder {
     try {
       streamReader = xmlPullParserFactory.newPullParser();
       streamReader.setInput(reader);
-      XPPElement XPPElement = new XPPElement(streamReader, objectStore);
+      XPPElement XPPElement = new XPPElement(streamReader);
       ElementProcessor elementProcessor = new ElementProcessor(rootElementFinder.getElementFinder(), XPPElement);
       return elementProcessor.search(streamReader, XPPElement);
     } catch (Exception ex) {

@@ -22,42 +22,43 @@
  */
 package dk.simpletools.odc.benchmark;
 
-import dk.simpletools.odc.core.processing.ObservablePathFinder;
-import dk.simpletools.odc.json.JsonPathFinder;
+import dk.simpletools.odc.core.stub.InputReader;
+import dk.simpletools.odc.core.stub.StubPathFinder;
+import dk.simpletools.odc.core.stub.XmlToInputReader;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 
-//,jvmArgsAppend={"-XX:MaxInlineSize=0", "-Xverify:none"}
+//jvmArgsAppend={"-XX:MaxInlineSize=0", "-Xverify:none"}
+
 // jvmArgsAppend = {"-XX:+UnlockDiagnosticVMOptions", "-XX:+PrintInlining"}
-@Fork(value = 1)
+@Fork(value = 1, jvmArgsAppend={"-Xverify:none"})
 @Warmup(iterations = 1)
 //@Measurement(iterations = 100, time = 30)
 @Measurement(iterations = 5, time = 10)
 @BenchmarkMode(Mode.SampleTime)
-public class BigJsonBenchmark {
+public class BigStubPathFinderBenchmark {
 
     @State(Scope.Benchmark)
     public static class BenchmarkState {
         String xmlContent;
-        ObservablePathFinder jsonPath;
+        InputReader inputReader;
+        StubPathFinder stubPathFinder;
         private StringBuilder builder = new StringBuilder(2000000);
 
         public BenchmarkState() {
             try {
-                xmlContent = readFile();
-                jsonPath = new JsonPathFinder();
-                jsonPath.addXpath("/$/{}/registered").handleStartElementBy(element -> {
-                    builder.append(element.getElementName()).append(": ").append(element.getText());
-                });
-//                jsonPath.addXpath("/$/{}/tags").handleStartElementBy(element -> {
-//                    String[] values = element.getValueArray();
-//                    for (String value : values) {
-//                        builder.append(element.getElementName()).append(": ").append(value);
-//                    }
-//                });
+                String xmlContent = readFile();
+                inputReader = new XmlToInputReader().processXml(new StringReader(xmlContent));
+                stubPathFinder = new StubPathFinder();
+                ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
+                stubPathFinder.addXpath("/root/row/registered").onText(testHandler);
+//                xppPathFinder.addXpath("/root/row/greeting").onText(testHandler);
+//                xppPathFinder.addXpath("/root/row/latitude").onText(testHandler);
+                stubPathFinder.addXpath("/root/row/tags").onText(testHandler);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -67,15 +68,15 @@ public class BigJsonBenchmark {
 
 //    @Benchmark
     public void testBigXml(BenchmarkState benchmarkState, final Blackhole blackhole) {
-        blackhole.consume(benchmarkState.jsonPath.find(benchmarkState.xmlContent));
+        benchmarkState.inputReader.reset();
+        blackhole.consume(benchmarkState.stubPathFinder.find(benchmarkState.inputReader));
 //        System.out.println("Length: " + benchmarkState.builder.length());
         benchmarkState.builder.setLength(0);
-
     }
 
     private static String readFile() throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(
-                BigJsonBenchmark.class.getClassLoader().getResourceAsStream("bigjson.json")));
+                BigStubPathFinderBenchmark.class.getClassLoader().getResourceAsStream("bigjson.xml")));
         StringBuilder builder = new StringBuilder();
         while (reader.ready()) {
             builder.append(reader.readLine());

@@ -21,8 +21,8 @@
  * THE SOFTWARE.
  */
 
+import dk.simpletools.odc.core.eventhandling.TextValueCollector;
 import dk.simpletools.odc.core.finder.ElementHandler;
-import dk.simpletools.odc.core.finder.OnStartHandler;
 import dk.simpletools.odc.core.finder.OnTextHandler;
 import dk.simpletools.odc.core.processing.*;
 import dk.simpletools.odc.json.JsonPathFinder;
@@ -41,10 +41,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static dk.simpletools.odc.core.picker.ValuePickers.valuePicker;
 import static dk.simpletools.odc.core.predicate.Predicates.alwaysTrue;
 import static dk.simpletools.odc.core.predicate.Predicates.storedValue;
-import static dk.simpletools.odc.core.standardhandlers.Handlers.valueToStore;
 import static org.junit.Assert.assertEquals;
 
 public class TreeBuilderTest {
@@ -250,10 +248,10 @@ public class TreeBuilderTest {
                     .element("one").onStart().to(assertElementHandler)
                         .element("two").onStart().to(assertElementHandler)
                             .element("att")
-                                .onText().to(valueToStore(valuePicker(DefaultEnum.VALUE01)))
+                                .onText().to(new TextValueCollector("att"))
                             .end()
                             .element("three")
-                                .predicate(storedValue(DefaultEnum.VALUE01, "one"))
+                                .predicate(storedValue("att", "one"))
                                     .onStart().to(assertElementHandler)
                                 .end(assertElementHandler)
                             .end()
@@ -428,7 +426,7 @@ public class TreeBuilderTest {
 
         OnTextHandler valueTester = new OnTextHandler() {
             @Override
-            public void onText(StructureElement structureElement) {
+            public void onText(StructureElement structureElement, ObjectStore objectStore) {
                 String value = structureElement.getText();
                 if(value == null) {
                     assertEquals("isnull", structureElement.getElementName());
@@ -501,22 +499,17 @@ public class TreeBuilderTest {
         }
 
         @Override
-        public void startElement(StructureElement structureElement) throws Exception {
+        public void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
             startElementsActual.add(structureElement.getElementName());
         }
 
         @Override
-        public void endElement(EndElement endElement, ValueStore valueStore, ObjectStore objectStore) throws Exception {
-            endElementsActual.add(endElement.getElementName());
+        public void endElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+            endElementsActual.add(structureElement.getElementName());
         }
 
         @Override
-        public void clear() {
-
-        }
-
-        @Override
-        public void onText(StructureElement structureElement) {
+        public void onText(StructureElement structureElement, ObjectStore objectStore) {
 
         }
     }

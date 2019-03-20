@@ -45,7 +45,7 @@ public class ObjectStore {
     }
 
     public void clearKey(String key) {
-        objectMap.put(key, null);
+        objectMap.remove(key);
     }
 
     public void clear() {

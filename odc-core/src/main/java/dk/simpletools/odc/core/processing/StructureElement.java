@@ -31,12 +31,6 @@ public interface StructureElement {
 
     boolean hasAttribute(String attributeName);
 
-    ValueStore getValueStore();
-
-    ObjectStore getObjectStore();
-
-//    String[] getValueArray();
-
     String getRawElementValue();
 
     String getText();

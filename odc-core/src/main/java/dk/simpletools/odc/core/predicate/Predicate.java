@@ -22,8 +22,9 @@
  */
 package dk.simpletools.odc.core.predicate;
 
+import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.StructureElement;
 
 public interface Predicate {
-  boolean evaluate(StructureElement structureElement);
+  boolean evaluate(StructureElement structureElement, ObjectStore objectStore);
 }

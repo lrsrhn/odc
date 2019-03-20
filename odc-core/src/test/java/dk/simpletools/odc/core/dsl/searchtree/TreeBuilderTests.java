@@ -37,8 +37,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static dk.simpletools.odc.core.predicate.Predicates.alwaysTrue;
-import static dk.simpletools.odc.core.predicate.Predicates.attribute;
+import static dk.simpletools.odc.core.predicate.Predicates.*;
+import static dk.simpletools.odc.core.standardhandlers.EventForwarderBuilder.builder;
 
 public abstract class TreeBuilderTests {
     protected ObservablePathFinder observablePathFinder;
@@ -548,7 +548,7 @@ public abstract class TreeBuilderTests {
                     .element("two")
                         .onStart().to(new OnStartHandler() {
             @Override
-            public void startElement(StructureElement structureElement) throws Exception {
+            public void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
                 Assert.assertEquals(longValue.length(), structureElement.getRawElementValue().length());
                 Assert.assertEquals(longValue, structureElement.getRawElementValue());
             }
@@ -599,22 +599,18 @@ public abstract class TreeBuilderTests {
         }
 
         @Override
-        public void startElement(StructureElement structureElement) throws Exception {
+        public void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
             startElementsActual.add(structureElement.getElementName());
         }
 
         @Override
-        public void endElement(EndElement endElement, ValueStore valueStore, ObjectStore objectStore) throws Exception {
-            endElementsActual.add(endElement.getElementName());
+        public void endElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+            endElementsActual.add(structureElement.getElementName());
         }
 
-        @Override
-        public void clear() {
-
-        }
 
         @Override
-        public void onText(StructureElement structureElement) {
+        public void onText(StructureElement structureElement, ObjectStore objectStore) {
             System.out.println(structureElement.getText());
         }
     }

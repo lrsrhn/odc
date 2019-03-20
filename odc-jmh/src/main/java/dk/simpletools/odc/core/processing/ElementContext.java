@@ -63,15 +63,6 @@ public class ElementContext implements InternalStructureElement {
         return false;
     }
 
-    @Override
-    public ValueStore getValueStore() {
-        return valueStore;
-    }
-
-    @Override
-    public ObjectStore getObjectStore() {
-        return objectStore;
-    }
 
     @Override
     public String getRawElementValue() {

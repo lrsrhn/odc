@@ -20,14 +20,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.core.picker;
+package dk.simpletools.odc.core.eventhandling;
 
-public class ValuePickers {
-  public static ValuePicker valuePicker(Enum<?> enumValueIndex) {
-    return new ElementValuePicker(enumValueIndex);
+import dk.simpletools.odc.core.processing.ObjectStore;
+import dk.simpletools.odc.core.processing.StructureElement;
+
+public class TextValueCollector implements EventHandler {
+
+  private String storeKey;
+
+  public TextValueCollector(String storeKey) {
+    this.storeKey = storeKey;
   }
 
-  public static ValuePicker attributePicker(Enum<?> enumValueIndex, String attributeName) {
-    return new AttributeValuePicker(enumValueIndex, attributeName);
+  @Override
+  public void handle(StructureElement structureElement, ObjectStore objectStore) {
+    objectStore.put(storeKey,  structureElement.getText());
+  }
+
+  @Override
+  public void endElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+    handle(structureElement, objectStore);
+  }
+
+  @Override
+  public void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+    handle(structureElement, objectStore);
+  }
+
+  @Override
+  public void onText(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+    handle(structureElement, objectStore);
   }
 }

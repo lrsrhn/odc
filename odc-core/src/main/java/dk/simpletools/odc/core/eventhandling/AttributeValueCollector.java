@@ -20,13 +20,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.simpletools.odc.core.standardhandlers;
+package dk.simpletools.odc.core.eventhandling;
 
-import dk.simpletools.odc.core.picker.ValuePicker;
+import dk.simpletools.odc.core.processing.ObjectStore;
+import dk.simpletools.odc.core.processing.StructureElement;
 
-public class Handlers {
+public class AttributeValueCollector implements EventHandler {
+  private String storeKey;
+  private String attributeName;
 
-  public static ValuePickerToValueStore valueToStore(ValuePicker... pickers) {
-    return new ValuePickerToValueStore(pickers);
+  public AttributeValueCollector(String attributeName, String storeKey) {
+    this.storeKey = storeKey;
+    this.attributeName = attributeName;
+  }
+
+  @Override
+  public void handle(StructureElement structureElement, ObjectStore objectStore) {
+    objectStore.put(storeKey,  structureElement.getAttributeValue(attributeName));
+  }
+
+  @Override
+  public void endElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+    handle(structureElement, objectStore);
+  }
+
+  @Override
+  public void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+    handle(structureElement, objectStore);
+  }
+
+  @Override
+  public void onText(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+    handle(structureElement, objectStore);
   }
 }

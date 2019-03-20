@@ -51,6 +51,6 @@ public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamRea
                     observablePathTraverser.endElement(xmlElement, --currentDepth);
             }
         }
-        return xmlElement.getObjectStore();
+        return objectStore;
     }
 }

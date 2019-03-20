@@ -22,13 +22,14 @@
  */
 package dk.simpletools.odc.core.predicate;
 
+import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.StructureElement;
 
 public class TruePredicate implements Predicate {
   public static final Predicate INSTANCE = new TruePredicate();
 
   @Override
-  public boolean evaluate(StructureElement structureElement) {
+  public boolean evaluate(StructureElement structureElement, ObjectStore objectStore) {
     return true;
   }
 }

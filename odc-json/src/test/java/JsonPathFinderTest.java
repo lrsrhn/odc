@@ -22,10 +22,8 @@
  */
 
 import dk.simpletools.odc.core.finder.ElementHandler;
-import dk.simpletools.odc.core.processing.EndElement;
 import dk.simpletools.odc.core.processing.ObjectStore;
 import dk.simpletools.odc.core.processing.StructureElement;
-import dk.simpletools.odc.core.processing.ValueStore;
 import dk.simpletools.odc.json.JsonPathFinder;
 import org.junit.Test;
 
@@ -33,8 +31,6 @@ import javax.json.Json;
 import javax.json.JsonBuilderFactory;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
-import static dk.simpletools.odc.core.predicate.Predicates.text;
 
 public class JsonPathFinderTest {
 
@@ -44,7 +40,7 @@ public class JsonPathFinderTest {
     public void singleValue() throws Exception {
         JsonPathFinder jsonPathFinder = new JsonPathFinder();
         TestingHandler testingHandler = new TestingHandler(false);
-        jsonPathFinder.addXpath("/$/squadName").handleElementBy(testingHandler);
+        jsonPathFinder.addXpath("/$/squadName").handle(testingHandler);
         jsonPathFinder.find(readFile());
     }
 
@@ -52,9 +48,9 @@ public class JsonPathFinderTest {
     public void multipleSameDepthValue() throws Exception {
         JsonPathFinder jsonPathFinder = new JsonPathFinder();
         TestingHandler testingHandler = new TestingHandler(false);
-        jsonPathFinder.addXpath("/$/squadName").handleElementBy(testingHandler);
-        jsonPathFinder.addXpath("/$/formed").handleElementBy(testingHandler);
-        jsonPathFinder.addXpath("/$/active").handleElementBy(testingHandler);
+        jsonPathFinder.addXpath("/$/squadName").handle(testingHandler);
+        jsonPathFinder.addXpath("/$/formed").handle(testingHandler);
+        jsonPathFinder.addXpath("/$/active").handle(testingHandler);
         ObjectStore objectStore = jsonPathFinder.find(readFile());
 
         System.out.println("ObjectStore object: " + objectStore.get("something", String.class));
@@ -66,7 +62,7 @@ public class JsonPathFinderTest {
     public void arrayLookup() throws Exception {
         JsonPathFinder jsonPathFinder = new JsonPathFinder();
         TestingHandler testingHandler = new TestingHandler(false);
-        jsonPathFinder.addXpath("/$/members/{}/name").handleElementBy(testingHandler);
+        jsonPathFinder.addXpath("/$/members/{}/name").handle(testingHandler);
         jsonPathFinder.find(readFile());
     }
 
@@ -75,7 +71,7 @@ public class JsonPathFinderTest {
         JsonPathFinder jsonPathFinder = new JsonPathFinder();
         TestingHandler testingHandler = new TestingHandler(false);
         jsonPathFinder.addXpath("/$/members/{}/name")
-                .handleElementBy(testingHandler);
+                .handle(testingHandler);
         jsonPathFinder.find(readFile());
     }
 
@@ -83,7 +79,7 @@ public class JsonPathFinderTest {
     public void innerArrayLookup() throws Exception {
         JsonPathFinder jsonPathFinder = new JsonPathFinder();
         TestingHandler testingHandler = new TestingHandler(true);
-        jsonPathFinder.addXpath("/$/members/{}/powers").handleElementBy(testingHandler);
+        jsonPathFinder.addXpath("/$/members/{}/powers").handle(testingHandler);
         jsonPathFinder.find(readFile());
     }
 
@@ -108,19 +104,14 @@ public class JsonPathFinderTest {
         }
 
         @Override
-        public void startElement(StructureElement structureElement) throws Exception {
-            structureElement.getObjectStore().put("something", structureElement.getElementName());
-            structureElement.getObjectStore().put("one", 123);
+        public void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+            objectStore.put("something", structureElement.getElementName());
+            objectStore.put("one", 123);
         }
 
         @Override
-        public void endElement(EndElement endElement, ValueStore valueStore, ObjectStore objectStore) throws Exception {
-            System.out.println("End: " + endElement.getElementName());
-        }
-
-        @Override
-        public void clear() {
-
+        public void endElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+            System.out.println("End: " + structureElement.getElementName());
         }
 
         @Override
@@ -129,7 +120,7 @@ public class JsonPathFinderTest {
         }
 
         @Override
-        public void onText(StructureElement structureElement) {
+        public void onText(StructureElement structureElement, ObjectStore objectStore) {
             System.out.println(String.format("%s=%s", structureElement.getElementName(), structureElement.getText()));
         }
     }

@@ -54,7 +54,7 @@ class ObjectProcessor extends BaseElementProcessor<JsonParser, JsonObject>{
                     process(currentDepth, jsonObject, jsonParser);
             }
         }
-        return jsonObject.getObjectStore();
+        return objectStore;
     }
 
     private int process(int currentDepth, JsonObject jsonObject, JsonParser jsonParser) throws Exception {
