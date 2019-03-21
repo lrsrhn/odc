@@ -23,21 +23,15 @@
 package dk.simpletools.odc.core.processing;
 
 import javax.json.stream.JsonParser;
-import java.util.ArrayList;
-import java.util.List;
 
 public class JsonObject implements InternalStructureElement {
     private JsonParser.Event currentEvent;
     private JsonParser jsonParser;
     private String keyName;
-    private ValueStore valueStore;
-    private ObjectStore objectStore;
     private String elementValueCache;
 
-    public JsonObject(JsonParser jsonParser, ObjectStore objectStore) {
-        this.objectStore = objectStore == null ? new ObjectStore() : objectStore;
+    public JsonObject(JsonParser jsonParser) {
         this.jsonParser = jsonParser;
-        this.valueStore = new ValueStore();
     }
 
     public void setCurrentEvent(JsonParser.Event currentEvent) {
@@ -93,28 +87,6 @@ public class JsonObject implements InternalStructureElement {
     public boolean hasAttribute(String attributeName) {
         throw new UnsupportedOperationException();
     }
-
-//    public String[] getValueArray() {
-//        if (elementValuesCache != null) {
-//            return elementValuesCache;
-//        }
-//        List<String> array = new ArrayList<String>();
-//        while(jsonParser.hasNext()) {
-//            currentEvent = jsonParser.next();
-//            switch (currentEvent) {
-//                case END_ARRAY:
-//                    elementValuesCache = array.toArray(new String[array.size()]);
-//                    return elementValuesCache;
-//                default:
-//                    elementValueCache = null;
-//                    array.add(getText());
-//                    break;
-//            }
-//        }
-//        elementValueCache = null;
-//        elementValuesCache = array.toArray(new String[array.size()]);
-//        return elementValuesCache;
-//    }
 
     @Override
     public String getRawElementValue() {

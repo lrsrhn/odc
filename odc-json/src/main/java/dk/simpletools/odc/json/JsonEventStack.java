@@ -44,6 +44,8 @@ final class JsonEventStack {
 
   Event peek() {
     if (head == -1) {
+      return null;
+    } else if (head < -1) {
       throw new ArrayIndexOutOfBoundsException();
     }
     return array[head];
@@ -54,5 +56,9 @@ final class JsonEventStack {
       array = Arrays.copyOf(array, array.length * 2);
     }
     array[++head] = value;
+  }
+
+  int size() {
+    return head + 1;
   }
 }

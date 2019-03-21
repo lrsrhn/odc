@@ -49,7 +49,7 @@ public class JsonPathFinder extends ObservablePathFinder {
     JsonParser jsonParser = null;
     try {
       jsonParser = jsonParserFactory.createParser(reader);
-      JsonObject jsonObject = new JsonObject(jsonParser, objectStore);
+      JsonObject jsonObject = new JsonObject(jsonParser);
       ObjectProcessor objectProcessor = new ObjectProcessor(rootElementFinder.getElementFinder(), jsonObject);
       return objectProcessor.search(jsonParser, jsonObject);
     } catch (Exception ex) {

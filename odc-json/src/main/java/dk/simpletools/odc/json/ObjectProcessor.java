@@ -100,6 +100,9 @@ class ObjectProcessor extends BaseElementProcessor<JsonParser, JsonObject>{
                 case END_ARRAY:
                 case END_OBJECT:
                     jsonEventStack.pop();
+                    if (jsonEventStack.size() > 0 && jsonEventStack.peek() == JsonParser.Event.KEY_NAME) {
+                        jsonEventStack.pop();
+                    }
                     observablePathTraverser.endElement(jsonObject, --currentDepth);
                     if (currentDepth != 0) {
                         jsonObject.setKeyName(stringStack.pop());
