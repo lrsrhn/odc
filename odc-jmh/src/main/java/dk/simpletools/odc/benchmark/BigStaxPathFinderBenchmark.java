@@ -62,14 +62,11 @@ public class BigStaxPathFinderBenchmark {
 
     @Benchmark
     public void testBigXml(BenchmarkState benchmarkState, final Blackhole blackhole) {
-//        if (!run) {
-            blackhole.consume(benchmarkState.staxPathFinder.find(benchmarkState.xmlContent));
-//            System.out.println("Length: " + benchmarkState.builder.length());
-//            System.out.println(benchmarkState.builder.toString());
-            benchmarkState.builder.setLength(0);
-//            run = true;
-//        }
-
+        blackhole.consume(benchmarkState.staxPathFinder.find(benchmarkState.xmlContent));
+        if (benchmarkState.builder.length() != 1191873) {
+            throw new IllegalStateException(String.format("Length was %d but should be 1191873", benchmarkState.builder.length()));
+        }
+        benchmarkState.builder.setLength(0);
     }
 
     private static String readFile() throws Exception {

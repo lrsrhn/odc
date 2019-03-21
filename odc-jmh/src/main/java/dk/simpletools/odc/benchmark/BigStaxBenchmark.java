@@ -26,6 +26,8 @@ import com.ctc.wstx.stax.WstxInputFactory;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -60,7 +62,9 @@ public class BigStaxBenchmark {
         while (streamReader.hasNext()) {
             findRoot(streamReader, benchmarkState.builder);
         }
-//        System.out.println("Length: " + benchmarkState.builder.length());
+        if (benchmarkState.builder.length() != 1191873) {
+            throw new IllegalStateException(String.format("Length was %d but should be 1191873", benchmarkState.builder.length()));
+        }
         benchmarkState.builder.setLength(0);
         streamReader.close();
     }
@@ -115,17 +119,24 @@ public class BigStaxBenchmark {
 
     private boolean findTwins(XMLStreamReader streamReader, StringBuilder builder) throws Exception {
         int depthCounter = 0;
+        boolean found = false;
         while (streamReader.hasNext()) {
             switch (streamReader.next()) {
                 case XMLStreamReader.START_ELEMENT:
                     depthCounter++;
 //                    if ("registered".equals(streamReader.getLocalName()) || "greeting".equals(streamReader.getLocalName()) || "latitude".equals(streamReader.getLocalName()) || "tags".equals(streamReader.getLocalName())) {
                     if (depthCounter == 1 && ("registered".equals(streamReader.getLocalName()) || "tags".equals(streamReader.getLocalName()))) {
-                        builder.append(streamReader.getLocalName()).append(": ").append(streamReader.getElementText());
-                        depthCounter--;
+                        builder.append(streamReader.getLocalName()).append(": ");
+                        found = true;
+                    }
+                    break;
+                case XMLStreamConstants.CHARACTERS:
+                    if (found) {
+                        builder.append(streamReader.getText());
                     }
                     break;
                 case XMLStreamReader.END_ELEMENT:
+                    found = false;
                     if (depthCounter == 0) {
                         return false;
                     }

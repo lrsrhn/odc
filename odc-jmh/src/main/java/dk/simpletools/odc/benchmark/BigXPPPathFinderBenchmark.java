@@ -64,7 +64,9 @@ public class BigXPPPathFinderBenchmark {
     @Benchmark
     public void testBigXml(BenchmarkState benchmarkState, final Blackhole blackhole) {
         blackhole.consume(benchmarkState.xppPathFinder.find(benchmarkState.xmlContent));
-//        System.out.println("Length: " + benchmarkState.builder.length());
+        if (benchmarkState.builder.length() != 1191873) {
+            throw new IllegalStateException(String.format("Length was %d but should be 1191873", benchmarkState.builder.length()));
+        }
         benchmarkState.builder.setLength(0);
 
     }
