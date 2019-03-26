@@ -3,6 +3,7 @@ package dk.simpletools.odc.core.processing;
 import dk.simpletools.odc.xml.TextExtractor;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class SaxHandler extends DefaultHandler {
@@ -11,10 +12,11 @@ public class SaxHandler extends DefaultHandler {
     private ObservablePathTraverser observablePathTraverser;
     private int depth;
 
-    public SaxHandler(ObservablePathTraverser observablePathTraverser) {
+    public SaxHandler(XMLReader xmlReader, ObservablePathTraverser observablePathTraverser, SaxElementSkippingHandler saxElementSkippingHandler) {
         this.observablePathTraverser = observablePathTraverser;
         this.textExtractor = new TextExtractor();
-        this.saxElement = new SaxElement(textExtractor);
+        saxElementSkippingHandler.setSaxHandler(this);
+        this.saxElement = new SaxElement(xmlReader, textExtractor, saxElementSkippingHandler);
         this.depth = 0;
     }
 

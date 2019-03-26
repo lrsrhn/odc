@@ -24,8 +24,7 @@ package dk.simpletools.odc.core.processing;
 
 import dk.simpletools.odc.xml.TextExtractor;
 import org.xml.sax.Attributes;
-
-import javax.xml.stream.XMLStreamReader;
+import org.xml.sax.XMLReader;
 
 public class SaxElement implements InternalStructureElement {
   private String elementTextCache;
@@ -33,9 +32,13 @@ public class SaxElement implements InternalStructureElement {
   private String elementNamespaceCache;
   private Attributes attributes;
   private TextExtractor textExtractor;
+  private XMLReader xmlReader;
+  private SaxElementSkippingHandler saxElementSkippingHandler;
 
-  public SaxElement(TextExtractor textExtractor) {
+  public SaxElement(XMLReader xmlReader, TextExtractor textExtractor, SaxElementSkippingHandler saxElementSkippingHandler) {
+    this.xmlReader = xmlReader;
     this.textExtractor = textExtractor;
+    this.saxElementSkippingHandler = saxElementSkippingHandler;
   }
 
   public String getElementName() {
@@ -71,11 +74,12 @@ public class SaxElement implements InternalStructureElement {
 
   @Override
   public void skipElement() {
-    // TODO
+    saxElementSkippingHandler.resetDepth();
+    xmlReader.setContentHandler(saxElementSkippingHandler);
   }
 
   public void clearCache() {
-    // This is done by SaxHandler. See usage of setData
+    this.elementTextCache = null;
   }
 
   public String getElementNS() {
