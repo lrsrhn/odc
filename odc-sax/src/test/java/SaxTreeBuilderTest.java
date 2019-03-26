@@ -22,6 +22,9 @@
  */
 import dk.simpletools.odc.core.dsl.searchtree.TreeBuilderTests;
 import dk.simpletools.odc.xml.SaxPathFinder;
+import org.junit.Ignore;
+
+import java.io.IOException;
 
 public class SaxTreeBuilderTest extends TreeBuilderTests {
 
@@ -29,5 +32,11 @@ public class SaxTreeBuilderTest extends TreeBuilderTests {
     public void setObservablePathFinder() {
         SaxPathFinder saxPathFinder = new SaxPathFinder();
         this.observablePathFinder = saxPathFinder;
+    }
+
+    @Override
+    @Ignore
+    public void testRaw() {
+        // Sax parser does not support raw text extraction
     }
 }

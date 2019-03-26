@@ -32,11 +32,9 @@ public class SaxElement implements InternalStructureElement {
   private String elementNameCache;
   private String elementNamespaceCache;
   private Attributes attributes;
-  private ObjectStore objectStore;
   private TextExtractor textExtractor;
 
-  public SaxElement(ObjectStore objectStore, TextExtractor textExtractor) {
-    this.objectStore = objectStore;
+  public SaxElement(TextExtractor textExtractor) {
     this.textExtractor = textExtractor;
   }
 
@@ -48,14 +46,14 @@ public class SaxElement implements InternalStructureElement {
     if (attributes == null) {
       return null;
     }
-    return attributes.getValue(null, attributeName);
+    return attributes.getValue("", attributeName);
   }
 
   public boolean hasAttribute(String attributeName) {
     if (attributes == null) {
       return false;
     }
-    return attributes.getIndex(null, attributeName) > -1;
+    return attributes.getIndex("", attributeName) > -1;
   }
 
   public String getText() {
@@ -66,11 +64,6 @@ public class SaxElement implements InternalStructureElement {
     return elementTextCache;
   }
 
-  /**
-   * NB: Only use this after all attributes have been read - Calling this will
-   * move the XML parser forward
-   *
-   */
   @Override
   public String getRawElementValue() {
     return "";
@@ -82,10 +75,7 @@ public class SaxElement implements InternalStructureElement {
   }
 
   public void clearCache() {
-    elementNamespaceCache = null;
-    elementNameCache = null;
-    elementTextCache = null;
-    attributes = null;
+    // This is done by SaxHandler. See usage of setData
   }
 
   public String getElementNS() {

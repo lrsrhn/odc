@@ -6,18 +6,15 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class SaxHandler extends DefaultHandler {
-
-    private ObjectStore objectStore;
     private SaxElement saxElement;
     private TextExtractor textExtractor;
     private ObservablePathTraverser observablePathTraverser;
     private int depth;
 
-    public SaxHandler(ObjectStore objectStore, ObservablePathTraverser observablePathTraverser) {
-        this.objectStore = objectStore;
+    public SaxHandler(ObservablePathTraverser observablePathTraverser) {
         this.observablePathTraverser = observablePathTraverser;
         this.textExtractor = new TextExtractor();
-        this.saxElement = new SaxElement(objectStore, textExtractor);
+        this.saxElement = new SaxElement(textExtractor);
         this.depth = 0;
     }
 
@@ -33,6 +30,9 @@ public class SaxHandler extends DefaultHandler {
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
+        if (observablePathTraverser.isTextHandlerSet()) {
+            textExtractor.startBuffering();
+        }
         textExtractor.append(ch, start, length);
     }
 

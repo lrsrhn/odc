@@ -34,6 +34,7 @@ public final class ObservablePathTraverser {
     private int childDepth;
     private final ObjectStore objectStore;
 
+    // TODO: Fix this stuff
     public ObservablePathTraverser(final ElementFinder rootElementFinder, final StructureElement structureElement, ObjectStore objectStore) {
         this.objectStore = objectStore;
         this.currentElementFinder = rootElementFinder;
@@ -138,5 +139,9 @@ public final class ObservablePathTraverser {
             }
             currentElementFinder = previousElementFinder;
         }
+    }
+
+    public boolean isTextHandlerSet() {
+        return currentOnTextLocation != null;
     }
 }
