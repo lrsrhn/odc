@@ -39,11 +39,9 @@ public class SaxPathFinder extends ObservablePathFinder {
   }
 
   private SAXParserFactory saxParserFactory;
-  private boolean isRawTextReadingEnabled;
 
   public SaxPathFinder() {
     this(DEFAULT_XML_INPUT_FACTORY);
-    this.isRawTextReadingEnabled = true;
   }
 
   public SaxPathFinder(SAXParserFactory saxParserFactory) {
@@ -55,9 +53,8 @@ public class SaxPathFinder extends ObservablePathFinder {
 
   @Override
   public ObjectStore find(Reader reader, ObjectStore objectStore) {
-    SAXParser saxParser =  null;
     try {
-      saxParser = saxParserFactory.newSAXParser();
+      SAXParser saxParser = saxParserFactory.newSAXParser();
       XMLReader xmlReader = saxParser.getXMLReader();
       SaxElementSkippingHandler saxElementSkippingHandler = new SaxElementSkippingHandler(xmlReader);
       SaxHandler saxHandler = new SaxHandler(xmlReader, new ObservablePathTraverser(rootElementFinder.getElementFinder(), null, objectStore), saxElementSkippingHandler);
