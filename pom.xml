@@ -17,6 +17,7 @@
 
     <modules>
         <module>odc-core</module>
+        <module>odc-sax</module>
         <module>odc-stax</module>
         <module>odc-json</module>
         <module>odc-xpp</module>
