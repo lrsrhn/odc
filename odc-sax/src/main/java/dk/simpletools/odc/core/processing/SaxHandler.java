@@ -33,9 +33,8 @@ public class SaxHandler extends DefaultHandler {
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         if (observablePathTraverser.isTextHandlerSet()) {
-            textExtractor.startBuffering();
+            textExtractor.append(ch, start, length);
         }
-        textExtractor.append(ch, start, length);
     }
 
     @Override
