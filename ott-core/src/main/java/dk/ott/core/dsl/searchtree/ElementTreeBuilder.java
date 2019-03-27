@@ -33,7 +33,6 @@ import dk.ott.core.predicate.Predicate;
 import java.util.List;
 import java.util.Map;
 
-// TODO: Add syntax for TextLocation stuff!
 public class ElementTreeBuilder<T> {
     private T parentTreeBuilder;
     private PathReference parentReference;
