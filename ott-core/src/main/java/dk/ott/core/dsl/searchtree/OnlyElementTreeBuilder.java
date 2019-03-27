@@ -22,6 +22,7 @@
  */
 package dk.ott.core.dsl.searchtree;
 
+import dk.ott.core.dsl.expression.PathFragment;
 import dk.ott.core.dsl.expression.PathReference;
 import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.finder.OnEndHandler;
@@ -65,9 +66,16 @@ public class OnlyElementTreeBuilder<T> {
         return this;
     }
 
-    public OnlyElementTreeBuilder<T> addReference(PathReference reference) {
+    private OnlyElementTreeBuilder<T> addReference(PathReference reference) {
         ExpressionHelper.addElmentFinderCopy(parentReference, reference)
-            .mergeElementFinder(reference.getElementFinder());
+                .mergeElementFinder(reference.getElementFinder());
+        return this;
+    }
+
+    public OnlyElementTreeBuilder<T> addPathFragment(PathFragment pathFragment) {
+        PathReference reference = pathFragment.getPathReference();
+        ExpressionHelper.addElmentFinderCopy(parentReference, reference)
+                .mergeElementFinder(reference.getElementFinder());
         return this;
     }
 

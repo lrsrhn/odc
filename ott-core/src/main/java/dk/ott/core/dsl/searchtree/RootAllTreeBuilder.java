@@ -23,6 +23,7 @@
 package dk.ott.core.dsl.searchtree;
 
 import dk.ott.core.dsl.adders.TreePathAdder;
+import dk.ott.core.dsl.expression.PathFragment;
 import dk.ott.core.dsl.expression.PathReference;
 import dk.ott.core.dsl.expression.XpathParser;
 import dk.ott.core.finder.ElementFinder;
@@ -87,7 +88,14 @@ public class RootAllTreeBuilder {
         return this;
     }
 
-    public RootAllTreeBuilder addReference(PathReference reference) {
+    RootAllTreeBuilder addReference(PathReference reference) {
+        ExpressionHelper.addElmentFinderCopy(rootReference, reference)
+                .mergeElementFinder(reference.getElementFinder());
+        return this;
+    }
+
+    public RootAllTreeBuilder addPathFragment(PathFragment pathFragment) {
+        PathReference reference = pathFragment.getPathReference();
         ExpressionHelper.addElmentFinderCopy(rootReference, reference)
                 .mergeElementFinder(reference.getElementFinder());
         return this;
