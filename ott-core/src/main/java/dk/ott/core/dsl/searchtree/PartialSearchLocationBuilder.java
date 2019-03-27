@@ -47,6 +47,4 @@ public class PartialSearchLocationBuilder<T> {
         this.searchLocationBuilder.onStartHandler(onStartHandler);
         return parentTreeBuilder;
     }
-
-    // TODO: Add to method from standard handlers
 }
