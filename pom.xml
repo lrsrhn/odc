@@ -3,25 +3,25 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>dk.simpletools</groupId>
-    <artifactId>odc</artifactId>
+    <groupId>dk</groupId>
+    <artifactId>ott</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <inceptionYear>2018</inceptionYear>
 
-    <name>Observable Data Crawler</name>
+    <name>Observable Tree Traverser</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <modules>
-        <module>odc-core</module>
-        <module>odc-sax</module>
-        <module>odc-stax</module>
-        <module>odc-json</module>
-        <module>odc-xpp</module>
-        <module>odc-jmh</module>
+        <module>ott-core</module>
+        <module>ott-sax</module>
+        <module>ott-stax</module>
+        <module>ott-json</module>
+        <module>ott-xpp</module>
+        <module>ott-jmh</module>
     </modules>
 
     <dependencies>
