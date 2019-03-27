@@ -34,8 +34,7 @@ public final class ObservablePathTraverser {
     private int childDepth;
     private final ObjectStore objectStore;
 
-    // TODO: Fix this stuff
-    public ObservablePathTraverser(final ElementFinder rootElementFinder, final StructureElement structureElement, ObjectStore objectStore) {
+    public ObservablePathTraverser(final ElementFinder rootElementFinder, ObjectStore objectStore) {
         this.objectStore = objectStore;
         this.currentElementFinder = rootElementFinder;
         this.elementFinderStack = new ElementFinderStack(15);

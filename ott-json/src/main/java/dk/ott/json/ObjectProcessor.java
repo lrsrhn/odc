@@ -34,8 +34,8 @@ class ObjectProcessor extends BaseElementProcessor<JsonParser, JsonObject> {
     private StringStack stringStack;
     private JsonEventStack jsonEventStack;
 
-    public ObjectProcessor(ElementFinder nextElementFinder, JsonObject jsonObject) {
-        super(nextElementFinder, jsonObject);
+    public ObjectProcessor(ElementFinder nextElementFinder, ObjectStore objectStore) {
+        super(nextElementFinder, objectStore);
         this.stringStack = new StringStack(10);
         this.jsonEventStack = new JsonEventStack(10);
     }

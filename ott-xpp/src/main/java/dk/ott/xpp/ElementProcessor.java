@@ -30,8 +30,8 @@ import org.xmlpull.v1.XmlPullParser;
 
 public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XPPElement> {
 
-  public ElementProcessor(ElementFinder nextElementFinder, XPPElement XPPElement) {
-    super(nextElementFinder, XPPElement);
+  public ElementProcessor(ElementFinder nextElementFinder, ObjectStore objectStore) {
+    super(nextElementFinder, objectStore);
   }
 
   public ObjectStore search(XmlPullParser streamReader, XPPElement XPPElement) throws Exception {

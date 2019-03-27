@@ -57,7 +57,7 @@ public class SaxPathFinder extends ObservablePathFinder {
       SAXParser saxParser = saxParserFactory.newSAXParser();
       XMLReader xmlReader = saxParser.getXMLReader();
       SaxElementSkippingHandler saxElementSkippingHandler = new SaxElementSkippingHandler(xmlReader);
-      SaxHandler saxHandler = new SaxHandler(xmlReader, new ObservablePathTraverser(rootElementFinder.getElementFinder(), null, objectStore), saxElementSkippingHandler);
+      SaxHandler saxHandler = new SaxHandler(xmlReader, new ObservablePathTraverser(rootElementFinder.getElementFinder(), objectStore), saxElementSkippingHandler);
       xmlReader.setContentHandler(saxHandler);
       xmlReader.parse(new InputSource(reader));
       return objectStore;

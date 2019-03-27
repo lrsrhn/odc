@@ -88,7 +88,7 @@ public class StaxPathFinder extends ObservablePathFinder {
         streamReader.validateAgainst(xmlValidationSchema);
       }
       XMLElement xmlElement = new XMLElement(streamReader, xmlRawTextReader, objectStore);
-      XmlElementProcessor xmlElementProcessor = new XmlElementProcessor(rootElementFinder.getElementFinder(), xmlElement);
+      XmlElementProcessor xmlElementProcessor = new XmlElementProcessor(rootElementFinder.getElementFinder(), objectStore);
       return xmlElementProcessor.search(streamReader, xmlElement);
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);

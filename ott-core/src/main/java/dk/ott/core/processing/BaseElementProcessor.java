@@ -28,12 +28,12 @@ public abstract class BaseElementProcessor<E,T extends StructureElement> {
     protected ObservablePathTraverser observablePathTraverser;
     protected ObjectStore objectStore;
 
-    public BaseElementProcessor(ElementFinder rootElementFinder, StructureElement structureElement) {
+    public BaseElementProcessor(ElementFinder rootElementFinder, ObjectStore objectStore) {
         if (rootElementFinder == null) {
             throw new IllegalArgumentException("The root xml element finder cannot be null");
         }
-        this.objectStore = new ObjectStore();
-        this.observablePathTraverser = new ObservablePathTraverser(rootElementFinder, structureElement, objectStore);
+        this.objectStore = objectStore;
+        this.observablePathTraverser = new ObservablePathTraverser(rootElementFinder, this.objectStore);
     }
 
     public abstract ObjectStore search(E parser, T structureElement) throws Exception;

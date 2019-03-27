@@ -28,8 +28,8 @@ import dk.ott.core.stub.InputReader;
 
 public class StubElementProcessor extends BaseElementProcessor<InputReader, ElementContext> {
 
-    public StubElementProcessor(ElementFinder rootElementFinder, StructureElement structureElement) {
-        super(rootElementFinder, structureElement);
+    public StubElementProcessor(ElementFinder rootElementFinder, ObjectStore objectStore) {
+        super(rootElementFinder, objectStore);
     }
 
     @Override

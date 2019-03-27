@@ -42,7 +42,7 @@ public class StubPathFinder extends ObservablePathFinder {
         try {
             inputReader.reset();
             ElementContext elementContext = new ElementContext(objectStore);
-            StubElementProcessor stubElementProcessor = new StubElementProcessor(super.rootElementFinder.getElementFinder(), elementContext);
+            StubElementProcessor stubElementProcessor = new StubElementProcessor(super.rootElementFinder.getElementFinder(), objectStore);
             return stubElementProcessor.search(inputReader, elementContext);
         } catch (Exception e) {
             throw new RuntimeException(e);

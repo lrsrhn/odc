@@ -29,8 +29,8 @@ import javax.xml.stream.XMLStreamReader;
 
 public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamReader, XMLElement> {
 
-    public XmlElementProcessor(ElementFinder nextElementFinder, XMLElement xmlElement) {
-        super(nextElementFinder, xmlElement);
+    public XmlElementProcessor(ElementFinder nextElementFinder, ObjectStore objectStore) {
+        super(nextElementFinder, objectStore);
     }
 
     public ObjectStore search(XMLStreamReader streamReader, XMLElement xmlElement) throws Exception {
