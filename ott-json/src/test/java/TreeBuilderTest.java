@@ -25,9 +25,9 @@ import dk.ott.core.eventhandling.TextValueCollector;
 import dk.ott.core.finder.ElementHandler;
 import dk.ott.core.finder.OnTextHandler;
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.ObservableTreeTraverser;
+import dk.ott.core.processing.ObservableTree;
 import dk.ott.core.processing.StructureElement;
-import dk.ott.json.JsonTreeTraverser;
+import dk.ott.json.JsonObservableTree;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,11 +49,11 @@ import static org.junit.Assert.assertEquals;
 
 public class TreeBuilderTest {
     private JsonBuilderFactory jsonBuilderFactory;
-    private ObservableTreeTraverser observableTreeTraverser;
+    private ObservableTree observableTree;
 
     @Before
     public void init() {
-        observableTreeTraverser = new JsonTreeTraverser();
+        observableTree = new JsonObservableTree();
         jsonBuilderFactory = Json.createBuilderFactory(null);
     }
 
@@ -74,7 +74,7 @@ public class TreeBuilderTest {
         assertElementHandler.exptectedStartElements("$", "one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one", "$");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
             .element("$").onStart().to(assertElementHandler)
                 .element("one").onStart().to(assertElementHandler)
                     .element("two").onStart().to(assertElementHandler)
@@ -85,7 +85,7 @@ public class TreeBuilderTest {
             .end(assertElementHandler)
         .build();
 
-        observableTreeTraverser.find(new StringReader(jsonText));
+        observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -108,7 +108,7 @@ public class TreeBuilderTest {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("$")
                     .element("one").onStart().to(assertElementHandler)
                         .element("two").onStart().to(assertElementHandler)
@@ -119,7 +119,7 @@ public class TreeBuilderTest {
                 .end()
             .build();
 
-        observableTreeTraverser.find(new StringReader(jsonText));
+        observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -140,7 +140,7 @@ public class TreeBuilderTest {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("$")
                     .element("one").onStart().to(assertElementHandler)
                         .element("two").onStart().to(assertElementHandler)
@@ -153,7 +153,7 @@ public class TreeBuilderTest {
                 .end()
             .build();
 
-        observableTreeTraverser.find(new StringReader(jsonText));
+        observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -179,7 +179,7 @@ public class TreeBuilderTest {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("$")
                     .element("one").onStart().to(assertElementHandler)
                         .element("two").onStart().to(assertElementHandler)
@@ -192,7 +192,7 @@ public class TreeBuilderTest {
                 .end()
             .build();
 
-        observableTreeTraverser.find(new StringReader(jsonText));
+        observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -212,7 +212,7 @@ public class TreeBuilderTest {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("$")
                     .element("one").onStart().filter(alwaysTrue()).to(assertElementHandler)
                         .element("two").onStart().filter(alwaysTrue()).to(assertElementHandler)
@@ -223,7 +223,7 @@ public class TreeBuilderTest {
                 .end()
             .build();
 
-        observableTreeTraverser.find(new StringReader(jsonText));
+        observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -245,7 +245,7 @@ public class TreeBuilderTest {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("$")
                     .element("one").onStart().to(assertElementHandler)
                         .element("two").onStart().to(assertElementHandler)
@@ -264,7 +264,7 @@ public class TreeBuilderTest {
                     .end()
             .build();
 
-        observableTreeTraverser.find(new StringReader(jsonText));
+        observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -289,7 +289,7 @@ public class TreeBuilderTest {
         assertElementHandler.exptectedStartElements("three", "five");
         assertElementHandler.exptectedEndElements("three", "five");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("$")
                     .element("one")
                         .element("two")
@@ -302,7 +302,7 @@ public class TreeBuilderTest {
                 .end()
                 .build();
 
-        observableTreeTraverser.find(new StringReader(jsonText));
+        observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -322,7 +322,7 @@ public class TreeBuilderTest {
         assertElementHandler.exptectedStartElements("five");
         assertElementHandler.exptectedEndElements("five");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("$")
                     .element("one")
                         .relativeElement("five").onStart().to(assertElementHandler)
@@ -331,7 +331,7 @@ public class TreeBuilderTest {
                 .end()
                 .build();
 
-        observableTreeTraverser.find(new StringReader(jsonText));
+        observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -358,7 +358,7 @@ public class TreeBuilderTest {
         assertElementHandler.exptectedEndElements("three", "three", "two", "one", "five", "two", "one");
 
         String referenceName = "numberone";
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("$")
                     .element("one").onStart().to(assertElementHandler)
                         .storeReference(referenceName)
@@ -375,7 +375,7 @@ public class TreeBuilderTest {
                 .end()
             .build();
 
-        observableTreeTraverser.find(new StringReader(jsonText));
+        observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -400,7 +400,7 @@ public class TreeBuilderTest {
         assertElementHandler.exptectedStartElements("two", "three", "four", "five");
         assertElementHandler.exptectedEndElements("three", "two", "five", "four");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("$")
                     .element("one")
                         .all(assertElementHandler, assertElementHandler)
@@ -408,7 +408,7 @@ public class TreeBuilderTest {
                 .end()
                 .build();
 
-        observableTreeTraverser.find(new StringReader(jsonText));
+        observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -448,7 +448,7 @@ public class TreeBuilderTest {
             }
         };
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
             .element("$")
                 .element("isnull").onText().to(valueTester)
                 .end()
@@ -465,7 +465,7 @@ public class TreeBuilderTest {
             .end()
             .build();
 
-        observableTreeTraverser.find(new StringReader(jsonText));
+        observableTree.find(new StringReader(jsonText));
     }
 
     private String jsonStructureToString(JsonStructure jsonStructure) {

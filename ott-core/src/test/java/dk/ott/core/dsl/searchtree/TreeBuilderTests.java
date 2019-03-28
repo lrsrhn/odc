@@ -27,7 +27,7 @@ import dk.ott.core.finder.OnStartHandler;
 import dk.ott.core.finder.OnTextHandler;
 import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.ObservableTreeTraverser;
+import dk.ott.core.processing.ObservableTree;
 import dk.ott.core.processing.StructureElement;
 import dk.ott.core.xml.builder.XmlStreamBuilder;
 import org.junit.Assert;
@@ -41,7 +41,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class TreeBuilderTests {
-    protected ObservableTreeTraverser observableTreeTraverser;
+    protected ObservableTree observableTree;
 
     @Before
     public abstract void setObservablePathFinder();
@@ -62,7 +62,7 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("one").onStart().to(assertElementHandler)
                     .element("two").onStart().to(assertElementHandler)
                         .element("three").onStart().to(assertElementHandler)
@@ -71,7 +71,7 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTreeTraverser.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
     }
 
@@ -96,7 +96,7 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("one").onStart().to(assertElementHandler)
                     .element("two").onStart().to(assertElementHandler)
                         .element("three").onStart().to(assertElementHandler)
@@ -105,7 +105,7 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTreeTraverser.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
     }
 
@@ -126,7 +126,7 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("one").onStart().to(assertElementHandler)
                     .element("two").onStart().to(assertElementHandler)
                         .element("three").onStart().to(assertElementHandler)
@@ -137,7 +137,7 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTreeTraverser.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
     }
 
@@ -166,7 +166,7 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("one").onStart().to(assertElementHandler)
                     .element("two").onStart().to(assertElementHandler)
                         .element("three").onStart().to(assertElementHandler)
@@ -177,7 +177,7 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTreeTraverser.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
     }
 
@@ -196,7 +196,7 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("one").onStart().filter(Predicates.alwaysTrue()).to(assertElementHandler)
                     .element("two").onStart().filter(Predicates.alwaysTrue()).to(assertElementHandler)
                         .element("three").onStart().filter(Predicates.alwaysTrue()).to(assertElementHandler)
@@ -205,7 +205,7 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTreeTraverser.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
     }
 
@@ -226,7 +226,7 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("one").onStart().to(assertElementHandler)
                     .element("two").onStart().to(assertElementHandler)
                         .element("three")
@@ -240,7 +240,7 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTreeTraverser.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
     }
 
@@ -263,7 +263,7 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedStartElements("one", "two", "three", "two", "five");
         assertElementHandler.exptectedEndElements("three", "two", "five", "two", "one");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("one").onStart().to(assertElementHandler)
                     .element("two").onStart().to(assertElementHandler)
                         .predicate(Predicates.attribute("att", "bla"))
@@ -280,7 +280,7 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTreeTraverser.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
     }
 
@@ -303,7 +303,7 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedStartElements("one", "two", "three", "two", "five");
         assertElementHandler.exptectedEndElements("three", "two", "five", "two", "one");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("one").onStart().to(assertElementHandler)
                     .element("two").onStart().to(assertElementHandler)
                         .predicate(Predicates.attribute("att", "bla"))
@@ -320,7 +320,7 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTreeTraverser.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
     }
 
@@ -344,7 +344,7 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedStartElements("three", "five");
         assertElementHandler.exptectedEndElements("three", "five");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("one")
                     .element("two")
                         .element("three").onStart().to(assertElementHandler)
@@ -355,7 +355,7 @@ public abstract class TreeBuilderTests {
                 .end()
                 .build();
 
-        observableTreeTraverser.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
     }
 
@@ -374,14 +374,14 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedStartElements("five");
         assertElementHandler.exptectedEndElements("five");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("one")
                     .relativeElement("five").onStart().to(assertElementHandler)
                     .end(assertElementHandler)
                 .end()
                 .build();
 
-        observableTreeTraverser.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
     }
 
@@ -400,7 +400,7 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedStartElements("five");
         assertElementHandler.exptectedEndElements("five");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("two")
                 .end()
                 .element("one")
@@ -409,7 +409,7 @@ public abstract class TreeBuilderTests {
                 .end()
                 .build();
 
-        observableTreeTraverser.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
     }
 
@@ -431,7 +431,7 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedStartElements("five");
         assertElementHandler.exptectedEndElements("five");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("one")
                     .relativeElement("five").onStart().to(assertElementHandler)
                         .onText().to(assertElementHandler)
@@ -442,7 +442,7 @@ public abstract class TreeBuilderTests {
                 .end()
                 .build();
 
-        observableTreeTraverser.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
     }
 
@@ -472,7 +472,7 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedEndElements("three", "three", "two", "one", "two", "five", "two", "one");
 
         String referenceName = "numberone";
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("one").onStart().to(assertElementHandler)
                     .storeReference(referenceName)
                     .element("two").onStart().to(assertElementHandler)
@@ -487,7 +487,7 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTreeTraverser.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
     }
 
@@ -511,7 +511,7 @@ public abstract class TreeBuilderTests {
         assertElementHandler.exptectedStartElements("two", "three", "two", "five");
         assertElementHandler.exptectedEndElements("three", "two", "five", "two");
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("")
                 .end()
                 .element("")
@@ -521,7 +521,7 @@ public abstract class TreeBuilderTests {
                 .end()
                 .build();
 
-        observableTreeTraverser.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(builder.toString()));
         assertElementHandler.verify();
     }
 
@@ -543,7 +543,7 @@ public abstract class TreeBuilderTests {
         }
         xmlBuilder.elementEnd();
 
-        observableTreeTraverser.treeBuilder()
+        observableTree.treeBuilder()
                 .element("one")
                     .element("two")
                         .onStart().to(new OnStartHandler() {
@@ -554,7 +554,7 @@ public abstract class TreeBuilderTests {
             }
         });
 
-        observableTreeTraverser.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(builder.toString()));
 
     }
 

@@ -22,6 +22,7 @@
  */
 package dk.ott.core.dsl.expression;
 
+import dk.ott.core.dsl.ObservableTreeFragment;
 import dk.ott.core.dsl.adders.*;
 import dk.ott.core.finder.ElementHandler;
 import dk.ott.core.finder.OnEndHandler;

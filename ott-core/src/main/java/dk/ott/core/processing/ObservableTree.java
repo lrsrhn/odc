@@ -33,10 +33,10 @@ import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class ObservableTreeTraverser {
+public abstract class ObservableTree {
   protected TreeEdgeReference rootElementFinder;
 
-  public ObservableTreeTraverser() {
+  public ObservableTree() {
     this.rootElementFinder = new TreeEdgeReference(new SingleElementFinder().getReference(), false);
   }
 

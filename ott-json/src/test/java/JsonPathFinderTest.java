@@ -24,7 +24,7 @@
 import dk.ott.core.finder.ElementHandler;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.StructureElement;
-import dk.ott.json.JsonTreeTraverser;
+import dk.ott.json.JsonObservableTree;
 import org.junit.Test;
 
 import javax.json.Json;
@@ -38,7 +38,7 @@ public class JsonPathFinderTest {
 
     @Test
     public void singleValue() throws Exception {
-        JsonTreeTraverser jsonPathFinder = new JsonTreeTraverser();
+        JsonObservableTree jsonPathFinder = new JsonObservableTree();
         TestingHandler testingHandler = new TestingHandler(false);
         jsonPathFinder.addXpath("/$/squadName").handle(testingHandler);
         jsonPathFinder.find(readFile());
@@ -46,7 +46,7 @@ public class JsonPathFinderTest {
 
     @Test
     public void multipleSameDepthValue() throws Exception {
-        JsonTreeTraverser jsonPathFinder = new JsonTreeTraverser();
+        JsonObservableTree jsonPathFinder = new JsonObservableTree();
         TestingHandler testingHandler = new TestingHandler(false);
         jsonPathFinder.addXpath("/$/squadName").handle(testingHandler);
         jsonPathFinder.addXpath("/$/formed").handle(testingHandler);
@@ -60,7 +60,7 @@ public class JsonPathFinderTest {
 
     @Test
     public void arrayLookup() throws Exception {
-        JsonTreeTraverser jsonPathFinder = new JsonTreeTraverser();
+        JsonObservableTree jsonPathFinder = new JsonObservableTree();
         TestingHandler testingHandler = new TestingHandler(false);
         jsonPathFinder.addXpath("/$/members/{}/name").handle(testingHandler);
         jsonPathFinder.find(readFile());
@@ -68,7 +68,7 @@ public class JsonPathFinderTest {
 
     @Test
     public void arrayPredicateLookup() throws Exception {
-        JsonTreeTraverser jsonPathFinder = new JsonTreeTraverser();
+        JsonObservableTree jsonPathFinder = new JsonObservableTree();
         TestingHandler testingHandler = new TestingHandler(false);
         jsonPathFinder.addXpath("/$/members/{}/name")
                 .handle(testingHandler);
@@ -77,7 +77,7 @@ public class JsonPathFinderTest {
 
     @Test
     public void innerArrayLookup() throws Exception {
-        JsonTreeTraverser jsonPathFinder = new JsonTreeTraverser();
+        JsonObservableTree jsonPathFinder = new JsonObservableTree();
         TestingHandler testingHandler = new TestingHandler(true);
         jsonPathFinder.addXpath("/$/members/{}/powers").handle(testingHandler);
         jsonPathFinder.find(readFile());

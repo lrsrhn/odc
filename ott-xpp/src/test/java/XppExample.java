@@ -22,11 +22,11 @@
  */
 
 import dk.ott.core.dsl.Example;
-import dk.ott.xpp.XppTreeTraverser;
+import dk.ott.xpp.XppObservableTree;
 
 public class XppExample extends Example {
     @Override
     public void setObservablePathFinder() {
-        super.observableTreeTraverser = new XppTreeTraverser();
+        super.observableTree = new XppObservableTree();
     }
 }

@@ -20,48 +20,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.ott.json;
+package dk.ott.xml;
 
-import dk.ott.core.processing.JsonObject;
-import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.ObservableTreeTraverser;
+import dk.ott.core.processing.*;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 
-import javax.json.Json;
-import javax.json.stream.JsonParser;
-import javax.json.stream.JsonParserFactory;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.Reader;
-import java.util.HashMap;
 
-public class JsonTreeTraverser extends ObservableTreeTraverser {
-  private static final JsonParserFactory DEFAULT_JSON_PARSER_FACTORY = Json.createParserFactory(new HashMap<String, Object>());
-  private JsonParserFactory jsonParserFactory;
+public class SaxObservableTree extends ObservableTree {
+  private static final SAXParserFactory DEFAULT_XML_INPUT_FACTORY = createDefaultFactory();
 
-  public JsonTreeTraverser(JsonParserFactory jsonParserFactory) {
-    this.jsonParserFactory = jsonParserFactory;
+  static SAXParserFactory createDefaultFactory() {
+    SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+    return saxParserFactory;
   }
 
-  public JsonTreeTraverser() {
-    this(DEFAULT_JSON_PARSER_FACTORY);
+  private SAXParserFactory saxParserFactory;
+
+  public SaxObservableTree() {
+    this(DEFAULT_XML_INPUT_FACTORY);
+  }
+
+  public SaxObservableTree(SAXParserFactory saxParserFactory) {
+    if (saxParserFactory != DEFAULT_XML_INPUT_FACTORY) {
+    }
+    saxParserFactory.setNamespaceAware(true);
+    this.saxParserFactory = saxParserFactory;
   }
 
   @Override
   public ObjectStore find(Reader reader, ObjectStore objectStore) {
-    JsonParser jsonParser = null;
     try {
-      jsonParser = jsonParserFactory.createParser(reader);
-      JsonObject jsonObject = new JsonObject(jsonParser);
-      ObjectProcessor objectProcessor = new ObjectProcessor(rootElementFinder.getElementFinder(), objectStore);
-      return objectProcessor.search(jsonParser, jsonObject);
+      SAXParser saxParser = saxParserFactory.newSAXParser();
+      XMLReader xmlReader = saxParser.getXMLReader();
+      SaxElementSkippingHandler saxElementSkippingHandler = new SaxElementSkippingHandler(xmlReader);
+      SaxHandler saxHandler = new SaxHandler(xmlReader, new ObservablePathTraverser(rootElementFinder.getElementFinder(), objectStore), saxElementSkippingHandler);
+      xmlReader.setContentHandler(saxHandler);
+      xmlReader.parse(new InputSource(reader));
+      return objectStore;
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);
-    } finally {
-      if (jsonParser != null) {
-        try {
-          jsonParser.close();
-        } catch (Exception ex) {
-          // Ignore
-        }
-      }
     }
   }
 }

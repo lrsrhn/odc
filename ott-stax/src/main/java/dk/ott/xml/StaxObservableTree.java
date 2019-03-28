@@ -24,7 +24,7 @@ package dk.ott.xml;
 
 import com.ctc.wstx.stax.WstxInputFactory;
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.ObservableTreeTraverser;
+import dk.ott.core.processing.ObservableTree;
 import dk.ott.core.processing.XMLElement;
 import dk.ott.core.processing.XmlElementProcessor;
 import org.codehaus.stax2.XMLStreamReader2;
@@ -32,7 +32,7 @@ import org.codehaus.stax2.validation.XMLValidationSchema;
 
 import java.io.Reader;
 
-public class StaxTreeTraverser extends ObservableTreeTraverser {
+public class StaxObservableTree extends ObservableTree {
   private static final WstxInputFactory DEFAULT_XML_INPUT_FACTORY = createDefaultFactory();
 
   static WstxInputFactory createDefaultFactory() {
@@ -45,12 +45,12 @@ public class StaxTreeTraverser extends ObservableTreeTraverser {
   private boolean isRawTextReadingEnabled;
   private XMLValidationSchema xmlValidationSchema;
 
-  public StaxTreeTraverser() {
+  public StaxObservableTree() {
     this(DEFAULT_XML_INPUT_FACTORY);
     this.isRawTextReadingEnabled = true;
   }
 
-  public StaxTreeTraverser(WstxInputFactory xmlInputFactory) {
+  public StaxObservableTree(WstxInputFactory xmlInputFactory) {
     if (xmlInputFactory != DEFAULT_XML_INPUT_FACTORY) {
       xmlInputFactory.configureForConvenience();
     }

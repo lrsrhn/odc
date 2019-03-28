@@ -22,8 +22,8 @@
  */
 package dk.ott.benchmark;
 
-import dk.ott.core.processing.ObservableTreeTraverser;
-import dk.ott.json.JsonTreeTraverser;
+import dk.ott.core.processing.ObservableTree;
+import dk.ott.json.JsonObservableTree;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
@@ -42,13 +42,13 @@ public class BigJsonPathFinderBenchmark {
     @State(Scope.Benchmark)
     public static class BenchmarkState {
         String xmlContent;
-        ObservableTreeTraverser jsonPath;
+        ObservableTree jsonPath;
         private StringBuilder builder = new StringBuilder(2000000);
 
         public BenchmarkState() {
             try {
                 xmlContent = readFile();
-                jsonPath = new JsonTreeTraverser();
+                jsonPath = new JsonObservableTree();
                 ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
                 jsonPath.addXpath("/$/{}/registered").onText(testHandler);
                 jsonPath.addXpath("/$/{}/tags").onText(testHandler);

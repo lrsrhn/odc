@@ -22,15 +22,15 @@
  */
 
 import dk.ott.core.dsl.searchtree.TreeBuilderTests;
-import dk.ott.xml.SaxTreeTraverser;
+import dk.ott.xml.SaxObservableTree;
 import org.junit.Ignore;
 
 public class SaxTreeBuilderTest extends TreeBuilderTests {
 
     @Override
     public void setObservablePathFinder() {
-        SaxTreeTraverser saxPathFinder = new SaxTreeTraverser();
-        this.observableTreeTraverser = saxPathFinder;
+        SaxObservableTree saxPathFinder = new SaxObservableTree();
+        this.observableTree = saxPathFinder;
     }
 
     @Override

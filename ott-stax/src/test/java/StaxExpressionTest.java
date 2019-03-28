@@ -21,14 +21,14 @@
  * THE SOFTWARE.
  */
 import dk.ott.core.dsl.expression.ExpressionXmlTests;
-import dk.ott.xml.StaxTreeTraverser;
+import dk.ott.xml.StaxObservableTree;
 
 public class StaxExpressionTest extends ExpressionXmlTests {
 
     @Override
     public void setObservablePathFinder() {
-        StaxTreeTraverser staxPathFinder = new StaxTreeTraverser();
+        StaxObservableTree staxPathFinder = new StaxObservableTree();
         staxPathFinder.enableRawTextReading();
-        this.observableTreeTraverser = staxPathFinder;
+        this.observableTree = staxPathFinder;
     }
 }

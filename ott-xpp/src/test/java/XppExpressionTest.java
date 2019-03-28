@@ -22,12 +22,12 @@
  */
 
 import dk.ott.core.dsl.expression.ExpressionXmlTests;
-import dk.ott.xpp.XppTreeTraverser;
+import dk.ott.xpp.XppObservableTree;
 
 public class XppExpressionTest extends ExpressionXmlTests {
 
     @Override
     public void setObservablePathFinder() {
-        this.observableTreeTraverser = new XppTreeTraverser();
+        this.observableTree = new XppObservableTree();
     }
 }

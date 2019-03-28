@@ -22,7 +22,7 @@
  */
 package dk.ott.benchmark;
 
-import dk.ott.xml.SaxTreeTraverser;
+import dk.ott.xml.SaxObservableTree;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
@@ -41,14 +41,14 @@ public class BigSaxPathFinderBenchmark {
     @State(Scope.Benchmark)
     public static class BenchmarkState {
         String xmlContent;
-        SaxTreeTraverser saxPathFinder;
+        SaxObservableTree saxPathFinder;
         private StringBuilder builder = new StringBuilder(2000000);
 
         public BenchmarkState() {
             try {
 
                 xmlContent = readFile();
-                saxPathFinder = new SaxTreeTraverser();
+                saxPathFinder = new SaxObservableTree();
                 ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
                 saxPathFinder.addXpath("/root/row/registered").onText(testHandler);
 //                staxPathFinder.addXpath("/root/row/greeting").onText(testHandler);

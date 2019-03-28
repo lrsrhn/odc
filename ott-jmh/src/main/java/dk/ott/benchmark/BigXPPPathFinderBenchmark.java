@@ -22,8 +22,8 @@
  */
 package dk.ott.benchmark;
 
-import dk.ott.core.processing.ObservableTreeTraverser;
-import dk.ott.xpp.XppTreeTraverser;
+import dk.ott.core.processing.ObservableTree;
+import dk.ott.xpp.XppObservableTree;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
@@ -41,14 +41,14 @@ public class BigXPPPathFinderBenchmark {
     @State(Scope.Benchmark)
     public static class BenchmarkState {
         String xmlContent;
-        ObservableTreeTraverser xppPathFinder;
+        ObservableTree xppPathFinder;
         private StringBuilder builder = new StringBuilder(2000000);
 
         public BenchmarkState() {
             try {
 
                 xmlContent = readFile();
-                xppPathFinder = new XppTreeTraverser();
+                xppPathFinder = new XppObservableTree();
                 ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
                 xppPathFinder.addXpath("/root/row/registered").onText(testHandler);
 //                xppPathFinder.addXpath("/root/row/greeting").onText(testHandler);

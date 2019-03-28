@@ -22,14 +22,14 @@
  */
 
 import dk.ott.core.dsl.expression.ExpressionXmlTests;
-import dk.ott.xml.SaxTreeTraverser;
+import dk.ott.xml.SaxObservableTree;
 
 
 public class SaxExpressionTest extends ExpressionXmlTests {
 
     @Override
     public void setObservablePathFinder() {
-        SaxTreeTraverser saxPathFinder = new SaxTreeTraverser();
-        super.observableTreeTraverser = saxPathFinder;
+        SaxObservableTree saxPathFinder = new SaxObservableTree();
+        super.observableTree = saxPathFinder;
     }
 }
