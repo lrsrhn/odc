@@ -1,5 +1,6 @@
 package dk.ott.core.finder;
 
+import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.predicate.Predicate;
 
 public class TextLocation {

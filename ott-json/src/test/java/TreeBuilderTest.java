@@ -22,8 +22,8 @@
  */
 
 import dk.ott.core.eventhandling.TextValueCollector;
-import dk.ott.core.finder.ElementHandler;
-import dk.ott.core.finder.OnTextHandler;
+import dk.ott.core.event.ElementHandler;
+import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
 import dk.ott.core.processing.StructureElement;
@@ -501,12 +501,12 @@ public class TreeBuilderTest {
         }
 
         @Override
-        public void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+        public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
             startElementsActual.add(structureElement.getElementName());
         }
 
         @Override
-        public void endElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+        public void onEnd(StructureElement structureElement, ObjectStore objectStore) throws Exception {
             endElementsActual.add(structureElement.getElementName());
         }
 

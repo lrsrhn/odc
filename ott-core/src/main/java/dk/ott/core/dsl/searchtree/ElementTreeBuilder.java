@@ -27,8 +27,8 @@ import dk.ott.core.dsl.ObservableTreeFragment;
 import dk.ott.core.dsl.expression.TreeEdgeReference;
 import dk.ott.core.dsl.expression.XpathParser;
 import dk.ott.core.finder.ElementFinder;
-import dk.ott.core.finder.OnEndHandler;
-import dk.ott.core.finder.OnStartHandler;
+import dk.ott.core.event.OnEndHandler;
+import dk.ott.core.event.OnStartHandler;
 import dk.ott.core.predicate.Predicate;
 
 import java.util.List;

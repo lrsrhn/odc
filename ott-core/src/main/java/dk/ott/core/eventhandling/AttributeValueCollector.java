@@ -40,12 +40,12 @@ public class AttributeValueCollector implements EventHandler {
   }
 
   @Override
-  public void endElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+  public void onEnd(StructureElement structureElement, ObjectStore objectStore) throws Exception {
     handle(structureElement, objectStore);
   }
 
   @Override
-  public void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+  public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
     handle(structureElement, objectStore);
   }
 

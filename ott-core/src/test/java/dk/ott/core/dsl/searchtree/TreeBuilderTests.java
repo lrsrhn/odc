@@ -22,9 +22,9 @@
  */
 package dk.ott.core.dsl.searchtree;
 
-import dk.ott.core.finder.ElementHandler;
-import dk.ott.core.finder.OnStartHandler;
-import dk.ott.core.finder.OnTextHandler;
+import dk.ott.core.event.ElementHandler;
+import dk.ott.core.event.OnStartHandler;
+import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
@@ -548,7 +548,7 @@ public abstract class TreeBuilderTests {
                     .element("two")
                         .onStart().to(new OnStartHandler() {
             @Override
-            public void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+            public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
                 Assert.assertEquals(longValue.length(), structureElement.getRawElementValue().length());
                 Assert.assertEquals(longValue, structureElement.getRawElementValue());
             }
@@ -599,12 +599,12 @@ public abstract class TreeBuilderTests {
         }
 
         @Override
-        public void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+        public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
             startElementsActual.add(structureElement.getElementName());
         }
 
         @Override
-        public void endElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+        public void onEnd(StructureElement structureElement, ObjectStore objectStore) throws Exception {
             endElementsActual.add(structureElement.getElementName());
         }
 

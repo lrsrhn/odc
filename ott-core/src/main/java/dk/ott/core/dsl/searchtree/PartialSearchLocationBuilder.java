@@ -22,7 +22,7 @@
  */
 package dk.ott.core.dsl.searchtree;
 
-import dk.ott.core.finder.OnStartHandler;
+import dk.ott.core.event.OnStartHandler;
 import dk.ott.core.finder.SearchLocationBuilder;
 import dk.ott.core.predicate.Predicate;
 

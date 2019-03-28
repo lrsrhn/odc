@@ -1,4 +1,4 @@
-package dk.ott.core.finder;
+package dk.ott.core.event;
 
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.StructureElement;

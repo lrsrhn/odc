@@ -21,7 +21,7 @@
  * THE SOFTWARE.
  */
 
-import dk.ott.core.finder.ElementHandler;
+import dk.ott.core.event.ElementHandler;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.StructureElement;
 import dk.ott.json.JsonObservableTree;
@@ -104,13 +104,13 @@ public class JsonPathFinderTest {
         }
 
         @Override
-        public void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+        public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
             objectStore.put("something", structureElement.getElementName());
             objectStore.put("one", 123);
         }
 
         @Override
-        public void endElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+        public void onEnd(StructureElement structureElement, ObjectStore objectStore) throws Exception {
             System.out.println("End: " + structureElement.getElementName());
         }
 

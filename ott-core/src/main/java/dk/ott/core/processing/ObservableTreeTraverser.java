@@ -22,6 +22,8 @@
  */
 package dk.ott.core.processing;
 
+import dk.ott.core.event.OnEndHandler;
+import dk.ott.core.event.OnStartHandler;
 import dk.ott.core.finder.*;
 import dk.ott.core.predicate.Predicate;
 
@@ -72,10 +74,10 @@ public final class ObservableTreeTraverser {
         ElementFinder nextElementFinder = searchLocation.getElementFinder();
         if (onStartHandler != null) {
             if (filter == null) {
-                onStartHandler.startElement(structureElement, objectStore);
+                onStartHandler.onStart(structureElement, objectStore);
             } else {
                 if (filter.evaluate(structureElement, objectStore)) {
-                    onStartHandler.startElement(structureElement, objectStore);
+                    onStartHandler.onStart(structureElement, objectStore);
                 }
             }
         }
@@ -134,7 +136,7 @@ public final class ObservableTreeTraverser {
             ElementFinder previousElementFinder = stackElement.getPreviousElementFinder();
             structureElement.clearCache();
             if (onEndHandler != null) {
-                onEndHandler.endElement(structureElement, objectStore);
+                onEndHandler.onEnd(structureElement, objectStore);
             }
             currentElementFinder = previousElementFinder;
         }

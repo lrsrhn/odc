@@ -20,7 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.ott.core.finder;
+package dk.ott.core.event;
 
-public interface ElementHandler extends OnStartHandler, OnEndHandler, OnTextHandler {
+import dk.ott.core.processing.ObjectStore;
+import dk.ott.core.processing.StructureElement;
+
+public interface OnEndHandler {
+    void onEnd(StructureElement structureElement, ObjectStore objectStore) throws Exception;
 }

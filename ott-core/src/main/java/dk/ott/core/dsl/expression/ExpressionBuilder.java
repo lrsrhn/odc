@@ -24,10 +24,10 @@ package dk.ott.core.dsl.expression;
 
 import dk.ott.core.dsl.ObservableTreeFragment;
 import dk.ott.core.dsl.adders.*;
-import dk.ott.core.finder.ElementHandler;
-import dk.ott.core.finder.OnEndHandler;
-import dk.ott.core.finder.OnStartHandler;
-import dk.ott.core.finder.OnTextHandler;
+import dk.ott.core.event.ElementHandler;
+import dk.ott.core.event.OnEndHandler;
+import dk.ott.core.event.OnStartHandler;
+import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.predicate.Predicate;
 
 import java.util.ArrayList;

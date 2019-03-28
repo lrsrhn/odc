@@ -24,7 +24,7 @@ package dk.ott.core.dsl.adders;
 
 import dk.ott.core.dsl.expression.TreeEdgeReference;
 import dk.ott.core.dsl.searchtree.ExpressionHelper;
-import dk.ott.core.finder.OnEndHandler;
+import dk.ott.core.event.OnEndHandler;
 
 public class TreeOnEndHandlerAdder implements TreePathAdder {
     private OnEndHandler onEndHandler;

@@ -23,7 +23,7 @@
 package dk.ott.core.dsl.expression;
 
 import dk.ott.core.dsl.ObservableTreeFragment;
-import dk.ott.core.finder.ElementHandler;
+import dk.ott.core.event.ElementHandler;
 import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
@@ -373,12 +373,12 @@ public abstract class ExpressionXmlTests {
         }
 
         @Override
-        public void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+        public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
             startElementsActual.add(structureElement.getElementName());
         }
 
         @Override
-        public void endElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+        public void onEnd(StructureElement structureElement, ObjectStore objectStore) throws Exception {
             endElementsActual.add(structureElement.getElementName());
         }
 

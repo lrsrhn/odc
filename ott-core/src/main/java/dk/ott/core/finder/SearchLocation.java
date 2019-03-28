@@ -22,6 +22,8 @@
  */
 package dk.ott.core.finder;
 
+import dk.ott.core.event.OnEndHandler;
+import dk.ott.core.event.OnStartHandler;
 import dk.ott.core.predicate.Predicate;
 
 public final class SearchLocation {

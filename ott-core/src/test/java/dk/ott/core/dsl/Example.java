@@ -22,8 +22,8 @@
  */
 package dk.ott.core.dsl;
 
-import dk.ott.core.finder.OnStartHandler;
-import dk.ott.core.finder.OnTextHandler;
+import dk.ott.core.event.OnStartHandler;
+import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
@@ -109,7 +109,7 @@ public abstract class Example {
         }
 
         @Override
-        public void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+        public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
             if (isRaw) {
                 System.out.println(prefix + ": " + structureElement.getRawElementValue());
             }

@@ -1,6 +1,6 @@
 package dk.ott.benchmark;
 
-import dk.ott.core.finder.OnTextHandler;
+import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.StructureElement;
 

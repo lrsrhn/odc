@@ -23,7 +23,7 @@
 package dk.ott.core.processing;
 
 import dk.ott.core.finder.ElementFinder;
-import dk.ott.core.finder.OnEndHandler;
+import dk.ott.core.event.OnEndHandler;
 
 import java.util.Arrays;
 

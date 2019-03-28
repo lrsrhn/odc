@@ -20,12 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.ott.core.finder;
+package dk.ott.core.event;
 
 
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.StructureElement;
 
 public interface OnStartHandler {
-    void startElement(StructureElement structureElement, ObjectStore objectStore) throws Exception;
+    void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception;
 }
