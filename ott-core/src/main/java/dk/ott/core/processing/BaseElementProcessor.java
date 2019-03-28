@@ -25,7 +25,7 @@ package dk.ott.core.processing;
 import dk.ott.core.finder.ElementFinder;
 
 public abstract class BaseElementProcessor<E,T extends StructureElement> {
-    protected ObservablePathTraverser observablePathTraverser;
+    protected ObservableTreeTraverser observableTreeTraverser;
     protected ObjectStore objectStore;
 
     public BaseElementProcessor(ElementFinder rootElementFinder, ObjectStore objectStore) {
@@ -33,7 +33,7 @@ public abstract class BaseElementProcessor<E,T extends StructureElement> {
             throw new IllegalArgumentException("The root xml element finder cannot be null");
         }
         this.objectStore = objectStore;
-        this.observablePathTraverser = new ObservablePathTraverser(rootElementFinder, this.objectStore);
+        this.observableTreeTraverser = new ObservableTreeTraverser(rootElementFinder, this.objectStore);
     }
 
     public abstract ObjectStore search(E parser, T structureElement) throws Exception;

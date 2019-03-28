@@ -25,7 +25,7 @@ package dk.ott.core.processing;
 import dk.ott.core.finder.*;
 import dk.ott.core.predicate.Predicate;
 
-public final class ObservablePathTraverser {
+public final class ObservableTreeTraverser {
     private ElementFinder currentElementFinder;
     private TextLocation currentOnTextLocation;
     private final ElementFinderStack elementFinderStack;
@@ -34,7 +34,7 @@ public final class ObservablePathTraverser {
     private int childDepth;
     private final ObjectStore objectStore;
 
-    public ObservablePathTraverser(final ElementFinder rootElementFinder, ObjectStore objectStore) {
+    public ObservableTreeTraverser(final ElementFinder rootElementFinder, ObjectStore objectStore) {
         this.objectStore = objectStore;
         this.currentElementFinder = rootElementFinder;
         this.elementFinderStack = new ElementFinderStack(15);

@@ -38,17 +38,17 @@ public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamRea
         while (streamReader.hasNext()) {
             switch (streamReader.next()) {
                 case XMLStreamReader.START_ELEMENT:
-                    observablePathTraverser.startElement(xmlElement, currentDepth++);
+                    observableTreeTraverser.startElement(xmlElement, currentDepth++);
                     // Traverser may have called skipElement
                     if (streamReader.getEventType() == XMLStreamConstants.END_ELEMENT) {
-                        observablePathTraverser.endElement(xmlElement, --currentDepth);
+                        observableTreeTraverser.endElement(xmlElement, --currentDepth);
                     }
                     continue;
                 case XMLStreamConstants.CHARACTERS:
-                    observablePathTraverser.text(xmlElement);
+                    observableTreeTraverser.text(xmlElement);
                     continue;
                 case XMLStreamReader.END_ELEMENT:
-                    observablePathTraverser.endElement(xmlElement, --currentDepth);
+                    observableTreeTraverser.endElement(xmlElement, --currentDepth);
             }
         }
         return objectStore;

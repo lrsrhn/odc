@@ -40,16 +40,16 @@ public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XPPEle
     while (continueLoop) {
           switch (streamReader.next()) {
               case XmlPullParser.START_TAG:
-                  observablePathTraverser.startElement(XPPElement, currentDepth++);
+                  observableTreeTraverser.startElement(XPPElement, currentDepth++);
                   if (streamReader.getEventType() == XmlPullParser.END_TAG) {
-                      observablePathTraverser.endElement(XPPElement, --currentDepth);
+                      observableTreeTraverser.endElement(XPPElement, --currentDepth);
                   }
                   continue;
               case XmlPullParser.TEXT:
-                  observablePathTraverser.text(XPPElement);
+                  observableTreeTraverser.text(XPPElement);
                   continue;
               case XmlPullParser.END_TAG:
-                  observablePathTraverser.endElement(XPPElement, --currentDepth);
+                  observableTreeTraverser.endElement(XPPElement, --currentDepth);
                   continue;
               case XmlPullParser.END_DOCUMENT:
                   continueLoop = false;

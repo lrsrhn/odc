@@ -9,11 +9,11 @@ import org.xml.sax.helpers.DefaultHandler;
 public class SaxHandler extends DefaultHandler {
     private SaxElement saxElement;
     private TextExtractor textExtractor;
-    private ObservablePathTraverser observablePathTraverser;
+    private ObservableTreeTraverser observableTreeTraverser;
     private int depth;
 
-    public SaxHandler(XMLReader xmlReader, ObservablePathTraverser observablePathTraverser, SaxElementSkippingHandler saxElementSkippingHandler) {
-        this.observablePathTraverser = observablePathTraverser;
+    public SaxHandler(XMLReader xmlReader, ObservableTreeTraverser observableTreeTraverser, SaxElementSkippingHandler saxElementSkippingHandler) {
+        this.observableTreeTraverser = observableTreeTraverser;
         this.textExtractor = new TextExtractor();
         saxElementSkippingHandler.setSaxHandler(this);
         this.saxElement = new SaxElement(xmlReader, textExtractor, saxElementSkippingHandler);
@@ -24,7 +24,7 @@ public class SaxHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         try {
             saxElement.setData(uri, localName, attributes);
-            observablePathTraverser.startElement(saxElement, depth++);
+            observableTreeTraverser.startElement(saxElement, depth++);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -32,7 +32,7 @@ public class SaxHandler extends DefaultHandler {
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
-        if (observablePathTraverser.isTextHandlerSet()) {
+        if (observableTreeTraverser.isTextHandlerSet()) {
             textExtractor.append(ch, start, length);
         }
     }
@@ -41,8 +41,8 @@ public class SaxHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         try {
             saxElement.setData(uri, localName, null);
-            observablePathTraverser.text(saxElement);
-            observablePathTraverser.endElement(saxElement, --depth);
+            observableTreeTraverser.text(saxElement);
+            observableTreeTraverser.endElement(saxElement, --depth);
             textExtractor.clear();
         } catch (Exception e) {
             throw new RuntimeException(e);

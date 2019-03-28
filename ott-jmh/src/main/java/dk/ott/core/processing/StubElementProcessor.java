@@ -39,10 +39,10 @@ public class StubElementProcessor extends BaseElementProcessor<InputReader, Elem
             Element element = parser.next();
             structureElement.setCurrentElement(element);
             if (element.isStartElement()) {
-                super.observablePathTraverser.startElement(structureElement, currentDepth++);
+                super.observableTreeTraverser.startElement(structureElement, currentDepth++);
                 continue;
             }
-            super.observablePathTraverser.endElement(structureElement, --currentDepth);
+            super.observableTreeTraverser.endElement(structureElement, --currentDepth);
         }
         return objectStore;
     }
