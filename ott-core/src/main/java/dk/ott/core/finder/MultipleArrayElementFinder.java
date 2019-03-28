@@ -36,7 +36,6 @@ import java.util.Set;
 public final class MultipleArrayElementFinder implements ElementFinder {
   private SearcLocationList nextXmlElementFinders;
   private ElementFinderReference thisReference;
-  private SearchLocation textSearchLocation;
   private SearcLocationList relativeElementFinders;
 
   MultipleArrayElementFinder(ElementFinderReference thisReference, boolean isRelative, String searchElement, SearchLocation searchLocation) {
