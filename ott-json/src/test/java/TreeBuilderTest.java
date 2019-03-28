@@ -21,8 +21,8 @@
  * THE SOFTWARE.
  */
 
+import dk.ott.core.event.EventHandler;
 import dk.ott.core.eventhandling.TextValueCollector;
-import dk.ott.core.event.ElementHandler;
 import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
@@ -70,7 +70,7 @@ public class TreeBuilderTest {
                 .build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("$", "one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one", "$");
 
@@ -104,7 +104,7 @@ public class TreeBuilderTest {
                 ).build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
@@ -136,7 +136,7 @@ public class TreeBuilderTest {
                 ).build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
@@ -175,7 +175,7 @@ public class TreeBuilderTest {
                 ).build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
@@ -208,7 +208,7 @@ public class TreeBuilderTest {
                 ).build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
@@ -241,7 +241,7 @@ public class TreeBuilderTest {
                 ).build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
@@ -285,7 +285,7 @@ public class TreeBuilderTest {
                 ).build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("three", "five");
         assertElementHandler.exptectedEndElements("three", "five");
 
@@ -318,7 +318,7 @@ public class TreeBuilderTest {
                 ).build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("five");
         assertElementHandler.exptectedEndElements("five");
 
@@ -353,7 +353,7 @@ public class TreeBuilderTest {
                 ).build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "one", "two", "three", "five");
         assertElementHandler.exptectedEndElements("three", "three", "two", "one", "five", "two", "one");
 
@@ -395,7 +395,7 @@ public class TreeBuilderTest {
                 .build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
 
         assertElementHandler.exptectedStartElements("two", "three", "four", "five");
         assertElementHandler.exptectedEndElements("three", "two", "five", "four");
@@ -476,13 +476,13 @@ public class TreeBuilderTest {
         return writer.toString();
     }
 
-    private static class AssertElementHandler implements ElementHandler {
+    private static class AssertEventHandler implements EventHandler {
         private List<String> expectedStartElements;
         private List<String> expectedEndElements;
         private List<String> startElementsActual;
         private List<String> endElementsActual;
 
-        public AssertElementHandler() {
+        public AssertEventHandler() {
             this.startElementsActual = new ArrayList<String>();
             this.endElementsActual = new ArrayList<String>();
         }

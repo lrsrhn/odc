@@ -1,5 +1,6 @@
 package dk.ott.core.eventhandling;
 
+import dk.ott.core.event.EventHandler;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.StructureElement;
 
@@ -17,7 +18,6 @@ public class ClearStoreHandler implements EventHandler {
         return new ClearStoreHandler(keysToClear);
     }
 
-    @Override
     public void handle(StructureElement structureElement, ObjectStore objectStore) {
         for (String storeKey : keysToClear) {
             objectStore.clearKey(storeKey);

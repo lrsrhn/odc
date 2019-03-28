@@ -1,8 +1,8 @@
 package dk.ott.core.standardhandlers;
 
+import dk.ott.core.event.EventHandler;
 import dk.ott.core.eventhandling.AttributeValueCollector;
 import dk.ott.core.eventhandling.ClearStoreHandler;
-import dk.ott.core.eventhandling.EventHandler;
 import dk.ott.core.eventhandling.TextValueCollector;
 
 import java.util.ArrayList;

@@ -21,7 +21,7 @@
  * THE SOFTWARE.
  */
 
-import dk.ott.core.event.ElementHandler;
+import dk.ott.core.event.EventHandler;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.StructureElement;
 import dk.ott.json.JsonObservableTree;
@@ -96,7 +96,7 @@ public class JsonPathFinderTest {
         return builder.toString();
     }
 
-    private class TestingHandler implements ElementHandler {
+    private class TestingHandler implements EventHandler {
         private boolean isArray;
 
         public TestingHandler(boolean isArray) {

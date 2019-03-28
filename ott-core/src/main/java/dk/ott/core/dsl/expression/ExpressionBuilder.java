@@ -24,7 +24,7 @@ package dk.ott.core.dsl.expression;
 
 import dk.ott.core.dsl.ObservableTreeFragment;
 import dk.ott.core.dsl.adders.*;
-import dk.ott.core.event.ElementHandler;
+import dk.ott.core.event.EventHandler;
 import dk.ott.core.event.OnEndHandler;
 import dk.ott.core.event.OnStartHandler;
 import dk.ott.core.event.OnTextHandler;
@@ -89,13 +89,13 @@ public class ExpressionBuilder {
     return toFragment();
   }
 
-  public ObservableTreeFragment handle(ElementHandler elementHandler) {
+  public ObservableTreeFragment handle(EventHandler eventHandler) {
     if (filter != null) {
       treePathAdders.add(new TreeElementFilterAdder(filter));
     }
-    treePathAdders.add(new TreeOnStartHandlerAdder(elementHandler));
-    treePathAdders.add(new TreeOnEndHandlerAdder(elementHandler));
-    treePathAdders.add(new TreeOnTextHandlerAdder(elementHandler));
+    treePathAdders.add(new TreeOnStartHandlerAdder(eventHandler));
+    treePathAdders.add(new TreeOnEndHandlerAdder(eventHandler));
+    treePathAdders.add(new TreeOnTextHandlerAdder(eventHandler));
     return toFragment();
   }
 

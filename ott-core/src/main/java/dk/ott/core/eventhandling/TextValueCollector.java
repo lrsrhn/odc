@@ -22,6 +22,7 @@
  */
 package dk.ott.core.eventhandling;
 
+import dk.ott.core.event.EventHandler;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.StructureElement;
 
@@ -33,7 +34,6 @@ public class TextValueCollector implements EventHandler {
     this.storeKey = storeKey;
   }
 
-  @Override
   public void handle(StructureElement structureElement, ObjectStore objectStore) {
     objectStore.put(storeKey,  structureElement.getText());
   }

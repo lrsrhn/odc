@@ -22,5 +22,5 @@
  */
 package dk.ott.core.event;
 
-public interface ElementHandler extends OnStartHandler, OnEndHandler, OnTextHandler {
+public interface EventHandler extends OnStartHandler, OnEndHandler, OnTextHandler {
 }

@@ -23,7 +23,7 @@
 package dk.ott.core.dsl.expression;
 
 import dk.ott.core.dsl.ObservableTreeFragment;
-import dk.ott.core.event.ElementHandler;
+import dk.ott.core.event.EventHandler;
 import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
@@ -54,7 +54,7 @@ public abstract class ExpressionXmlTests {
                 .elementEnd()
             .elementEnd();
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
@@ -78,7 +78,7 @@ public abstract class ExpressionXmlTests {
                     .elementEnd()
                 .elementEnd();
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.expectedValue("three", "Something darkside");
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
@@ -102,7 +102,7 @@ public abstract class ExpressionXmlTests {
                     .elementEnd()
                 .elementEnd();
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("five");
         assertElementHandler.exptectedEndElements("five");
 
@@ -130,7 +130,7 @@ public abstract class ExpressionXmlTests {
                 .elementEnd()
             .elementEnd();
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
@@ -155,7 +155,7 @@ public abstract class ExpressionXmlTests {
                 .elementEnd()
             .elementEnd();
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
@@ -189,7 +189,7 @@ public abstract class ExpressionXmlTests {
                 .elementEnd()
             .elementEnd();
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
@@ -213,7 +213,7 @@ public abstract class ExpressionXmlTests {
                 .elementEnd()
             .elementEnd();
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
@@ -238,7 +238,7 @@ public abstract class ExpressionXmlTests {
                 .elementEnd()
             .elementEnd();
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
@@ -266,7 +266,7 @@ public abstract class ExpressionXmlTests {
                 .elementEnd()
             .elementEnd();
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "two", "five");
         assertElementHandler.exptectedEndElements("three", "two", "five", "two", "one");
 
@@ -294,7 +294,7 @@ public abstract class ExpressionXmlTests {
                 .elementEnd()
             .elementEnd();
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "two", "five");
         assertElementHandler.exptectedEndElements("three", "two", "five", "two", "one");
 
@@ -328,7 +328,7 @@ public abstract class ExpressionXmlTests {
                 .elementEnd()
             .elementEnd();
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "one", "two", "three", "two", "five");
         assertElementHandler.exptectedEndElements("three", "three", "two", "one", "two", "five", "two", "one");
 
@@ -346,14 +346,14 @@ public abstract class ExpressionXmlTests {
         return new XmlStreamBuilder(builder);
     }
 
-    private static class AssertElementHandler implements ElementHandler {
+    private static class AssertEventHandler implements EventHandler {
         private List<String> expectedStartElements;
         private List<String> expectedEndElements;
         private List<String> startElementsActual;
         private List<String> endElementsActual;
         private Map<String, String> elementsToRead;
 
-        public AssertElementHandler() {
+        public AssertEventHandler() {
             this.startElementsActual = new ArrayList<String>();
             this.endElementsActual = new ArrayList<String>();
             this.elementsToRead = new HashMap<String, String>();

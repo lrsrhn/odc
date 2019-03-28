@@ -22,7 +22,7 @@
  */
 
 import dk.ott.core.dsl.ObservableTreeFragment;
-import dk.ott.core.event.ElementHandler;
+import dk.ott.core.event.EventHandler;
 import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
@@ -65,7 +65,7 @@ public class ExpressionXmlTest {
                 .build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
@@ -90,7 +90,7 @@ public class ExpressionXmlTest {
                 .build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.expectedValue("three", "Something darkside");
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
@@ -118,7 +118,7 @@ public class ExpressionXmlTest {
                 ).build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
@@ -143,7 +143,7 @@ public class ExpressionXmlTest {
                 ).build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
@@ -174,7 +174,7 @@ public class ExpressionXmlTest {
                 ).build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
@@ -199,7 +199,7 @@ public class ExpressionXmlTest {
                 ).build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
@@ -225,7 +225,7 @@ public class ExpressionXmlTest {
                         ).build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
@@ -257,7 +257,7 @@ public class ExpressionXmlTest {
                 ).build()
         );
 
-        AssertElementHandler assertElementHandler = new AssertElementHandler();
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "one", "two", "three", "five");
         assertElementHandler.exptectedEndElements("three", "three", "two", "one", "five", "two", "one");
 
@@ -279,14 +279,14 @@ public class ExpressionXmlTest {
         return writer.toString();
     }
 
-    private static class AssertElementHandler implements ElementHandler {
+    private static class AssertEventHandler implements EventHandler {
         private List<String> expectedStartElements;
         private List<String> expectedEndElements;
         private List<String> startElementsActual;
         private List<String> endElementsActual;
         private Map<String, String> elementsToRead;
 
-        public AssertElementHandler() {
+        public AssertEventHandler() {
             this.startElementsActual = new ArrayList<String>();
             this.endElementsActual = new ArrayList<String>();
             this.elementsToRead = new HashMap<String, String>();
