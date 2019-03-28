@@ -22,13 +22,13 @@
  */
 package dk.ott.core.dsl.searchtree;
 
-import dk.ott.core.dsl.expression.PathReference;
+import dk.ott.core.dsl.expression.TreeEdgeReference;
 import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.finder.SearchLocationBuilder;
 
 public class ExpressionHelper {
 
-    public static ElementFinder addNextElementFinder(PathReference parentReference) {
+    public static ElementFinder addNextElementFinder(TreeEdgeReference parentReference) {
         if (parentReference.getLastPredicate() != null) {
             return parentReference.getElementFinder()
                     .buildSearchLocation(parentReference.getLastPredicate())
@@ -40,7 +40,7 @@ public class ExpressionHelper {
         }
     }
 
-    public static ElementFinder addNextAllFinder(PathReference parentReference) {
+    public static ElementFinder addNextAllFinder(TreeEdgeReference parentReference) {
         if (parentReference.getLastPredicate() != null) {
             return parentReference.getElementFinder()
                     .buildSearchLocation(parentReference.getLastPredicate())
@@ -52,7 +52,7 @@ public class ExpressionHelper {
         }
     }
 
-    public static ElementFinder addNextPredicate(PathReference parentReference) {
+    public static ElementFinder addNextPredicate(TreeEdgeReference parentReference) {
         if (parentReference.getLastSearchElement() != null) {
             return parentReference.getElementFinder()
                     .buildSearchLocation(parentReference.getLastSearchElement(), parentReference.isRelative())
@@ -61,7 +61,7 @@ public class ExpressionHelper {
         throw new UnsupportedOperationException();
     }
 
-    public static ElementFinder addElmentFinderCopy(PathReference parentReference, PathReference reference) {
+    public static ElementFinder addElmentFinderCopy(TreeEdgeReference parentReference, TreeEdgeReference reference) {
         if (parentReference.getLastPredicate() != null) {
             if (reference.getElementFinder().isPredicate()) {
                 throw new RuntimeException("Two predicate finders may not be adjacent!");
@@ -81,7 +81,7 @@ public class ExpressionHelper {
         }
     }
 
-    public static SearchLocationBuilder getSearchLocationBuilder(PathReference parentReference) {
+    public static SearchLocationBuilder getSearchLocationBuilder(TreeEdgeReference parentReference) {
         if (parentReference.getLastPredicate() != null) {
             return parentReference.getElementFinder()
                     .buildSearchLocation(parentReference.getLastPredicate());

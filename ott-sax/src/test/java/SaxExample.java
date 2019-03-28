@@ -22,12 +22,12 @@
  */
 
 import dk.ott.core.dsl.Example;
-import dk.ott.xml.SaxPathFinder;
+import dk.ott.xml.SaxTreeTraverser;
 
 public class SaxExample extends Example {
     @Override
     public void setObservablePathFinder() {
-        SaxPathFinder saxPathFinder = new SaxPathFinder();
-        super.observablePathFinder = saxPathFinder;
+        SaxTreeTraverser saxPathFinder = new SaxTreeTraverser();
+        super.observableTreeTraverser = saxPathFinder;
     }
 }

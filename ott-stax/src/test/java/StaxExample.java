@@ -22,13 +22,13 @@
  */
 
 import dk.ott.core.dsl.Example;
-import dk.ott.xml.StaxPathFinder;
+import dk.ott.xml.StaxTreeTraverser;
 
 public class StaxExample extends Example {
     @Override
     public void setObservablePathFinder() {
-        StaxPathFinder staxPathFinder = new StaxPathFinder();
+        StaxTreeTraverser staxPathFinder = new StaxTreeTraverser();
         staxPathFinder.enableRawTextReading();
-        super.observablePathFinder = staxPathFinder;
+        super.observableTreeTraverser = staxPathFinder;
     }
 }

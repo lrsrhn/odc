@@ -22,7 +22,7 @@
  */
 package dk.ott.core.dsl.adders;
 
-import dk.ott.core.dsl.expression.PathReference;
+import dk.ott.core.dsl.expression.TreeEdgeReference;
 import dk.ott.core.dsl.searchtree.ExpressionHelper;
 import dk.ott.core.finder.ElementFinder;
 
@@ -36,7 +36,7 @@ public class TreeElementAdder implements TreePathAdder {
     }
 
     @Override
-    public PathReference addTreePath(PathReference reference, boolean hasRoot) {
+    public TreeEdgeReference addTreePath(TreeEdgeReference reference, boolean hasRoot) {
         if (elements == null || elements.length == 0) {
             throw new RuntimeException("The elements list is null or empty!");
         }
@@ -49,6 +49,6 @@ public class TreeElementAdder implements TreePathAdder {
             currentElementFinder = currentElementFinder.setSearchElement(elements[elements.length - 1], isRelative);
         }
 
-        return new PathReference(currentElementFinder, elements[elements.length - 1], isRelative);
+        return new TreeEdgeReference(currentElementFinder, elements[elements.length - 1], isRelative);
     }
 }

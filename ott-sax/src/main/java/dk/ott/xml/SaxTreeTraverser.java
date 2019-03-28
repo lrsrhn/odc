@@ -30,7 +30,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.Reader;
 
-public class SaxPathFinder extends ObservablePathFinder {
+public class SaxTreeTraverser extends ObservableTreeTraverser {
   private static final SAXParserFactory DEFAULT_XML_INPUT_FACTORY = createDefaultFactory();
 
   static SAXParserFactory createDefaultFactory() {
@@ -40,11 +40,11 @@ public class SaxPathFinder extends ObservablePathFinder {
 
   private SAXParserFactory saxParserFactory;
 
-  public SaxPathFinder() {
+  public SaxTreeTraverser() {
     this(DEFAULT_XML_INPUT_FACTORY);
   }
 
-  public SaxPathFinder(SAXParserFactory saxParserFactory) {
+  public SaxTreeTraverser(SAXParserFactory saxParserFactory) {
     if (saxParserFactory != DEFAULT_XML_INPUT_FACTORY) {
     }
     saxParserFactory.setNamespaceAware(true);

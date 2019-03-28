@@ -22,12 +22,12 @@
  */
 
 import dk.ott.core.dsl.searchtree.TreeBuilderTests;
-import dk.ott.xpp.XppPathFinder;
+import dk.ott.xpp.XppTreeTraverser;
 
 public class XppTreeBuilderTest extends TreeBuilderTests {
 
     @Override
     public void setObservablePathFinder() {
-        this.observablePathFinder = new XppPathFinder();
+        this.observableTreeTraverser = new XppTreeTraverser();
     }
 }

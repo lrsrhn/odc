@@ -22,7 +22,7 @@
  */
 package dk.ott.benchmark;
 
-import dk.ott.xml.StaxPathFinder;
+import dk.ott.xml.StaxTreeTraverser;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
@@ -40,14 +40,14 @@ public class BigStaxPathFinderBenchmark {
     @State(Scope.Benchmark)
     public static class BenchmarkState {
         String xmlContent;
-        StaxPathFinder staxPathFinder;
+        StaxTreeTraverser staxPathFinder;
         private StringBuilder builder = new StringBuilder(2000000);
 
         public BenchmarkState() {
             try {
 
                 xmlContent = readFile();
-                staxPathFinder = new StaxPathFinder();
+                staxPathFinder = new StaxTreeTraverser();
                 staxPathFinder.disableRawTextReading();
                 ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
                 staxPathFinder.addXpath("/root/row/registered").onText(testHandler);

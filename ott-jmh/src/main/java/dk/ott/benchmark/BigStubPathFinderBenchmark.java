@@ -23,7 +23,7 @@
 package dk.ott.benchmark;
 
 import dk.ott.core.stub.InputReader;
-import dk.ott.core.stub.StubPathFinder;
+import dk.ott.core.stub.StubTreeTraverser;
 import dk.ott.core.stub.XmlToInputReader;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
@@ -46,14 +46,14 @@ public class BigStubPathFinderBenchmark {
     public static class BenchmarkState {
         String xmlContent;
         InputReader inputReader;
-        StubPathFinder stubPathFinder;
+        StubTreeTraverser stubPathFinder;
         private StringBuilder builder = new StringBuilder(2000000);
 
         public BenchmarkState() {
             try {
                 String xmlContent = readFile();
                 inputReader = new XmlToInputReader().processXml(new StringReader(xmlContent));
-                stubPathFinder = new StubPathFinder();
+                stubPathFinder = new StubTreeTraverser();
                 ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
                 stubPathFinder.addXpath("/root/row/registered").onText(testHandler);
 //                xppPathFinder.addXpath("/root/row/greeting").onText(testHandler);

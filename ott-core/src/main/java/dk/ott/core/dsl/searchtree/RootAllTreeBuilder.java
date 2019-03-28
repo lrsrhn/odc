@@ -23,8 +23,8 @@
 package dk.ott.core.dsl.searchtree;
 
 import dk.ott.core.dsl.adders.TreePathAdder;
-import dk.ott.core.dsl.expression.PathFragment;
-import dk.ott.core.dsl.expression.PathReference;
+import dk.ott.core.dsl.expression.ObservableTreeFragment;
+import dk.ott.core.dsl.expression.TreeEdgeReference;
 import dk.ott.core.dsl.expression.XpathParser;
 import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.finder.OnEndHandler;
@@ -34,10 +34,10 @@ import java.util.List;
 import java.util.Map;
 
 public class RootAllTreeBuilder {
-    private PathReference rootReference;
-    private Map<String, PathReference> referenceStore;
+    private TreeEdgeReference rootReference;
+    private Map<String, TreeEdgeReference> referenceStore;
 
-    public RootAllTreeBuilder(Map<String, PathReference> referenceStore, PathReference parentReference) {
+    public RootAllTreeBuilder(Map<String, TreeEdgeReference> referenceStore, TreeEdgeReference parentReference) {
         this.referenceStore = referenceStore;
         this.rootReference = parentReference;
     }
@@ -45,7 +45,7 @@ public class RootAllTreeBuilder {
     public ElementTreeBuilder<RootAllTreeBuilder> element(String elementName) {
         ElementFinder newElementFinder = ExpressionHelper.addNextElementFinder(rootReference)
                 .setSearchElement(elementName, false);
-        return new ElementTreeBuilder<RootAllTreeBuilder>(this, referenceStore, new PathReference(newElementFinder, elementName, false));
+        return new ElementTreeBuilder<RootAllTreeBuilder>(this, referenceStore, new TreeEdgeReference(newElementFinder, elementName, false));
     }
 
     public ElementTreeBuilder<RootAllTreeBuilder> path(String path) {
@@ -53,17 +53,17 @@ public class RootAllTreeBuilder {
         if (adders.isEmpty()) {
             throw new RuntimeException("The provided path seems to be empty: " + path);
         }
-        PathReference currentPathReference = rootReference;
+        TreeEdgeReference currentTreeEdgeReference = rootReference;
         for (TreePathAdder treePathAdder : adders) {
-            currentPathReference = treePathAdder.addTreePath(currentPathReference, false);
+            currentTreeEdgeReference = treePathAdder.addTreePath(currentTreeEdgeReference, false);
         }
-        return new ElementTreeBuilder<RootAllTreeBuilder>(this, referenceStore, currentPathReference);
+        return new ElementTreeBuilder<RootAllTreeBuilder>(this, referenceStore, currentTreeEdgeReference);
     }
 
     public ElementTreeBuilder<RootAllTreeBuilder> relativeElement(String elementName) {
         ElementFinder newElementFinder = ExpressionHelper.addNextElementFinder(rootReference)
                 .setSearchElement(elementName, true);
-        return new ElementTreeBuilder<RootAllTreeBuilder>(this, referenceStore, new PathReference(newElementFinder, elementName, true));
+        return new ElementTreeBuilder<RootAllTreeBuilder>(this, referenceStore, new TreeEdgeReference(newElementFinder, elementName, true));
     }
 
     public PartialSearchTextLocationBuilder<RootAllTreeBuilder> onText() {
@@ -80,7 +80,7 @@ public class RootAllTreeBuilder {
     }
 
     public RootAllTreeBuilder recursionToReference(String referenceName) {
-        PathReference reference = referenceStore.get(referenceName);
+        TreeEdgeReference reference = referenceStore.get(referenceName);
         if (reference == null) {
             throw new RuntimeException(String.format("The reference '%s' does not exist in the reference store", referenceName));
         }
@@ -88,14 +88,14 @@ public class RootAllTreeBuilder {
         return this;
     }
 
-    RootAllTreeBuilder addReference(PathReference reference) {
+    RootAllTreeBuilder addReference(TreeEdgeReference reference) {
         ExpressionHelper.addElmentFinderCopy(rootReference, reference)
                 .mergeElementFinder(reference.getElementFinder());
         return this;
     }
 
-    public RootAllTreeBuilder addPathFragment(PathFragment pathFragment) {
-        PathReference reference = pathFragment.getPathReference();
+    public RootAllTreeBuilder addPathFragment(ObservableTreeFragment observableTreeFragment) {
+        TreeEdgeReference reference = observableTreeFragment.getTreeEdgeReference();
         ExpressionHelper.addElmentFinderCopy(rootReference, reference)
                 .mergeElementFinder(reference.getElementFinder());
         return this;
@@ -104,17 +104,17 @@ public class RootAllTreeBuilder {
     public OnlyElementTreeBuilder<RootAllTreeBuilder> predicate(Predicate predicate) {
         ElementFinder newElementFinder = ExpressionHelper.addNextPredicate(rootReference)
                 .setPredicate(predicate);
-        return new OnlyElementTreeBuilder<RootAllTreeBuilder>(this, referenceStore, new PathReference(newElementFinder, predicate, false));
+        return new OnlyElementTreeBuilder<RootAllTreeBuilder>(this, referenceStore, new TreeEdgeReference(newElementFinder, predicate, false));
     }
 
-    public PathReference end(OnEndHandler onEndHandler) {
+    public TreeEdgeReference end(OnEndHandler onEndHandler) {
         ExpressionHelper.getSearchLocationBuilder(rootReference)
                     .onEndHandler(onEndHandler)
                     .build();
         return rootReference;
     }
 
-    public PathReference end() {
+    public TreeEdgeReference end() {
         return rootReference;
     }
 }

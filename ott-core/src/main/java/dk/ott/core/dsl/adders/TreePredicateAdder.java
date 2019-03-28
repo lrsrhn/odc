@@ -22,7 +22,7 @@
  */
 package dk.ott.core.dsl.adders;
 
-import dk.ott.core.dsl.expression.PathReference;
+import dk.ott.core.dsl.expression.TreeEdgeReference;
 import dk.ott.core.dsl.searchtree.ExpressionHelper;
 import dk.ott.core.predicate.Predicate;
 
@@ -34,8 +34,8 @@ public class TreePredicateAdder implements TreePathAdder {
     }
 
     @Override
-    public PathReference addTreePath(PathReference reference, boolean hasRoot) {
-        return new PathReference(
+    public TreeEdgeReference addTreePath(TreeEdgeReference reference, boolean hasRoot) {
+        return new TreeEdgeReference(
                 ExpressionHelper.addNextPredicate(reference).setPredicate(predicate),
                 predicate,
                 reference.isRelative()

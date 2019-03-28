@@ -20,32 +20,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.ott.core.stub;
+package dk.ott.core.dsl.expression;
 
-import dk.ott.core.processing.ElementContext;
-import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.ObservablePathFinder;
-import dk.ott.core.processing.StubElementProcessor;
+import dk.ott.core.dsl.searchtree.RootAllTreeBuilder;
+import dk.ott.core.predicate.Predicate;
 
-import java.io.Reader;
+import java.util.HashMap;
 
-public class StubPathFinder extends ObservablePathFinder {
+public class ObservableTreeFragment {
+  private TreeEdgeReference treeEdgeReference;
 
-    @Override
-    public ObjectStore find(Reader reader, ObjectStore objectStore) {
-        throw new UnsupportedOperationException();
-    }
+  public ObservableTreeFragment(TreeEdgeReference treeEdgeReference) {
+    this.treeEdgeReference = treeEdgeReference;
+  }
 
-    public ObjectStore find(InputReader inputReader) { return find(inputReader, null); }
+  private ExpressionBuilder expression() {
+    return new ExpressionBuilder(treeEdgeReference, false);
+  }
 
-    public ObjectStore find(InputReader inputReader, ObjectStore objectStore) {
-        try {
-            inputReader.reset();
-            ElementContext elementContext = new ElementContext(objectStore);
-            StubElementProcessor stubElementProcessor = new StubElementProcessor(super.rootElementFinder.getElementFinder(), objectStore);
-            return stubElementProcessor.search(inputReader, elementContext);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+  public RootAllTreeBuilder treeBuilder() {
+    return new RootAllTreeBuilder(new HashMap<String, TreeEdgeReference>(), treeEdgeReference);
+  }
+
+  public ExpressionBuilder addPath(String xpath) {
+    return expression().path(xpath);
+  }
+
+  public ExpressionBuilder addElementsAbsolute(String...elements) {
+    return expression().elementsAbsolute(elements);
+  }
+
+  public ExpressionBuilder addPredicate(Predicate predicate) {
+    return expression().predicate(predicate);
+  }
+
+  public TreeEdgeReference getTreeEdgeReference() {
+    return treeEdgeReference;
+  }
 }

@@ -26,7 +26,7 @@ import dk.ott.core.finder.OnStartHandler;
 import dk.ott.core.finder.OnTextHandler;
 import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.ObservablePathFinder;
+import dk.ott.core.processing.ObservableTreeTraverser;
 import dk.ott.core.processing.StructureElement;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +37,7 @@ import java.io.InputStreamReader;
 public abstract class Example {
     private static String xmlFileContent = readFile();
 
-    protected ObservablePathFinder observablePathFinder;
+    protected ObservableTreeTraverser observableTreeTraverser;
 
     @Before
     public abstract void setObservablePathFinder();
@@ -46,7 +46,7 @@ public abstract class Example {
     // @formatter:off
     @Test
     public void example() {
-        observablePathFinder.treeBuilder()
+        observableTreeTraverser.treeBuilder()
                 .element("bookstore")
                     .element("book")
                         .predicate(Predicates.namespace(""))
@@ -78,7 +78,7 @@ public abstract class Example {
                     .end()
                 .end()
             .build();
-        observablePathFinder.find(xmlFileContent);
+        observableTreeTraverser.find(xmlFileContent);
     }
 
     // @formatter:on

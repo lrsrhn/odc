@@ -23,7 +23,7 @@
 package dk.ott.xpp;
 
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.ObservablePathFinder;
+import dk.ott.core.processing.ObservableTreeTraverser;
 import dk.ott.core.processing.XPPElement;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -31,7 +31,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.Reader;
 
-public class XppPathFinder extends ObservablePathFinder {
+public class XppTreeTraverser extends ObservableTreeTraverser {
   private static final XmlPullParserFactory DEFAULT_XML_PULL_PARSER_FACTORY = createFactory();
 
   private XmlPullParserFactory xmlPullParserFactory;
@@ -46,12 +46,12 @@ public class XppPathFinder extends ObservablePathFinder {
     }
   }
 
-  public XppPathFinder(XmlPullParserFactory xmlPullParserFactory) {
+  public XppTreeTraverser(XmlPullParserFactory xmlPullParserFactory) {
     super();
     this.xmlPullParserFactory = xmlPullParserFactory;
   }
 
-  public XppPathFinder() {
+  public XppTreeTraverser() {
     this(DEFAULT_XML_PULL_PARSER_FACTORY);
   }
 

@@ -22,22 +22,22 @@
  */
 package dk.ott.core.dsl.adders;
 
-import dk.ott.core.dsl.expression.PathReference;
+import dk.ott.core.dsl.expression.TreeEdgeReference;
 import dk.ott.core.dsl.searchtree.ExpressionHelper;
 
 public class TreeRecursionAdder implements TreePathAdder {
-    private PathReference pathReference;
+    private TreeEdgeReference treeEdgeReference;
 
-    public TreeRecursionAdder(PathReference pathReference) {
-        this.pathReference = pathReference;
+    public TreeRecursionAdder(TreeEdgeReference treeEdgeReference) {
+        this.treeEdgeReference = treeEdgeReference;
     }
 
     @Override
-    public PathReference addTreePath(PathReference reference, boolean hasRoot) {
-        if (pathReference.getLastPredicate() != null) {
+    public TreeEdgeReference addTreePath(TreeEdgeReference reference, boolean hasRoot) {
+        if (treeEdgeReference.getLastPredicate() != null) {
             throw new RuntimeException("Something wrong!!");
         }
-        ExpressionHelper.addElmentFinderCopy(reference, pathReference).mergeElementFinder(pathReference.getElementFinder());
+        ExpressionHelper.addElmentFinderCopy(reference, treeEdgeReference).mergeElementFinder(treeEdgeReference.getElementFinder());
         return reference;
     }
 }

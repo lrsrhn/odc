@@ -26,25 +26,25 @@ import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.predicate.Predicate;
 import dk.ott.core.processing.ElementFinderReference;
 
-public class PathReference {
+public class TreeEdgeReference {
   private String lastSearchElement;
   private Predicate lastPredicate;
   private ElementFinderReference elementFinderReference;
   private boolean isRelative;
 
-  public PathReference(ElementFinder elementFinder, String lastSearchElement, boolean isRelative) {
+  public TreeEdgeReference(ElementFinder elementFinder, String lastSearchElement, boolean isRelative) {
     this.elementFinderReference = elementFinder.getReference();
     this.lastSearchElement = lastSearchElement;
     this.isRelative = isRelative;
   }
 
-  public PathReference(ElementFinder elementFinder, Predicate lastPredicate, boolean isRelative) {
+  public TreeEdgeReference(ElementFinder elementFinder, Predicate lastPredicate, boolean isRelative) {
     this.elementFinderReference = elementFinder.getReference();
     this.lastPredicate = lastPredicate;
     this.isRelative = isRelative;
   }
 
-  public PathReference(ElementFinder elementFinder, boolean isRelative) {
+  public TreeEdgeReference(ElementFinder elementFinder, boolean isRelative) {
     this.elementFinderReference = elementFinder.getReference();
     this.isRelative = isRelative;
   }

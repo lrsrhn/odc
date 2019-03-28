@@ -22,7 +22,7 @@
  */
 package dk.ott.core.dsl.adders;
 
-import dk.ott.core.dsl.expression.PathReference;
+import dk.ott.core.dsl.expression.TreeEdgeReference;
 import dk.ott.core.dsl.searchtree.ExpressionHelper;
 import dk.ott.core.finder.OnTextHandler;
 
@@ -34,7 +34,7 @@ public class TreeOnTextHandlerAdder implements TreePathAdder {
     }
 
     @Override
-    public PathReference addTreePath(PathReference reference, boolean hasRoot) {
+    public TreeEdgeReference addTreePath(TreeEdgeReference reference, boolean hasRoot) {
         ExpressionHelper.getSearchLocationBuilder(reference).onTextHandler(onTextHandler);
         return reference;
     }

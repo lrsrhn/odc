@@ -22,8 +22,8 @@
  */
 package dk.ott.core.dsl.searchtree;
 
-import dk.ott.core.dsl.expression.PathFragment;
-import dk.ott.core.dsl.expression.PathReference;
+import dk.ott.core.dsl.expression.ObservableTreeFragment;
+import dk.ott.core.dsl.expression.TreeEdgeReference;
 import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.finder.OnEndHandler;
 
@@ -31,10 +31,10 @@ import java.util.Map;
 
 public class OnlyElementTreeBuilder<T> {
     private T parentTreeBuilder;
-    private PathReference parentReference;
-    private Map<String, PathReference> referenceStore;
+    private TreeEdgeReference parentReference;
+    private Map<String, TreeEdgeReference> referenceStore;
 
-    public OnlyElementTreeBuilder(T parentTreeBuilder, Map<String, PathReference> referenceStore, PathReference parentReference) {
+    public OnlyElementTreeBuilder(T parentTreeBuilder, Map<String, TreeEdgeReference> referenceStore, TreeEdgeReference parentReference) {
         this.parentTreeBuilder = parentTreeBuilder;
         this.parentReference = parentReference;
         this.referenceStore = referenceStore;
@@ -43,13 +43,13 @@ public class OnlyElementTreeBuilder<T> {
     public ElementTreeBuilder<OnlyElementTreeBuilder<T>> element(String elementName) {
         ElementFinder newElementFinder = ExpressionHelper.addNextElementFinder(parentReference)
                 .setSearchElement(elementName, false);
-        return new ElementTreeBuilder<OnlyElementTreeBuilder<T>>(this, referenceStore, new PathReference(newElementFinder, elementName, false));
+        return new ElementTreeBuilder<OnlyElementTreeBuilder<T>>(this, referenceStore, new TreeEdgeReference(newElementFinder, elementName, false));
     }
 
     public ElementTreeBuilder<OnlyElementTreeBuilder<T>> relativeElement(String elementName) {
         ElementFinder newElementFinder = ExpressionHelper.addNextElementFinder(parentReference)
                 .setSearchElement(elementName, true);
-        return new ElementTreeBuilder<OnlyElementTreeBuilder<T>>(this, referenceStore, new PathReference(newElementFinder, elementName, true));
+        return new ElementTreeBuilder<OnlyElementTreeBuilder<T>>(this, referenceStore, new TreeEdgeReference(newElementFinder, elementName, true));
     }
 
     public OnlyElementTreeBuilder<T> storeReference(String referenceName) {
@@ -58,7 +58,7 @@ public class OnlyElementTreeBuilder<T> {
     }
 
     public OnlyElementTreeBuilder<T> recursionToReference(String referenceName) {
-        PathReference reference = referenceStore.get(referenceName);
+        TreeEdgeReference reference = referenceStore.get(referenceName);
         if (reference == null) {
             throw new RuntimeException(String.format("The reference '%s' does not exist in the reference store", referenceName));
         }
@@ -66,14 +66,14 @@ public class OnlyElementTreeBuilder<T> {
         return this;
     }
 
-    private OnlyElementTreeBuilder<T> addReference(PathReference reference) {
+    private OnlyElementTreeBuilder<T> addReference(TreeEdgeReference reference) {
         ExpressionHelper.addElmentFinderCopy(parentReference, reference)
                 .mergeElementFinder(reference.getElementFinder());
         return this;
     }
 
-    public OnlyElementTreeBuilder<T> addPathFragment(PathFragment pathFragment) {
-        PathReference reference = pathFragment.getPathReference();
+    public OnlyElementTreeBuilder<T> addPathFragment(ObservableTreeFragment observableTreeFragment) {
+        TreeEdgeReference reference = observableTreeFragment.getTreeEdgeReference();
         ExpressionHelper.addElmentFinderCopy(parentReference, reference)
                 .mergeElementFinder(reference.getElementFinder());
         return this;

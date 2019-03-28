@@ -23,7 +23,7 @@
 package dk.ott.core.dsl.searchtree;
 
 import dk.ott.core.dsl.adders.TreePathAdder;
-import dk.ott.core.dsl.expression.PathReference;
+import dk.ott.core.dsl.expression.TreeEdgeReference;
 import dk.ott.core.dsl.expression.XpathParser;
 import dk.ott.core.finder.SingleElementFinder;
 import dk.ott.core.processing.ElementFinderReference;
@@ -34,11 +34,11 @@ import java.util.Map;
 
 public class RootTreeBuilder {
     private ElementFinderReference elementFinderReference;
-    private Map<String, PathReference> referenceStore;
+    private Map<String, TreeEdgeReference> referenceStore;
 
     public RootTreeBuilder(ElementFinderReference elementFinderReference) {
         this.elementFinderReference = elementFinderReference;
-        this.referenceStore = new HashMap<String, PathReference>();
+        this.referenceStore = new HashMap<String, TreeEdgeReference>();
     }
 
     public ElementTreeBuilder<RootTreeBuilder> path(String path) {
@@ -46,21 +46,21 @@ public class RootTreeBuilder {
         if (adders.isEmpty()) {
             throw new RuntimeException("The provided path seems to be empty: " + path);
         }
-        PathReference currentPathReference = new PathReference(elementFinderReference, false);
+        TreeEdgeReference currentTreeEdgeReference = new TreeEdgeReference(elementFinderReference, false);
         for (TreePathAdder treePathAdder : adders) {
-            currentPathReference = treePathAdder.addTreePath(currentPathReference, true);
+            currentTreeEdgeReference = treePathAdder.addTreePath(currentTreeEdgeReference, true);
         }
-        return new ElementTreeBuilder<RootTreeBuilder>(this, referenceStore, currentPathReference);
+        return new ElementTreeBuilder<RootTreeBuilder>(this, referenceStore, currentTreeEdgeReference);
     }
 
     public ElementTreeBuilder<RootTreeBuilder> element(String elementName) {
         elementFinderReference.setSearchElement(elementName, false);
-        return new ElementTreeBuilder<RootTreeBuilder>(this, referenceStore, new PathReference(elementFinderReference, elementName, false));
+        return new ElementTreeBuilder<RootTreeBuilder>(this, referenceStore, new TreeEdgeReference(elementFinderReference, elementName, false));
     }
 
     public ElementTreeBuilder<RootTreeBuilder> relativeElement(String elementName) {
         elementFinderReference.setSearchElement(elementName, true);
-        return new ElementTreeBuilder<RootTreeBuilder>(this, referenceStore, new PathReference(elementFinderReference, elementName, true));
+        return new ElementTreeBuilder<RootTreeBuilder>(this, referenceStore, new TreeEdgeReference(elementFinderReference, elementName, true));
     }
 
     // Present for handlerBuilder symmetry

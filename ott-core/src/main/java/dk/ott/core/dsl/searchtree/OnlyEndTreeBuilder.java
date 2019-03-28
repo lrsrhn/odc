@@ -22,14 +22,14 @@
  */
 package dk.ott.core.dsl.searchtree;
 
-import dk.ott.core.dsl.expression.PathReference;
+import dk.ott.core.dsl.expression.TreeEdgeReference;
 import dk.ott.core.finder.OnEndHandler;
 
 public class OnlyEndTreeBuilder<T> {
     private T parentTreeBuilder;
-    private PathReference parentReference;
+    private TreeEdgeReference parentReference;
 
-    public OnlyEndTreeBuilder(T parentTreeBuilder, PathReference parentReference) {
+    public OnlyEndTreeBuilder(T parentTreeBuilder, TreeEdgeReference parentReference) {
         this.parentTreeBuilder = parentTreeBuilder;
         this.parentReference = parentReference;
     }

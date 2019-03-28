@@ -21,14 +21,14 @@
  * THE SOFTWARE.
  */
 
-import dk.ott.core.dsl.expression.PathFragment;
+import dk.ott.core.dsl.expression.ObservableTreeFragment;
 import dk.ott.core.finder.ElementHandler;
 import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.ObservablePathFinder;
+import dk.ott.core.processing.ObservableTreeTraverser;
 import dk.ott.core.processing.StructureElement;
 import dk.ott.core.standardhandlers.EventForwarderBuilder;
-import dk.ott.json.JsonPathFinder;
+import dk.ott.json.JsonTreeTraverser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,11 +44,11 @@ import java.util.*;
 
 public class ExpressionXmlTest {
     private JsonBuilderFactory jsonBuilderFactory;
-    private ObservablePathFinder observablePathFinder;
+    private ObservableTreeTraverser observableTreeTraverser;
 
     @Before
     public void init() {
-        observablePathFinder = new JsonPathFinder();
+        observableTreeTraverser = new JsonTreeTraverser();
         jsonBuilderFactory = Json.createBuilderFactory(null);
     }
 
@@ -69,11 +69,11 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observablePathFinder.addXpath("/$/one").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/three").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two/three").handle(assertElementHandler);
 
-        observablePathFinder.find(new StringReader(jsonText));
+        observableTreeTraverser.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -95,11 +95,11 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observablePathFinder.addXpath("/$/one").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/three").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two/three").handle(assertElementHandler);
 
-        observablePathFinder.find(new StringReader(jsonText));
+        observableTreeTraverser.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -122,11 +122,11 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observablePathFinder.addXpath("/$/one").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/three").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two/three").handle(assertElementHandler);
 
-        observablePathFinder.find(new StringReader(jsonText));
+        observableTreeTraverser.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -147,12 +147,12 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observablePathFinder.addXpath("/$/one").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/three").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/four").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two/three").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two/four").handle(assertElementHandler);
 
-        observablePathFinder.find(new StringReader(jsonText));
+        observableTreeTraverser.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -178,12 +178,12 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observablePathFinder.addXpath("/$/one").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/three").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/four").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two/three").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two/four").handle(assertElementHandler);
 
-        observablePathFinder.find(new StringReader(jsonText));
+        observableTreeTraverser.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -203,11 +203,11 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observablePathFinder.addXpath("/$/one").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/three").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two/three").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
 
-        observablePathFinder.find(new StringReader(jsonText));
+        observableTreeTraverser.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -229,13 +229,13 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observablePathFinder.addXpath("/$/one").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/att").onText(EventForwarderBuilder.builder().textValueCollector("att").build());
-        observablePathFinder.addXpath("/$/one/two/three").predicate(Predicates.storedValue("att", "one")).handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two/four").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two/att").onText(EventForwarderBuilder.builder().textValueCollector("att").build());
+        observableTreeTraverser.addXpath("/$/one/two/three").predicate(Predicates.storedValue("att", "one")).handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two/four").handle(assertElementHandler);
 
-        observablePathFinder.find(new StringReader(jsonText));
+        observableTreeTraverser.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 
@@ -261,13 +261,13 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three", "one", "two", "three", "five");
         assertElementHandler.exptectedEndElements("three", "three", "two", "one", "five", "two", "one");
 
-        PathFragment recursion = observablePathFinder.addXpath("/$/one").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").elementsAbsolute("three").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").elementsAbsolute("five").handle(assertElementHandler);
-        observablePathFinder.addXpath("/$/one/two").recursion(recursion);
+        ObservableTreeFragment recursion = observableTreeTraverser.addXpath("/$/one").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two").elementsAbsolute("three").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two").elementsAbsolute("five").handle(assertElementHandler);
+        observableTreeTraverser.addXpath("/$/one/two").recursion(recursion);
 
-        observablePathFinder.find(new StringReader(jsonText));
+        observableTreeTraverser.find(new StringReader(jsonText));
         assertElementHandler.verify();
     }
 

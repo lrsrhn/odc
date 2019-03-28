@@ -38,10 +38,10 @@ import static dk.ott.core.dsl.expression.XpathParser.parseXpath;
 public class ExpressionBuilder {
   private final boolean hasRoot;
   private List<TreePathAdder> treePathAdders;
-  private PathReference rootReference;
+  private TreeEdgeReference rootReference;
   private Predicate filter;
 
-  public ExpressionBuilder(PathReference rootReference, boolean hasRoot) {
+  public ExpressionBuilder(TreeEdgeReference rootReference, boolean hasRoot) {
     this.rootReference = rootReference;
     this.filter = null;
     this.treePathAdders = new ArrayList<TreePathAdder>();
@@ -83,12 +83,12 @@ public class ExpressionBuilder {
     return this;
   }
 
-  public PathFragment recursion(PathFragment pathFragment) {
-    this.treePathAdders.add(new TreeRecursionAdder(pathFragment.getPathReference()));
+  public ObservableTreeFragment recursion(ObservableTreeFragment observableTreeFragment) {
+    this.treePathAdders.add(new TreeRecursionAdder(observableTreeFragment.getTreeEdgeReference()));
     return toFragment();
   }
 
-  public PathFragment handle(ElementHandler elementHandler) {
+  public ObservableTreeFragment handle(ElementHandler elementHandler) {
     if (filter != null) {
       treePathAdders.add(new TreeElementFilterAdder(filter));
     }
@@ -98,7 +98,7 @@ public class ExpressionBuilder {
     return toFragment();
   }
 
-  public PathFragment onStart(OnStartHandler onStartHandler) {
+  public ObservableTreeFragment onStart(OnStartHandler onStartHandler) {
     if (filter != null) {
       treePathAdders.add(new TreeElementFilterAdder(filter));
     }
@@ -106,7 +106,7 @@ public class ExpressionBuilder {
     return toFragment();
   }
 
-  public PathFragment onText(OnTextHandler onTextHandler) {
+  public ObservableTreeFragment onText(OnTextHandler onTextHandler) {
     if (filter != null) {
       treePathAdders.add(new TreeElementTextFilterAdder(filter));
     }
@@ -114,7 +114,7 @@ public class ExpressionBuilder {
     return toFragment();
   }
 
-  public PathFragment onEnd(OnEndHandler onEndHandler) {
+  public ObservableTreeFragment onEnd(OnEndHandler onEndHandler) {
     if (filter != null) {
       treePathAdders.add(new TreeElementFilterAdder(filter));
     }
@@ -122,14 +122,14 @@ public class ExpressionBuilder {
     return toFragment();
   }
 
-  public PathFragment toFragment() {
+  public ObservableTreeFragment toFragment() {
     if (treePathAdders.isEmpty()) {
       throw new IllegalArgumentException("Missing path and predicates for expression");
     }
-    PathReference reference = rootReference;
+    TreeEdgeReference reference = rootReference;
     for (int i = 0; i < treePathAdders.size(); i++) {
       reference = treePathAdders.get(i).addTreePath(reference, i == 0 && hasRoot);
     }
-    return new PathFragment(reference);
+    return new ObservableTreeFragment(reference);
   }
 }

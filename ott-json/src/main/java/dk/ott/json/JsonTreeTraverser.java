@@ -24,7 +24,7 @@ package dk.ott.json;
 
 import dk.ott.core.processing.JsonObject;
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.ObservablePathFinder;
+import dk.ott.core.processing.ObservableTreeTraverser;
 
 import javax.json.Json;
 import javax.json.stream.JsonParser;
@@ -32,15 +32,15 @@ import javax.json.stream.JsonParserFactory;
 import java.io.Reader;
 import java.util.HashMap;
 
-public class JsonPathFinder extends ObservablePathFinder {
+public class JsonTreeTraverser extends ObservableTreeTraverser {
   private static final JsonParserFactory DEFAULT_JSON_PARSER_FACTORY = Json.createParserFactory(new HashMap<String, Object>());
   private JsonParserFactory jsonParserFactory;
 
-  public JsonPathFinder(JsonParserFactory jsonParserFactory) {
+  public JsonTreeTraverser(JsonParserFactory jsonParserFactory) {
     this.jsonParserFactory = jsonParserFactory;
   }
 
-  public JsonPathFinder() {
+  public JsonTreeTraverser() {
     this(DEFAULT_JSON_PARSER_FACTORY);
   }
 

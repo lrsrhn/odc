@@ -22,7 +22,7 @@
  */
 package dk.ott.core.dsl.adders;
 
-import dk.ott.core.dsl.expression.PathReference;
+import dk.ott.core.dsl.expression.TreeEdgeReference;
 import dk.ott.core.finder.ElementFinder;
 
 public class TreeRootElementAdder implements TreePathAdder {
@@ -35,11 +35,11 @@ public class TreeRootElementAdder implements TreePathAdder {
     }
 
     @Override
-    public PathReference addTreePath(PathReference reference, boolean hasRoot) {
+    public TreeEdgeReference addTreePath(TreeEdgeReference reference, boolean hasRoot) {
         ElementFinder currentElementFinder = reference.getElementFinder();
         if (!hasRoot) {
             throw new RuntimeException("The hasRoot is false!");
         }
-        return new PathReference(currentElementFinder.setSearchElement(element, isRelative), element, isRelative);
+        return new TreeEdgeReference(currentElementFinder.setSearchElement(element, isRelative), element, isRelative);
     }
 }

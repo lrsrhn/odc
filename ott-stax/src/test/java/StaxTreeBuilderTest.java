@@ -22,14 +22,14 @@
  */
 
 import dk.ott.core.dsl.searchtree.TreeBuilderTests;
-import dk.ott.xml.StaxPathFinder;
+import dk.ott.xml.StaxTreeTraverser;
 
 public class StaxTreeBuilderTest extends TreeBuilderTests {
 
     @Override
     public void setObservablePathFinder() {
-        StaxPathFinder staxPathFinder = new StaxPathFinder();
+        StaxTreeTraverser staxPathFinder = new StaxTreeTraverser();
         staxPathFinder.enableRawTextReading();
-        this.observablePathFinder = staxPathFinder;
+        this.observableTreeTraverser = staxPathFinder;
     }
 }

@@ -23,7 +23,7 @@
 package dk.ott.core.processing;
 
 import dk.ott.core.dsl.expression.ExpressionBuilder;
-import dk.ott.core.dsl.expression.PathReference;
+import dk.ott.core.dsl.expression.TreeEdgeReference;
 import dk.ott.core.dsl.searchtree.RootTreeBuilder;
 import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.finder.SingleElementFinder;
@@ -33,11 +33,11 @@ import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class ObservablePathFinder {
-  protected PathReference rootElementFinder;
+public abstract class ObservableTreeTraverser {
+  protected TreeEdgeReference rootElementFinder;
 
-  public ObservablePathFinder() {
-    this.rootElementFinder = new PathReference(new SingleElementFinder().getReference(), false);
+  public ObservableTreeTraverser() {
+    this.rootElementFinder = new TreeEdgeReference(new SingleElementFinder().getReference(), false);
   }
 
   ElementFinder getRootElementFinder() {
