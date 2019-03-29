@@ -39,10 +39,9 @@ public final class DomNodeProcessor extends BaseElementProcessor<Document, DomEl
     public ObjectStore search(Document document, DomElement domElement) throws Exception {
         int currentDepth = 0;
         NodeProgressStack nodeProgressStack = new NodeProgressStack(10);
-        NodeProgressStack.NodeProgress currentNodeProgress = new NodeProgressStack.NodeProgress();
-        currentNodeProgress.setValues(0, document.getDocumentElement());
+        nodeProgressStack.push(0, document.getDocumentElement());
 
-        while (currentNodeProgress != null) {
+        for (NodeProgressStack.NodeProgress currentNodeProgress = nodeProgressStack.pop(); currentNodeProgress != null; currentNodeProgress = nodeProgressStack.pop()) {
             Node currentNode = currentNodeProgress.getNodeElement();
             int index = currentNodeProgress.getIndex();
             domElement.setNode(currentNode);
@@ -54,8 +53,8 @@ public final class DomNodeProcessor extends BaseElementProcessor<Document, DomEl
                 for (; index < nodeList.getLength(); index++) {
                     Node childNode = nodeList.item(index);
                     if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                        currentNodeProgress.setValues(index + 1, currentNode); // Save progress
-                        currentNodeProgress = nodeProgressStack.push(0, childNode);
+                        nodeProgressStack.push(index + 1, currentNode); // Save progress
+                        nodeProgressStack.push(0, childNode);
                         break;
                     } else if (childNode.getNodeType() == Node.TEXT_NODE) {
                         observableTreeTraverser.text(domElement);
@@ -63,11 +62,9 @@ public final class DomNodeProcessor extends BaseElementProcessor<Document, DomEl
                 }
                 if (index == nodeList.getLength()) {
                     observableTreeTraverser.endElement(domElement, --currentDepth);
-                    currentNodeProgress = nodeProgressStack.pop();
                 }
             } else {
                 observableTreeTraverser.endElement(domElement, --currentDepth);
-                currentNodeProgress = nodeProgressStack.pop();
             }
         }
         return objectStore;

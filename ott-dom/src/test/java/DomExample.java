@@ -22,13 +22,11 @@
  */
 
 import dk.ott.core.dsl.Example;
-import dk.ott.xml.StaxObservableTree;
+import dk.ott.xml.DomObservableTree;
 
-public class StaxExample extends Example {
+public class DomExample extends Example {
     @Override
     public void setObservablePathFinder() {
-        StaxObservableTree staxPathFinder = new StaxObservableTree();
-        staxPathFinder.enableRawTextReading();
-        super.observableTree = staxPathFinder;
+        super.observableTree = new DomObservableTree();
     }
 }

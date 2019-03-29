@@ -22,14 +22,19 @@
  */
 
 import dk.ott.core.dsl.searchtree.TreeBuilderTests;
-import dk.ott.xml.StaxObservableTree;
+import dk.ott.xml.DomObservableTree;
+import org.junit.Ignore;
 
-public class StaxTreeBuilderTest extends TreeBuilderTests {
+public class DomTreeBuilderTest extends TreeBuilderTests {
 
     @Override
     public void setObservablePathFinder() {
-        StaxObservableTree staxPathFinder = new StaxObservableTree();
-        staxPathFinder.enableRawTextReading();
-        this.observableTree = staxPathFinder;
+        super.observableTree = new DomObservableTree();
+    }
+
+    @Override
+    @Ignore
+    public void testRaw() {
+        // Dom parser does not support raw text extraction
     }
 }

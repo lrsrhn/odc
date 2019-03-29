@@ -20,15 +20,13 @@ public class NodeProgressStack {
         }
     }
 
-    NodeProgress push(int index, Node node) {
+    void push(int index, Node node) {
         if (lookupIndex == nodeProgresses.length - 1) {
             int previousSize = nodeProgresses.length;
             nodeProgresses = Arrays.copyOf(nodeProgresses, nodeProgresses.length * 2);
             prefill(previousSize);
         }
-        NodeProgress nodeProgress = nodeProgresses[++lookupIndex];
-        nodeProgress.setValues(index, node);
-        return nodeProgress;
+        nodeProgresses[++lookupIndex].setValues(index, node);
     }
 
     public NodeProgress pop() {

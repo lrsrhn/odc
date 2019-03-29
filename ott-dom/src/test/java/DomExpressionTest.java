@@ -20,15 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.ott.core.dsl.expression.ExpressionXmlTests;
-import dk.ott.xml.StaxObservableTree;
 
-public class StaxExpressionTest extends ExpressionXmlTests {
+import dk.ott.core.dsl.expression.ExpressionXmlTests;
+import dk.ott.xml.DomObservableTree;
+
+public class DomExpressionTest extends ExpressionXmlTests {
 
     @Override
     public void setObservablePathFinder() {
-        StaxObservableTree staxPathFinder = new StaxObservableTree();
-        staxPathFinder.enableRawTextReading();
-        this.observableTree = staxPathFinder;
+        super.observableTree = new DomObservableTree();
     }
 }
