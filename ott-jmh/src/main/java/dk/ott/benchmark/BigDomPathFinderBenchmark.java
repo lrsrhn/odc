@@ -22,12 +22,13 @@
  */
 package dk.ott.benchmark;
 
-import dk.ott.xml.StaxObservableTree;
+import dk.ott.xml.DomObservableTree;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
 //,jvmArgsAppend={"-XX:MaxInlineSize=0", "-Xverify:none"}
 // jvmArgsAppend = {"-XX:+UnlockDiagnosticVMOptions", "-XX:+PrintInlining"}
 @Fork(value = 1)
@@ -35,25 +36,24 @@ import java.io.InputStreamReader;
 //@Measurement(iterations = 100, time = 30)
 @Measurement(iterations = 5, time = 10)
 @BenchmarkMode(Mode.SampleTime)
-public class BigStaxPathFinderBenchmark {
+public class BigDomPathFinderBenchmark {
 
     @State(Scope.Benchmark)
     public static class BenchmarkState {
         String xmlContent;
-        StaxObservableTree staxPathFinder;
+        DomObservableTree domObservableTree;
         private StringBuilder builder = new StringBuilder(2000000);
 
         public BenchmarkState() {
             try {
 
                 xmlContent = readFile();
-                staxPathFinder = new StaxObservableTree();
-                staxPathFinder.disableRawTextReading();
+                domObservableTree = new DomObservableTree();
                 ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
-                staxPathFinder.addXpath("/root/row/registered").onText(testHandler);
+                domObservableTree.addXpath("/root/row/registered").onText(testHandler);
 //                domObservableTree.addXpath("/root/row/greeting").onText(testHandler);
 //                domObservableTree.addXpath("/root/row/latitude").onText(testHandler);
-                staxPathFinder.addXpath("/root/row/tags").onText(testHandler);
+                domObservableTree.addXpath("/root/row/tags").onText(testHandler);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -62,7 +62,7 @@ public class BigStaxPathFinderBenchmark {
 
     @Benchmark
     public void testBigXml(BenchmarkState benchmarkState, final Blackhole blackhole) {
-        blackhole.consume(benchmarkState.staxPathFinder.find(benchmarkState.xmlContent));
+        blackhole.consume(benchmarkState.domObservableTree.find(benchmarkState.xmlContent));
         if (benchmarkState.builder.length() != 1191873) {
             throw new IllegalStateException(String.format("Length was %d but should be 1191873", benchmarkState.builder.length()));
         }
@@ -71,7 +71,7 @@ public class BigStaxPathFinderBenchmark {
 
     private static String readFile() throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(
-                BigStaxPathFinderBenchmark.class.getClassLoader().getResourceAsStream("bigjson.xml")));
+                BigDomPathFinderBenchmark.class.getClassLoader().getResourceAsStream("bigjson.xml")));
         StringBuilder builder = new StringBuilder();
         while (reader.ready()) {
             builder.append(reader.readLine());

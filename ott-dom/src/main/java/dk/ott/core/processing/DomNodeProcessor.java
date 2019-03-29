@@ -31,9 +31,11 @@ import org.w3c.dom.NodeList;
 import javax.xml.stream.XMLStreamReader;
 
 public final class DomNodeProcessor extends BaseElementProcessor<Document, DomElement> {
+    private boolean skipElement;
 
     public DomNodeProcessor(ElementFinder nextElementFinder, ObjectStore objectStore) {
         super(nextElementFinder, objectStore);
+        this.skipElement = false;
     }
 
     public ObjectStore search(Document document, DomElement domElement) throws Exception {
@@ -48,7 +50,7 @@ public final class DomNodeProcessor extends BaseElementProcessor<Document, DomEl
             if (index == 0) {
                 observableTreeTraverser.startElement(domElement, currentDepth++);
             }
-            if (currentNode.hasChildNodes()) {
+            if (!skipElement && currentNode.hasChildNodes()) {
                 NodeList nodeList = currentNode.getChildNodes();
                 for (; index < nodeList.getLength(); index++) {
                     Node childNode = nodeList.item(index);
@@ -56,7 +58,8 @@ public final class DomNodeProcessor extends BaseElementProcessor<Document, DomEl
                         nodeProgressStack.push(index + 1, currentNode); // Save progress
                         nodeProgressStack.push(0, childNode);
                         break;
-                    } else if (childNode.getNodeType() == Node.TEXT_NODE) {
+                    } else if (observableTreeTraverser.isTextHandlerSet() && childNode.getNodeType() == Node.TEXT_NODE) {
+                        domElement.setNodeText(childNode);
                         observableTreeTraverser.text(domElement);
                     }
                 }
@@ -65,8 +68,13 @@ public final class DomNodeProcessor extends BaseElementProcessor<Document, DomEl
                 }
             } else {
                 observableTreeTraverser.endElement(domElement, --currentDepth);
+                skipElement = false;
             }
         }
         return objectStore;
+    }
+
+    public void skipElement() {
+        this.skipElement = true;
     }
 }

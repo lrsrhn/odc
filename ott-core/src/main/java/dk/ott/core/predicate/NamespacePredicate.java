@@ -29,7 +29,9 @@ public class NamespacePredicate implements Predicate {
     private String expectedNamespace;
 
     public NamespacePredicate(String expectedNamespace) {
-        this.expectedNamespace = expectedNamespace.intern();
+        if (expectedNamespace != null) {
+            this.expectedNamespace = expectedNamespace.intern();
+        }
     }
 
     @Override

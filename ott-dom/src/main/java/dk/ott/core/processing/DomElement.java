@@ -27,9 +27,19 @@ import org.w3c.dom.Node;
 
 public class DomElement implements InternalStructureElement {
   private Node node;
+  private Node nodeText;
+  private DomNodeProcessor domNodeProcessor;
+
+  public DomElement(DomNodeProcessor domNodeProcessor) {
+    this.domNodeProcessor = domNodeProcessor;
+  }
 
   public void setNode(Node node) {
     this.node = node;
+  }
+
+  public void setNodeText(Node nodeText) {
+    this.nodeText = nodeText;
   }
 
   public String getElementName() {
@@ -53,7 +63,10 @@ public class DomElement implements InternalStructureElement {
   }
 
   public String getText() {
-    return node.getTextContent();
+    if (nodeText == null) {
+      return null;
+    }
+    return nodeText.getTextContent();
   }
 
   /**
@@ -67,14 +80,16 @@ public class DomElement implements InternalStructureElement {
 
   @Override
   public void skipElement() {
-    // TODO
+    domNodeProcessor.skipElement();
   }
 
   public void clearCache() {
+    nodeText = null;
     // Do nothing
   }
 
   public String getElementNS() {
-    return node.getNamespaceURI();
+    String elementNS = node.getNamespaceURI();
+    return elementNS == null ? "" : elementNS;
   }
 }

@@ -15,4 +15,8 @@ public class ToStringBuilderHandler implements OnTextHandler {
     public void onText(StructureElement structureElement, ObjectStore objectStore) throws Exception {
         stringBuilder.append(structureElement.getElementName()).append(": ").append(structureElement.getText());
     }
+
+    public void setStringBuilder(StringBuilder stringBuilder) {
+        this.stringBuilder = stringBuilder;
+    }
 }

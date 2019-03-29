@@ -51,8 +51,8 @@ public class BigSaxPathFinderBenchmark {
                 saxPathFinder = new SaxObservableTree();
                 ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
                 saxPathFinder.addXpath("/root/row/registered").onText(testHandler);
-//                staxPathFinder.addXpath("/root/row/greeting").onText(testHandler);
-//                staxPathFinder.addXpath("/root/row/latitude").onText(testHandler);
+//                domObservableTree.addXpath("/root/row/greeting").onText(testHandler);
+//                domObservableTree.addXpath("/root/row/latitude").onText(testHandler);
                 saxPathFinder.addXpath("/root/row/tags").onText(testHandler);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);

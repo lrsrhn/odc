@@ -34,13 +34,20 @@ import java.io.Reader;
 
 public class DomObservableTree extends ObservableTree {
 
+  private DocumentBuilderFactory documentBuilderFactory;
+
+  public DomObservableTree() {
+    documentBuilderFactory = DocumentBuilderFactory.newInstance();
+      documentBuilderFactory.setNamespaceAware(true);
+      documentBuilderFactory.setCoalescing(true);
+      documentBuilderFactory.setIgnoringElementContentWhitespace(true);
+      documentBuilderFactory.setIgnoringComments(true);
+  }
+
   @Override
   public ObjectStore find(Reader reader, ObjectStore objectStore) {
     try {
-      DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-      documentBuilderFactory.setNamespaceAware(true);
-      documentBuilderFactory.setCoalescing(true);
-      return find(documentBuilderFactory.newDocumentBuilder().parse(new InputSource(reader)));
+      return find(documentBuilderFactory.newDocumentBuilder().parse(new InputSource(reader)), objectStore);
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);
     }
@@ -52,8 +59,8 @@ public class DomObservableTree extends ObservableTree {
 
   public ObjectStore find(Document document, ObjectStore objectStore) {
     try {
-      DomElement domElement = new DomElement();
       DomNodeProcessor domNodeProcessor = new DomNodeProcessor(rootElementFinder.getElementFinder(), objectStore);
+      DomElement domElement = new DomElement(domNodeProcessor);
       return domNodeProcessor.search(document, domElement);
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);
