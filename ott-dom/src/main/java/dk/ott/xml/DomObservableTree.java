@@ -23,13 +23,16 @@
 package dk.ott.xml;
 
 import com.ctc.wstx.stax.WstxInputFactory;
+import dk.ott.core.processing.DomElement;
+import dk.ott.core.processing.DomNodeProcessor;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
-import dk.ott.core.processing.XMLElement;
-import dk.ott.core.processing.XmlElementProcessor;
 import org.codehaus.stax2.XMLStreamReader2;
 import org.codehaus.stax2.validation.XMLValidationSchema;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.Reader;
 
 public class DomObservableTree extends ObservableTree {
@@ -75,9 +78,11 @@ public class DomObservableTree extends ObservableTree {
 
   @Override
   public ObjectStore find(Reader reader, ObjectStore objectStore) {
-    XMLStreamReader2 streamReader = null;
-    XmlRawTextReader2 xmlRawTextReader = null;
     try {
+      DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+      documentBuilderFactory.setNamespaceAware(true);
+      documentBuilderFactory.setCoalescing(true);
+      Document document = documentBuilderFactory.newDocumentBuilder().parse(new InputSource(reader));
       if (isRawTextReadingEnabled) {
         xmlRawTextReader = new XmlRawTextReader2(reader);
         streamReader = (XMLStreamReader2) xmlInputFactory.createXMLStreamReader(xmlRawTextReader);
@@ -87,9 +92,9 @@ public class DomObservableTree extends ObservableTree {
       if (xmlValidationSchema != null) {
         streamReader.validateAgainst(xmlValidationSchema);
       }
-      XMLElement xmlElement = new XMLElement(streamReader, xmlRawTextReader, objectStore);
-      XmlElementProcessor xmlElementProcessor = new XmlElementProcessor(rootElementFinder.getElementFinder(), objectStore);
-      return xmlElementProcessor.search(streamReader, xmlElement);
+      DomElement domElement = new DomElement(streamReader, xmlRawTextReader, objectStore);
+      DomNodeProcessor domNodeProcessor = new DomNodeProcessor(rootElementFinder.getElementFinder(), objectStore);
+      return domNodeProcessor.search(streamReader, domElement);
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);
     } finally {
