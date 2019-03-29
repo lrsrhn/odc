@@ -20,18 +20,20 @@ public class NodeProgressStack {
         }
     }
 
-    void push(int index, Node node) {
+    NodeProgress push(int index, Node node) {
         if (lookupIndex == nodeProgresses.length - 1) {
             int previousSize = nodeProgresses.length;
             nodeProgresses = Arrays.copyOf(nodeProgresses, nodeProgresses.length * 2);
             prefill(previousSize);
         }
-        nodeProgresses[++lookupIndex].setValues(index, node);
+        NodeProgress nodeProgress = nodeProgresses[++lookupIndex];
+        nodeProgress.setValues(index, node);
+        return nodeProgress;
     }
 
     public NodeProgress pop() {
         if (isEmpty()) {
-            throw new ArrayIndexOutOfBoundsException();
+            return null;
         }
         return nodeProgresses[lookupIndex--];
     }
@@ -40,11 +42,11 @@ public class NodeProgressStack {
         return lookupIndex == -1;
     }
 
-    public class NodeProgress {
+    public static class NodeProgress {
         private int index;
         private Node nodeElement;
 
-        private NodeProgress() { }
+        NodeProgress() { }
 
         void setValues(int index, Node nodeElement) {
             this.index = index;

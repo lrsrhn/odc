@@ -36,29 +36,39 @@ public final class DomNodeProcessor extends BaseElementProcessor<Document, DomEl
         super(nextElementFinder, objectStore);
     }
 
-    // TODO finish first draft
     public ObjectStore search(Document document, DomElement domElement) throws Exception {
         int currentDepth = 0;
         NodeProgressStack nodeProgressStack = new NodeProgressStack(10);
-        nodeProgressStack.push(0, document.getDocumentElement());
+        NodeProgressStack.NodeProgress currentNodeProgress = new NodeProgressStack.NodeProgress();
+        currentNodeProgress.setValues(0, document.getDocumentElement());
 
-        for (NodeProgressStack.NodeProgress currentNodeProgress = nodeProgressStack.pop(); !nodeProgressStack.isEmpty(); nodeProgressStack.pop()) {
+        while (currentNodeProgress != null) {
             Node currentNode = currentNodeProgress.getNodeElement();
+            int index = currentNodeProgress.getIndex();
             domElement.setNode(currentNode);
-            observableTreeTraverser.startElement(domElement, currentDepth++);
+            if (index == 0) {
+                observableTreeTraverser.startElement(domElement, currentDepth++);
+            }
             if (currentNode.hasChildNodes()) {
                 NodeList nodeList = currentNode.getChildNodes();
-                for (int i = currentNodeProgress.getIndex(); i < nodeList.getLength(); i++) {
-                    Node childNode = nodeList.item(i);
+                for (; index < nodeList.getLength(); index++) {
+                    Node childNode = nodeList.item(index);
                     if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                        nodeProgressStack.push(i + 1, childNode);
+                        currentNodeProgress.setValues(index + 1, currentNode); // Save progress
+                        currentNodeProgress = nodeProgressStack.push(0, childNode);
                         break;
                     } else if (childNode.getNodeType() == Node.TEXT_NODE) {
                         observableTreeTraverser.text(domElement);
                     }
                 }
+                if (index == nodeList.getLength()) {
+                    observableTreeTraverser.endElement(domElement, --currentDepth);
+                    currentNodeProgress = nodeProgressStack.pop();
+                }
+            } else {
+                observableTreeTraverser.endElement(domElement, --currentDepth);
+                currentNodeProgress = nodeProgressStack.pop();
             }
-            observableTreeTraverser.endElement(domElement, --currentDepth);
         }
         return objectStore;
     }
