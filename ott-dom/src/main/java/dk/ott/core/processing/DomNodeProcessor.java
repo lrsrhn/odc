@@ -24,11 +24,8 @@ package dk.ott.core.processing;
 
 import dk.ott.core.finder.ElementFinder;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import javax.xml.stream.XMLStreamReader;
 
 public final class DomNodeProcessor extends BaseElementProcessor<Document, DomElement> {
     private boolean skipElement;
@@ -45,17 +42,17 @@ public final class DomNodeProcessor extends BaseElementProcessor<Document, DomEl
 
         for (NodeProgressStack.NodeProgress currentNodeProgress = nodeProgressStack.pop(); currentNodeProgress != null; currentNodeProgress = nodeProgressStack.pop()) {
             Node currentNode = currentNodeProgress.getNodeElement();
-            int index = currentNodeProgress.getIndex();
+            int nextChildIndex = currentNodeProgress.getNextChildIndex();
             domElement.setNode(currentNode);
-            if (index == 0) {
+            if (nextChildIndex == 0) {
                 observableTreeTraverser.startElement(domElement, currentDepth++);
             }
             if (!skipElement && currentNode.hasChildNodes()) {
                 NodeList nodeList = currentNode.getChildNodes();
-                for (; index < nodeList.getLength(); index++) {
-                    Node childNode = nodeList.item(index);
+                for (; nextChildIndex < nodeList.getLength(); nextChildIndex++) {
+                    Node childNode = nodeList.item(nextChildIndex);
                     if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                        nodeProgressStack.push(index + 1, currentNode); // Save progress
+                        nodeProgressStack.push(nextChildIndex + 1, currentNode); // Save progress
                         nodeProgressStack.push(0, childNode);
                         break;
                     } else if (observableTreeTraverser.isTextHandlerSet() && childNode.getNodeType() == Node.TEXT_NODE) {
@@ -63,7 +60,7 @@ public final class DomNodeProcessor extends BaseElementProcessor<Document, DomEl
                         observableTreeTraverser.text(domElement);
                     }
                 }
-                if (index == nodeList.getLength()) {
+                if (nextChildIndex == nodeList.getLength()) {
                     observableTreeTraverser.endElement(domElement, --currentDepth);
                 }
             } else {

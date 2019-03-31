@@ -6,12 +6,12 @@ import java.util.Arrays;
 
 public class NodeProgressStack {
     private NodeProgress[] nodeProgresses;
-    private int lookupIndex;
+    private int nextChildIndex;
 
     public NodeProgressStack(int size) {
         this.nodeProgresses = new NodeProgress[size];
         prefill(0);
-        this.lookupIndex = -1;
+        this.nextChildIndex = -1;
     }
 
     private void prefill(int startIndex) {
@@ -20,39 +20,39 @@ public class NodeProgressStack {
         }
     }
 
-    void push(int index, Node node) {
-        if (lookupIndex == nodeProgresses.length - 1) {
+    void push(int nextChildIndex, Node node) {
+        if (this.nextChildIndex == nodeProgresses.length - 1) {
             int previousSize = nodeProgresses.length;
             nodeProgresses = Arrays.copyOf(nodeProgresses, nodeProgresses.length * 2);
             prefill(previousSize);
         }
-        nodeProgresses[++lookupIndex].setValues(index, node);
+        nodeProgresses[++this.nextChildIndex].setValues(nextChildIndex, node);
     }
 
     public NodeProgress pop() {
         if (isEmpty()) {
             return null;
         }
-        return nodeProgresses[lookupIndex--];
+        return nodeProgresses[nextChildIndex--];
     }
 
     public boolean isEmpty() {
-        return lookupIndex == -1;
+        return nextChildIndex == -1;
     }
 
     public static class NodeProgress {
-        private int index;
+        private int nextChildIndex;
         private Node nodeElement;
 
         NodeProgress() { }
 
-        void setValues(int index, Node nodeElement) {
-            this.index = index;
+        void setValues(int nextChildIndex, Node nodeElement) {
+            this.nextChildIndex = nextChildIndex;
             this.nodeElement = nodeElement;
         }
 
-        public int getIndex() {
-            return index;
+        public int getNextChildIndex() {
+            return nextChildIndex;
         }
 
         public Node getNodeElement() {
