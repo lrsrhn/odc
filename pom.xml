@@ -22,6 +22,7 @@
         <module>ott-stax</module>
         <module>ott-json</module>
         <module>ott-xpp</module>
+        <module>ott-vtd-xml</module>
         <module>ott-jmh</module>
     </modules>
 
