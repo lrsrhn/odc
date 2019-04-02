@@ -22,7 +22,6 @@
  */
 package dk.ott.core.processing;
 
-import com.ximpleware.AutoPilot;
 import com.ximpleware.VTDNav;
 import dk.ott.core.finder.ElementFinder;
 
@@ -33,29 +32,44 @@ public final class VtdIndexProcessor extends BaseElementProcessor<VTDNav, XMLEle
     }
 
     public ObjectStore search(VTDNav vtdNav, XMLElement xmlElement) throws Exception {
-        AutoPilot ap = new AutoPilot(vtdNav);
+        int previousElementDepth = -1;
+        int currentDepth = 0;
+        IndexProgressStack indexProgressStack = new IndexProgressStack(10);
         if (vtdNav.toElement(VTDNav.ROOT)) {
             for (int tokenIndex = vtdNav.getCurrentIndex(); tokenIndex < vtdNav.getTokenCount(); tokenIndex++) {
-                System.out.println("token count => "+tokenIndex + ", Type: " + typeToText(vtdNav.getTokenType(tokenIndex)));
-                if (vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_STARTING_TAG) {
-                    System.out.println("Element length: " + vtdNav.getTokenLength(tokenIndex));
-                    System.out.println("Element length: " + vtdNav.toString(tokenIndex));
+                switch (vtdNav.getTokenType(tokenIndex)) {
+                    case VTDNav.TOKEN_STARTING_TAG:
+                        int elementDepth = vtdNav.getTokenDepth(tokenIndex);
+                        if (elementDepth > previousElementDepth) {
+                            indexProgressStack.push(tokenIndex, vtdNav.toNormalizedString(tokenIndex));
+                        } else {
+                            while (elementDepth <= previousElementDepth) {
+                                IndexProgressStack.Element element = indexProgressStack.pop();
+                                xmlElement.setElementName(element.getElementName());
+                                xmlElement.setTokenIndex(element.getElementIndex());
+                                observableTreeTraverser.endElement(xmlElement, --currentDepth);
+                                previousElementDepth--;
+                            }
+                            indexProgressStack.push(tokenIndex, vtdNav.toNormalizedString(tokenIndex));
+                        }
+                        previousElementDepth = elementDepth;
+                        xmlElement.setTokenIndex(tokenIndex);
+                        observableTreeTraverser.startElement(xmlElement, currentDepth++);
+                        break;
+                    case VTDNav.TOKEN_CHARACTER_DATA:
+                        xmlElement.setTokenIndex(tokenIndex);
+                        observableTreeTraverser.text(xmlElement);
+                        break;
                 }
+            }
+            // Stack not empty -> process end elements
+            while (!indexProgressStack.isEmpty()) {
+                IndexProgressStack.Element element = indexProgressStack.pop();
+                xmlElement.setElementName(element.getElementName());
+                xmlElement.setTokenIndex(element.getElementIndex());
+                observableTreeTraverser.endElement(xmlElement, --currentDepth);
             }
         }
         return objectStore;
-    }
-
-    private static String typeToText(int type) {
-        switch (type) {
-            case VTDNav.TOKEN_STARTING_TAG:
-                return "Start element";
-            case VTDNav.TOKEN_ENDING_TAG:
-                return "End element";
-            case VTDNav.TOKEN_CHARACTER_DATA:
-                return "Characters";
-            default:
-                return type + "";
-        }
     }
 }

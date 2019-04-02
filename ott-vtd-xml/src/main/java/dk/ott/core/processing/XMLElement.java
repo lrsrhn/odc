@@ -22,6 +22,7 @@
  */
 package dk.ott.core.processing;
 
+import com.ximpleware.NavException;
 import com.ximpleware.VTDNav;
 
 public class XMLElement implements InternalStructureElement {
@@ -40,42 +41,61 @@ public class XMLElement implements InternalStructureElement {
   }
 
   public String getElementName() {
-    if (elementNameCache == null && vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_STARTING_TAG) {
-//      elementNameCache = vtdNav.get;
+    try {
+      if (elementNameCache == null && vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_STARTING_TAG) {
+          elementNameCache = vtdNav.toNormalizedString(tokenIndex);
+      }
+      return elementNameCache;
+    } catch (NavException e) {
+      throw new RuntimeException(e.getMessage(), e);
     }
-    return elementNameCache;
   }
 
   public String getAttributeValue(String attributeName) {
-//    if (xmlStreamReader.getEventType() == XMLStreamReader.START_ELEMENT) {
-//      return xmlStreamReader.getAttributeValue(null, attributeName);
-//    }
-    return null;
+    try {
+      if (vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_STARTING_TAG) {
+        if (!vtdNav.toElement(tokenIndex)) {
+          return null;
+        }
+        int attributeToken = vtdNav.getAttrVal(attributeName);
+        if (attributeToken == -1) {
+          return null;
+        }
+        return vtdNav.toNormalizedString(attributeToken);
+      }
+      return null;
+    } catch (NavException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
   }
 
   public boolean hasAttribute(String attributeName) {
-//    if (attributeName != null && xmlStreamReader.getEventType() == XMLStreamReader.START_ELEMENT) {
-//      for (int i = 0; i < xmlStreamReader.getAttributeCount(); i++) {
-//        if (attributeName.equals(xmlStreamReader.getAttributeLocalName(i))) {
-//          return true;
-//        }
-//      }
-//    }
-    return false;
+    try {
+      if (vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_STARTING_TAG) {
+        if (!vtdNav.toElement(tokenIndex)) {
+          return false;
+        }
+        int attributeToken = vtdNav.getAttrVal(attributeName);
+        if (attributeToken == -1) {
+          return false;
+        }
+        return true;
+      }
+      return false;
+    } catch (NavException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
   }
 
   public String getText() {
-//    if (elementTextCache != null) {
-//      return elementTextCache;
-//    }
-//    if (xmlStreamReader.getEventType() == XMLStreamConstants.CHARACTERS || xmlStreamReader.getEventType() == XMLStreamConstants.CDATA) {
-//      try {
-//        elementTextCache = xmlStreamReader.getText();
-//      } catch (IllegalStateException e) {
-//        // Element has children and does not have a value/text
-//      }
-//    }
-    return elementTextCache;
+    try {
+      if (elementTextCache == null && vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_CHARACTER_DATA) {
+        elementTextCache = vtdNav.toNormalizedString(tokenIndex);
+      }
+      return elementTextCache;
+    } catch (NavException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
   }
 
   /**
@@ -117,10 +137,18 @@ public class XMLElement implements InternalStructureElement {
   }
 
   public String getElementNS() {
-//    if (elementNamespaceCache == null) {
-//      elementNamespaceCache = xmlStreamReader.getNamespaceURI();
+//    try {
+//      if (elementNamespaceCache == null && vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_STARTING_TAG) {
+//        elementNamespaceCache = vtdNav.toElementNS(tokenIndex);
+//      }
+//      return elementNamespaceCache;
+//    } catch (NavException e) {
+//      throw new RuntimeException(e.getMessage(), e);
 //    }
-//    return elementNamespaceCache;
-    return null;
+    return "";
+  }
+
+  public void setElementName(String elementName) {
+    this.elementNameCache = elementName;
   }
 }
