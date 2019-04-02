@@ -22,6 +22,7 @@
  */
 package dk.ott.xml;
 
+import com.ximpleware.AutoPilot;
 import com.ximpleware.VTDGen;
 import com.ximpleware.VTDNav;
 import dk.ott.core.processing.ObjectStore;
@@ -42,7 +43,8 @@ public class VtdXmlObservableTree extends ObservableTree {
       vtdGen.setDoc(toByteArray(reader));
       vtdGen.parse(false); // Parse with namespace support enabled
       VTDNav vtdNav = vtdGen.getNav();
-      XMLElement xmlElement = new XMLElement(vtdNav);
+      AutoPilot autoPilot = new AutoPilot(vtdNav);
+      XMLElement xmlElement = new XMLElement(vtdNav, autoPilot);
       VtdIndexProcessor vtdIndexProcessor = new VtdIndexProcessor(rootElementFinder.getElementFinder(), objectStore);
       return vtdIndexProcessor.search(vtdNav, xmlElement);
     } catch (Exception ex) {

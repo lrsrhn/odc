@@ -22,18 +22,21 @@
  */
 package dk.ott.core.processing;
 
+import com.ximpleware.AutoPilot;
 import com.ximpleware.NavException;
 import com.ximpleware.VTDNav;
 
 public class XMLElement implements InternalStructureElement {
   private VTDNav vtdNav;
+  private AutoPilot autoPilot;
   private String elementTextCache;
   private String elementNameCache;
   private String elementNamespaceCache;
   private int tokenIndex;
 
-  public XMLElement(VTDNav vtdNav) {
+  public XMLElement(VTDNav vtdNav, AutoPilot autoPilot) {
     this.vtdNav = vtdNav;
+    this.autoPilot = autoPilot;
   }
 
   public void setTokenIndex(int tokenIndex) {
@@ -54,14 +57,13 @@ public class XMLElement implements InternalStructureElement {
   public String getAttributeValue(String attributeName) {
     try {
       if (vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_STARTING_TAG) {
-        if (!vtdNav.toElement(tokenIndex)) {
-          return null;
+        autoPilot.resetXPath();
+        autoPilot.selectAttr(attributeName);
+        int attributeindex  = -1;
+        if ((attributeindex = autoPilot.iterateAttr()) != -1) {
+          return vtdNav.toNormalizedString(attributeindex);
         }
-        int attributeToken = vtdNav.getAttrVal(attributeName);
-        if (attributeToken == -1) {
-          return null;
-        }
-        return vtdNav.toNormalizedString(attributeToken);
+        return null;
       }
       return null;
     } catch (NavException e) {
