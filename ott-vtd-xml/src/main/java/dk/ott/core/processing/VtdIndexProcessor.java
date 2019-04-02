@@ -44,10 +44,7 @@ public final class VtdIndexProcessor extends BaseElementProcessor<VTDNav, XMLEle
                             indexProgressStack.push(tokenIndex, vtdNav.toNormalizedString(tokenIndex));
                         } else {
                             while (elementDepth <= previousElementDepth) {
-                                IndexProgressStack.Element element = indexProgressStack.pop();
-                                xmlElement.setElementName(element.getElementName());
-                                xmlElement.setTokenIndex(element.getElementIndex());
-                                observableTreeTraverser.endElement(xmlElement, --currentDepth);
+                                currentDepth = endElement(xmlElement, currentDepth, indexProgressStack);
                                 previousElementDepth--;
                             }
                             indexProgressStack.push(tokenIndex, vtdNav.toNormalizedString(tokenIndex));
@@ -62,14 +59,18 @@ public final class VtdIndexProcessor extends BaseElementProcessor<VTDNav, XMLEle
                         break;
                 }
             }
-            // Stack not empty -> process end elements
             while (!indexProgressStack.isEmpty()) {
-                IndexProgressStack.Element element = indexProgressStack.pop();
-                xmlElement.setElementName(element.getElementName());
-                xmlElement.setTokenIndex(element.getElementIndex());
-                observableTreeTraverser.endElement(xmlElement, --currentDepth);
+                currentDepth = endElement(xmlElement, currentDepth, indexProgressStack);
             }
         }
         return objectStore;
+    }
+
+    private int endElement(XMLElement xmlElement, int currentDepth, IndexProgressStack indexProgressStack) throws Exception {
+        IndexProgressStack.Element element = indexProgressStack.pop();
+        xmlElement.setElementName(element.getElementName());
+        xmlElement.setTokenIndex(element.getElementIndex());
+        observableTreeTraverser.endElement(xmlElement, --currentDepth);
+        return currentDepth;
     }
 }
