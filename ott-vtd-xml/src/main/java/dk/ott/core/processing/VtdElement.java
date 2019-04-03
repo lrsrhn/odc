@@ -35,8 +35,13 @@ public class VtdElement implements InternalStructureElement {
   private int tokenIndex;
 
   public VtdElement(VTDNav vtdNav, AutoPilot autoPilot) {
-    this.vtdNav = vtdNav;
-    this.autoPilot = autoPilot;
+    try {
+      this.vtdNav = vtdNav;
+      this.autoPilot = autoPilot;
+      autoPilot.selectXPath("namespace-uri()");
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
   }
 
   public void setTokenIndex(int tokenIndex) {
@@ -141,11 +146,8 @@ public class VtdElement implements InternalStructureElement {
   public String getElementNS() {
     try {
       if (elementNamespaceCache == null && vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_STARTING_TAG) {
-        autoPilot.resetXPath();
         vtdNav.recoverNode(tokenIndex);
-        autoPilot.selectXPath("namespace-uri()");
         elementNamespaceCache = autoPilot.evalXPathToString();
-        autoPilot.resetXPath();
       }
       return elementNamespaceCache;
     } catch (Exception e) {

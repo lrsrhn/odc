@@ -43,12 +43,12 @@ final class JsonEventStack {
   }
 
   Event peek() {
-    if (head == -1) {
-      return null;
-    } else if (head < -1) {
-      throw new ArrayIndexOutOfBoundsException();
-    }
+    if (head > -1) {
     return array[head];
+    } else if (head == -1) {
+      return null;
+    }
+    throw new ArrayIndexOutOfBoundsException();
   }
 
   void push(Event value) {
