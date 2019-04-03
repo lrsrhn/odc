@@ -26,7 +26,7 @@ import com.ximpleware.AutoPilot;
 import com.ximpleware.NavException;
 import com.ximpleware.VTDNav;
 
-public class XMLElement implements InternalStructureElement {
+public class VtdElement implements InternalStructureElement {
   private VTDNav vtdNav;
   private AutoPilot autoPilot;
   private String elementTextCache;
@@ -34,7 +34,7 @@ public class XMLElement implements InternalStructureElement {
   private String elementNamespaceCache;
   private int tokenIndex;
 
-  public XMLElement(VTDNav vtdNav, AutoPilot autoPilot) {
+  public VtdElement(VTDNav vtdNav, AutoPilot autoPilot) {
     this.vtdNav = vtdNav;
     this.autoPilot = autoPilot;
   }

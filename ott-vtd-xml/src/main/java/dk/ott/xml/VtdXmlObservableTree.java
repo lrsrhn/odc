@@ -28,7 +28,7 @@ import com.ximpleware.VTDNav;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
 import dk.ott.core.processing.VtdIndexProcessor;
-import dk.ott.core.processing.XMLElement;
+import dk.ott.core.processing.VtdElement;
 
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -43,7 +43,7 @@ public class VtdXmlObservableTree extends ObservableTree {
       vtdGen.parse(true); // Parse with namespace support enabled
       VTDNav vtdNav = vtdGen.getNav();
       AutoPilot autoPilot = new AutoPilot(vtdNav);
-      XMLElement xmlElement = new XMLElement(vtdNav, autoPilot);
+      VtdElement xmlElement = new VtdElement(vtdNav, autoPilot);
       VtdIndexProcessor vtdIndexProcessor = new VtdIndexProcessor(rootElementFinder.getElementFinder(), objectStore);
       return vtdIndexProcessor.search(vtdNav, xmlElement);
     } catch (Exception ex) {

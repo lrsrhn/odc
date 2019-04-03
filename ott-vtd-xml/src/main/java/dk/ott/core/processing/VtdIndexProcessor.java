@@ -25,13 +25,13 @@ package dk.ott.core.processing;
 import com.ximpleware.VTDNav;
 import dk.ott.core.finder.ElementFinder;
 
-public final class VtdIndexProcessor extends BaseElementProcessor<VTDNav, XMLElement> {
+public final class VtdIndexProcessor extends BaseElementProcessor<VTDNav, VtdElement> {
 
     public VtdIndexProcessor(ElementFinder nextElementFinder, ObjectStore objectStore) {
         super(nextElementFinder, objectStore);
     }
 
-    public ObjectStore search(VTDNav vtdNav, XMLElement xmlElement) throws Exception {
+    public ObjectStore search(VTDNav vtdNav, VtdElement xmlElement) throws Exception {
         int previousElementDepth = -1;
         int currentDepth = 0;
         IndexProgressStack indexProgressStack = new IndexProgressStack(10);
@@ -66,7 +66,7 @@ public final class VtdIndexProcessor extends BaseElementProcessor<VTDNav, XMLEle
         return objectStore;
     }
 
-    private int endElement(XMLElement xmlElement, int currentDepth, IndexProgressStack indexProgressStack) throws Exception {
+    private int endElement(VtdElement xmlElement, int currentDepth, IndexProgressStack indexProgressStack) throws Exception {
         IndexProgressStack.Element element = indexProgressStack.pop();
         xmlElement.setElementName(element.getElementName());
         xmlElement.setTokenIndex(element.getElementIndex());
