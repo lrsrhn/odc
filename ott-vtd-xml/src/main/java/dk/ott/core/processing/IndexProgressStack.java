@@ -24,7 +24,7 @@ public class IndexProgressStack {
             elementIndices = Arrays.copyOf(elementIndices, elementIndices.length * 2);
             prefill(previousSize);
         }
-        elementIndices[++this.nextChildIndex].setValues(nextChildIndex, elementName);
+        elementIndices[++this.nextChildIndex].setValues(elementIndex, elementName);
     }
 
     public Element pop() {

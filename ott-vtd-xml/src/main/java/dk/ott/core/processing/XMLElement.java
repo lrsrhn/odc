@@ -57,11 +57,18 @@ public class XMLElement implements InternalStructureElement {
   public String getAttributeValue(String attributeName) {
     try {
       if (vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_STARTING_TAG) {
-        autoPilot.resetXPath();
-        autoPilot.selectAttr(attributeName);
-        int attributeindex  = -1;
-        if ((attributeindex = autoPilot.iterateAttr()) != -1) {
-          return vtdNav.toNormalizedString(attributeindex);
+        for (int index = tokenIndex + 1; index < vtdNav.getTokenCount(); index++) {
+          switch (vtdNav.getTokenType(index)) {
+            case VTDNav.TOKEN_ATTR_NAME:
+              if (attributeName.equals(vtdNav.toNormalizedString(index)) && vtdNav.getTokenType(++index) == VTDNav.TOKEN_ATTR_VAL) {
+                return vtdNav.toNormalizedString(index);
+              }
+              break;
+            case VTDNav.TOKEN_ATTR_VAL:
+              break;
+            default:
+              return null;
+          }
         }
         return null;
       }
