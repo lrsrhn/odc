@@ -23,6 +23,7 @@
 
 import dk.ott.core.dsl.searchtree.TreeBuilderTests;
 import dk.ott.xml.VtdXmlObservableTree;
+import org.junit.Ignore;
 
 public class VtdXmlTreeBuilderTest extends TreeBuilderTests {
 
@@ -30,5 +31,11 @@ public class VtdXmlTreeBuilderTest extends TreeBuilderTests {
     public void setObservablePathFinder() {
         VtdXmlObservableTree staxPathFinder = new VtdXmlObservableTree();
         this.observableTree = staxPathFinder;
+    }
+
+    @Override
+    @Ignore
+    public void testRaw() {
+        // vtd xml does not support raw text extraction
     }
 }

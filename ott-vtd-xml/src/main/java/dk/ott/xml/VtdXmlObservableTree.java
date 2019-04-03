@@ -39,9 +39,8 @@ public class VtdXmlObservableTree extends ObservableTree {
   public ObjectStore find(Reader reader, ObjectStore objectStore) {
     try {
       VTDGen vtdGen = new VTDGen();
-      vtdGen.enableIgnoredWhiteSpace(false);
       vtdGen.setDoc(toByteArray(reader));
-      vtdGen.parse(false); // Parse with namespace support enabled
+      vtdGen.parse(true); // Parse with namespace support enabled
       VTDNav vtdNav = vtdGen.getNav();
       AutoPilot autoPilot = new AutoPilot(vtdNav);
       XMLElement xmlElement = new XMLElement(vtdNav, autoPilot);

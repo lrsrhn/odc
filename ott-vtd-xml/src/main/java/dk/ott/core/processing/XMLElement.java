@@ -46,7 +46,12 @@ public class XMLElement implements InternalStructureElement {
   public String getElementName() {
     try {
       if (elementNameCache == null && vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_STARTING_TAG) {
-          elementNameCache = vtdNav.toNormalizedString(tokenIndex);
+        String prefix = vtdNav.getPrefixString(tokenIndex);
+        elementNameCache = vtdNav.toNormalizedString(tokenIndex);
+        // Remove prefix
+        if (prefix != null) {
+          elementNameCache = elementNameCache.substring(prefix.length() + 1); // Prefix + ':' length
+        }
       }
       return elementNameCache;
     } catch (NavException e) {
@@ -57,20 +62,11 @@ public class XMLElement implements InternalStructureElement {
   public String getAttributeValue(String attributeName) {
     try {
       if (vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_STARTING_TAG) {
-        for (int index = tokenIndex + 1; index < vtdNav.getTokenCount(); index++) {
-          switch (vtdNav.getTokenType(index)) {
-            case VTDNav.TOKEN_ATTR_NAME:
-              if (attributeName.equals(vtdNav.toNormalizedString(index)) && vtdNav.getTokenType(++index) == VTDNav.TOKEN_ATTR_VAL) {
-                return vtdNav.toNormalizedString(index);
-              }
-              break;
-            case VTDNav.TOKEN_ATTR_VAL:
-              break;
-            default:
-              return null;
+        for (int index = tokenIndex + 1; index < vtdNav.getTokenCount() && vtdNav.getTokenType(index) == VTDNav.TOKEN_ATTR_NAME; index++) {
+          if (attributeName.equals(vtdNav.toNormalizedString(index)) && vtdNav.getTokenType(++index) == VTDNav.TOKEN_ATTR_VAL) {
+            return vtdNav.toNormalizedString(index);
           }
         }
-        return null;
       }
       return null;
     } catch (NavException e) {
@@ -81,14 +77,11 @@ public class XMLElement implements InternalStructureElement {
   public boolean hasAttribute(String attributeName) {
     try {
       if (vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_STARTING_TAG) {
-        if (!vtdNav.toElement(tokenIndex)) {
-          return false;
+        for (int index = tokenIndex + 1; index < vtdNav.getTokenCount() && vtdNav.getTokenType(index) == VTDNav.TOKEN_ATTR_NAME; index++) {
+          if (attributeName.equals(vtdNav.toNormalizedString(index)) && vtdNav.getTokenType(++index) == VTDNav.TOKEN_ATTR_VAL) {
+            return true;
+          }
         }
-        int attributeToken = vtdNav.getAttrVal(attributeName);
-        if (attributeToken == -1) {
-          return false;
-        }
-        return true;
       }
       return false;
     } catch (NavException e) {
@@ -146,15 +139,18 @@ public class XMLElement implements InternalStructureElement {
   }
 
   public String getElementNS() {
-//    try {
-//      if (elementNamespaceCache == null && vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_STARTING_TAG) {
-//        elementNamespaceCache = vtdNav.toElementNS(tokenIndex);
-//      }
-//      return elementNamespaceCache;
-//    } catch (NavException e) {
-//      throw new RuntimeException(e.getMessage(), e);
-//    }
-    return "";
+    try {
+      if (elementNamespaceCache == null && vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_STARTING_TAG) {
+        autoPilot.resetXPath();
+        vtdNav.recoverNode(tokenIndex);
+        autoPilot.selectXPath("namespace-uri()");
+        elementNamespaceCache = autoPilot.evalXPathToString();
+        autoPilot.resetXPath();
+      }
+      return elementNamespaceCache;
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
   }
 
   public void setElementName(String elementName) {
