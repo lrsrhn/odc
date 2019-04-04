@@ -27,8 +27,8 @@ import com.ximpleware.VTDGen;
 import com.ximpleware.VTDNav;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
-import dk.ott.core.processing.VtdIndexProcessor;
 import dk.ott.core.processing.VtdElement;
+import dk.ott.core.processing.VtdIndexProcessor;
 
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -37,9 +37,17 @@ public class VtdXmlObservableTree extends ObservableTree {
 
   @Override
   public ObjectStore find(Reader reader, ObjectStore objectStore) {
+    return find(toByteArray(reader), objectStore);
+  }
+
+  public ObjectStore find(byte[] documentBytes) {
+    return find(documentBytes, new ObjectStore());
+  }
+
+  public ObjectStore find(byte[] documentBytes, ObjectStore objectStore) {
     try {
       VTDGen vtdGen = new VTDGen();
-      vtdGen.setDoc(toByteArray(reader));
+      vtdGen.setDoc(documentBytes);
       vtdGen.parse(true); // Parse with namespace support enabled
       VTDNav vtdNav = vtdGen.getNav();
       AutoPilot autoPilot = new AutoPilot(vtdNav);
@@ -51,7 +59,7 @@ public class VtdXmlObservableTree extends ObservableTree {
     }
   }
 
-  private byte[] toByteArray(Reader reader) {
+  public static byte[] toByteArray(Reader reader) {
     try {
       char[] charArray = new char[8 * 1024];
       StringBuilder builder = new StringBuilder();

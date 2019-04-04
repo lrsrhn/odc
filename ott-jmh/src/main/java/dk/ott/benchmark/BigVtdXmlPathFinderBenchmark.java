@@ -28,6 +28,7 @@ import org.openjdk.jmh.infra.Blackhole;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 
 //,jvmArgsAppend={"-XX:MaxInlineSize=0", "-Xverify:none"}
 // jvmArgsAppend = {"-XX:+UnlockDiagnosticVMOptions", "-XX:+PrintInlining"}
@@ -40,20 +41,19 @@ public class BigVtdXmlPathFinderBenchmark {
 
     @State(Scope.Benchmark)
     public static class BenchmarkState {
-        String xmlContent;
-        VtdXmlObservableTree domObservableTree;
+        byte[] xmlContent;
+        VtdXmlObservableTree vtdXmlObservableTree;
         private StringBuilder builder = new StringBuilder(2000000);
 
         public BenchmarkState() {
             try {
-
-                xmlContent = readFile();
-                domObservableTree = new VtdXmlObservableTree();
+                xmlContent = VtdXmlObservableTree.toByteArray(new StringReader(readFile()));
+                vtdXmlObservableTree = new VtdXmlObservableTree();
                 ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
-                domObservableTree.addXpath("/root/row/registered").onText(testHandler);
-//                domObservableTree.addXpath("/root/row/greeting").onText(testHandler);
-//                domObservableTree.addXpath("/root/row/latitude").onText(testHandler);
-                domObservableTree.addXpath("/root/row/tags").onText(testHandler);
+                vtdXmlObservableTree.addXpath("/root/row/registered").onText(testHandler);
+//                vtdXmlObservableTree.addXpath("/root/row/greeting").onText(testHandler);
+//                vtdXmlObservableTree.addXpath("/root/row/latitude").onText(testHandler);
+                vtdXmlObservableTree.addXpath("/root/row/tags").onText(testHandler);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -62,7 +62,7 @@ public class BigVtdXmlPathFinderBenchmark {
 
     @Benchmark
     public void testBigXml(BenchmarkState benchmarkState, final Blackhole blackhole) {
-        blackhole.consume(benchmarkState.domObservableTree.find(benchmarkState.xmlContent));
+        blackhole.consume(benchmarkState.vtdXmlObservableTree.find(benchmarkState.xmlContent));
         if (benchmarkState.builder.length() != 1191873) {
             throw new IllegalStateException(String.format("Length was %d but should be 1191873", benchmarkState.builder.length()));
         }

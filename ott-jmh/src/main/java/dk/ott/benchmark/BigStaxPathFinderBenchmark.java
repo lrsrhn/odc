@@ -51,8 +51,8 @@ public class BigStaxPathFinderBenchmark {
                 staxPathFinder.disableRawTextReading();
                 ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
                 staxPathFinder.addXpath("/root/row/registered").onText(testHandler);
-//                domObservableTree.addXpath("/root/row/greeting").onText(testHandler);
-//                domObservableTree.addXpath("/root/row/latitude").onText(testHandler);
+//                staxPathFinder.addXpath("/root/row/greeting").onText(testHandler);
+//                staxPathFinder.addXpath("/root/row/latitude").onText(testHandler);
                 staxPathFinder.addXpath("/root/row/tags").onText(testHandler);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
