@@ -46,22 +46,22 @@ public final class ObservableTreeTraverser {
         this.childDepth = 0;
     }
 
-    public void startElement(final InternalStructureElement structureElement, final int currentDepth) throws Exception {
+    public boolean startElement(final InternalStructureElement structureElement, final int currentDepth) throws Exception {
         structureElement.clearCache();
         if (childDepth == currentDepth) {
             SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, objectStore, false);
             if (searchLocation != null) {
                 handleSearchLocation(searchLocation, structureElement, currentDepth);
-                return;
+                return false;
             } else if (!currentElementFinder.hasRelative()) {
-                structureElement.skipElement();
-                return;
+                return true;
             }
         }
         SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, objectStore, true);
         if (searchLocation != null) {
             handleSearchLocation( searchLocation, structureElement, currentDepth);
         }
+        return false;
     }
 
     private void handleSearchLocation(final SearchLocation searchLocation, final InternalStructureElement structureElement, final int currentDepth) throws Exception {
