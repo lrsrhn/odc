@@ -35,6 +35,7 @@ public final class VtdIndexProcessor extends BaseElementProcessor<VTDNav, VtdEle
         int previousElementDepth = -1;
         int currentDepth = 0;
         IndexProgressStack indexProgressStack = new IndexProgressStack(10);
+        // TODO: redo has first child traversal
         if (vtdNav.toElement(VTDNav.ROOT)) {
             for (int tokenIndex = vtdNav.getCurrentIndex(); tokenIndex < vtdNav.getTokenCount(); tokenIndex++) {
                 switch (vtdNav.getTokenType(tokenIndex)) {

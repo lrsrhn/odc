@@ -130,6 +130,7 @@ public class VtdElement implements InternalStructureElement {
 
   @Override
   public void skipElement() {
+    // TODO: implement!
 //    try {
 //      xmlStreamReader.skipElement();
 //    } catch (XMLStreamException xse) {
