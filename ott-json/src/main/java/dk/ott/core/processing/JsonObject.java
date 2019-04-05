@@ -47,7 +47,6 @@ public class JsonObject implements InternalStructureElement {
         if (elementValueCache == null) {
             switch (currentEvent) {
                 case VALUE_NULL:
-                    elementValueCache = null;
                     break;
                 case VALUE_TRUE:
                     elementValueCache = "true";
