@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.ott.core.dsl.expression;
+package dk.ott.core.dsl;
 
 import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.predicate.Predicate;

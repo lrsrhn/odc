@@ -23,7 +23,7 @@
 package dk.ott.core.processing;
 
 import dk.ott.core.dsl.expression.ExpressionBuilder;
-import dk.ott.core.dsl.expression.TreeEdgeReference;
+import dk.ott.core.dsl.TreeEdgeReference;
 import dk.ott.core.dsl.searchtree.RootTreeBuilder;
 import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.finder.SingleElementFinder;

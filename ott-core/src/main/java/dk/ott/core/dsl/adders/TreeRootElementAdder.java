@@ -22,7 +22,7 @@
  */
 package dk.ott.core.dsl.adders;
 
-import dk.ott.core.dsl.expression.TreeEdgeReference;
+import dk.ott.core.dsl.TreeEdgeReference;
 import dk.ott.core.finder.ElementFinder;
 
 public class TreeRootElementAdder implements TreePathAdder {

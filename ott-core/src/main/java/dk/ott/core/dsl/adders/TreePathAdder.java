@@ -22,7 +22,7 @@
  */
 package dk.ott.core.dsl.adders;
 
-import dk.ott.core.dsl.expression.TreeEdgeReference;
+import dk.ott.core.dsl.TreeEdgeReference;
 
 public interface TreePathAdder {
     TreeEdgeReference addTreePath(TreeEdgeReference reference, boolean hasRoot);

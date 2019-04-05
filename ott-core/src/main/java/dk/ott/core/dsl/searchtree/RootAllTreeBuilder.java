@@ -24,7 +24,7 @@ package dk.ott.core.dsl.searchtree;
 
 import dk.ott.core.dsl.adders.TreePathAdder;
 import dk.ott.core.dsl.ObservableTreeFragment;
-import dk.ott.core.dsl.expression.TreeEdgeReference;
+import dk.ott.core.dsl.TreeEdgeReference;
 import dk.ott.core.dsl.expression.XpathParser;
 import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.event.OnEndHandler;

@@ -23,6 +23,7 @@
 package dk.ott.core.dsl.expression;
 
 import dk.ott.core.dsl.ObservableTreeFragment;
+import dk.ott.core.dsl.TreeEdgeReference;
 import dk.ott.core.dsl.adders.*;
 import dk.ott.core.event.EventHandler;
 import dk.ott.core.event.OnEndHandler;
