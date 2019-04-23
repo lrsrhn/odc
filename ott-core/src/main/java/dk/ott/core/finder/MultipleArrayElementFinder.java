@@ -178,7 +178,7 @@ public final class MultipleArrayElementFinder implements ElementFinder {
 
     final SearchLocation lookupSearchLocation(String targetElementName) {
       for (int i = 0; i < size; i++) {
-        if (elementNames[i].equals(targetElementName)) {
+        if (targetElementName.equals(elementNames[i])) {
           return searchLocations[i];
         }
       }

@@ -23,31 +23,36 @@
 package dk.ott.core.processing;
 
 import dk.ott.core.finder.ElementFinder;
+import org.codehaus.stax2.XMLStreamReader2;
 
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
-public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamReader, XMLElement> {
+public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamReader2, XMLElement> {
 
     public XmlElementProcessor(ElementFinder nextElementFinder, ObjectStore objectStore) {
         super(nextElementFinder, objectStore);
     }
 
-    public ObjectStore search(XMLStreamReader streamReader, XMLElement xmlElement) throws Exception {
+    public ObjectStore search(XMLStreamReader2 streamReader, XMLElement xmlElement) throws Exception {
         int currentDepth = 0;
         while (streamReader.hasNext()) {
-            switch (streamReader.next()) {
+            int eventType = streamReader.next();
+            switch (eventType) {
                 case XMLStreamReader.START_ELEMENT:
-                    observableTreeTraverser.startElement(xmlElement, currentDepth++);
-                    // Traverser may have called skipElement
-                    if (streamReader.getEventType() == XMLStreamConstants.END_ELEMENT) {
+                    xmlElement.setEventType(eventType);
+                    if (observableTreeTraverser.startElement(xmlElement, currentDepth++)) {
+                        streamReader.skipElement();
+                        xmlElement.setEventType(XMLStreamReader.END_ELEMENT);
                         observableTreeTraverser.endElement(xmlElement, --currentDepth);
                     }
                     continue;
                 case XMLStreamConstants.CHARACTERS:
+                    xmlElement.setEventType(eventType);
                     observableTreeTraverser.text(xmlElement);
                     continue;
                 case XMLStreamReader.END_ELEMENT:
+                    xmlElement.setEventType(eventType);
                     observableTreeTraverser.endElement(xmlElement, --currentDepth);
             }
         }

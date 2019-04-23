@@ -36,11 +36,16 @@ public class XMLElement implements InternalStructureElement {
   private String elementNamespaceCache;
   private ObjectStore objectStore;
   private XmlRawTextReader2 xmlRawTextReader;
+  private int eventType;
 
   public XMLElement(XMLStreamReader2 xmlStreamReader, XmlRawTextReader2 xmlRawTextReader, ObjectStore objectStore) {
     this.objectStore = objectStore;
     this.xmlStreamReader = xmlStreamReader;
     this.xmlRawTextReader = xmlRawTextReader;
+  }
+
+  public void setEventType(int eventType) {
+    this.eventType = eventType;
   }
 
   public String getElementName() {
@@ -51,14 +56,14 @@ public class XMLElement implements InternalStructureElement {
   }
 
   public String getAttributeValue(String attributeName) {
-    if (xmlStreamReader.getEventType() == XMLStreamReader.START_ELEMENT) {
+    if (eventType == XMLStreamReader.START_ELEMENT) {
       return xmlStreamReader.getAttributeValue(null, attributeName);
     }
     return null;
   }
 
   public boolean hasAttribute(String attributeName) {
-    if (attributeName != null && xmlStreamReader.getEventType() == XMLStreamReader.START_ELEMENT) {
+    if (attributeName != null && eventType == XMLStreamReader.START_ELEMENT) {
       for (int i = 0; i < xmlStreamReader.getAttributeCount(); i++) {
         if (attributeName.equals(xmlStreamReader.getAttributeLocalName(i))) {
           return true;
@@ -72,7 +77,7 @@ public class XMLElement implements InternalStructureElement {
     if (elementTextCache != null) {
       return elementTextCache;
     }
-    if (xmlStreamReader.getEventType() == XMLStreamConstants.CHARACTERS || xmlStreamReader.getEventType() == XMLStreamConstants.CDATA) {
+    if (eventType == XMLStreamConstants.CHARACTERS || eventType == XMLStreamConstants.CDATA) {
       try {
         elementTextCache = xmlStreamReader.getText();
       } catch (IllegalStateException e) {
@@ -91,7 +96,7 @@ public class XMLElement implements InternalStructureElement {
   public String getRawElementValue() {
     try {
       if (elementTextCache == null) {
-        if (xmlStreamReader.getEventType() != XMLStreamConstants.START_ELEMENT) {
+        if (eventType != XMLStreamConstants.START_ELEMENT) {
           throw new RuntimeException("Cannot retrieve raw value from other event then Start_element");
         }
         xmlRawTextReader.setStartIndex(xmlStreamReader.getLocation().getCharacterOffset());
