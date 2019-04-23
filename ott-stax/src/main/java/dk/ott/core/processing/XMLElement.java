@@ -34,12 +34,10 @@ public class XMLElement implements InternalStructureElement {
   private String elementTextCache;
   private String elementNameCache;
   private String elementNamespaceCache;
-  private ObjectStore objectStore;
   private XmlRawTextReader2 xmlRawTextReader;
   private int eventType;
 
-  public XMLElement(XMLStreamReader2 xmlStreamReader, XmlRawTextReader2 xmlRawTextReader, ObjectStore objectStore) {
-    this.objectStore = objectStore;
+  public XMLElement(XMLStreamReader2 xmlStreamReader, XmlRawTextReader2 xmlRawTextReader) {
     this.xmlStreamReader = xmlStreamReader;
     this.xmlRawTextReader = xmlRawTextReader;
   }

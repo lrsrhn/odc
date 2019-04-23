@@ -21,7 +21,7 @@ public class TextExtractor {
 
     public void clear() {
         if (stringBuilder.capacity() > CAPACITY) {
-            stringBuilder = new StringBuilder();
+            stringBuilder = new StringBuilder(CAPACITY);
         } else {
             stringBuilder.setLength(0);
         }

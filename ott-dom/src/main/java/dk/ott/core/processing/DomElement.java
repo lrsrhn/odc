@@ -28,17 +28,12 @@ import org.w3c.dom.Node;
 public class DomElement implements InternalStructureElement {
   private Node node;
   private Node nodeText;
-  private DomNodeProcessor domNodeProcessor;
 
-  public DomElement(DomNodeProcessor domNodeProcessor) {
-    this.domNodeProcessor = domNodeProcessor;
-  }
-
-  public void setNode(Node node) {
+  void setNode(Node node) {
     this.node = node;
   }
 
-  public void setNodeText(Node nodeText) {
+  void setNodeText(Node nodeText) {
     this.nodeText = nodeText;
   }
 
@@ -51,22 +46,20 @@ public class DomElement implements InternalStructureElement {
     if (attributes == null) {
       return null;
     }
-    return attributes.getNamedItem(attributeName).getNodeValue();
+    Node node = attributes.getNamedItem(attributeName);
+    if (node == null) {
+      return null;
+    }
+    return node.getNodeValue();
   }
 
   public boolean hasAttribute(String attributeName) {
     NamedNodeMap attributes = node.getAttributes();
-    if (attributes == null) {
-      return false;
-    }
-    return attributes.getNamedItem(attributeName) != null;
+    return attributes != null && attributes.getNamedItem(attributeName) != null;
   }
 
   public String getText() {
-    if (nodeText == null) {
-      return null;
-    }
-    return nodeText.getTextContent();
+    return nodeText == null  ? null : nodeText.getTextContent();
   }
 
   @Override

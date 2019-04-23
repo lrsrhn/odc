@@ -38,10 +38,6 @@ public class JsonObject implements InternalStructureElement {
         this.currentEvent = currentEvent;
     }
 
-    public JsonParser.Event getCurrentEvent() {
-        return currentEvent;
-    }
-
     @Override
     public String getText() {
         if (elementValueCache == null) {
@@ -55,8 +51,6 @@ public class JsonObject implements InternalStructureElement {
                     elementValueCache = "false";
                     break;
                 case VALUE_NUMBER:
-                    elementValueCache = jsonParser.getString();
-                    break;
                 case VALUE_STRING:
                     elementValueCache = jsonParser.getString();
                     break;

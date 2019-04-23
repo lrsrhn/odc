@@ -32,7 +32,7 @@ public class SaxElement implements InternalStructureElement {
   private Attributes attributes;
   private TextExtractor textExtractor;
 
-  public SaxElement(TextExtractor textExtractor) {
+  SaxElement(TextExtractor textExtractor) {
     this.textExtractor = textExtractor;
   }
 
@@ -41,17 +41,11 @@ public class SaxElement implements InternalStructureElement {
   }
 
   public String getAttributeValue(String attributeName) {
-    if (attributes == null) {
-      return null;
-    }
-    return attributes.getValue("", attributeName);
+    return attributeName == null ? null : attributes.getValue("", attributeName);
   }
 
   public boolean hasAttribute(String attributeName) {
-    if (attributes == null) {
-      return false;
-    }
-    return attributes.getIndex("", attributeName) > -1;
+    return attributes != null && attributes.getIndex("", attributeName) > -1;
   }
 
   public String getText() {

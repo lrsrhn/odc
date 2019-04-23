@@ -44,7 +44,7 @@ public class VtdElement implements InternalStructureElement {
     }
   }
 
-  public void setTokenIndex(int tokenIndex) {
+  void setTokenIndex(int tokenIndex) {
     this.tokenIndex = tokenIndex;
   }
 
@@ -128,7 +128,7 @@ public class VtdElement implements InternalStructureElement {
     }
   }
 
-  public void setElementName(String elementName) {
+  void setElementName(String elementName) {
     this.elementNameCache = elementName;
   }
 }

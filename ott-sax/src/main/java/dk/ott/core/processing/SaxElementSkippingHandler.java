@@ -15,11 +15,11 @@ public class SaxElementSkippingHandler extends DefaultHandler {
         resetDepth();
     }
 
-    public void setSaxHandler(SaxHandler saxHandler) {
+    void setSaxHandler(SaxHandler saxHandler) {
         this.saxHandler = saxHandler;
     }
 
-    public void resetDepth() {
+    void resetDepth() {
         depth = 0;
     }
 

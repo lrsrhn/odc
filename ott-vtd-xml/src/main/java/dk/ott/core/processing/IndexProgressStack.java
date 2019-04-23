@@ -6,7 +6,7 @@ public class IndexProgressStack {
     private Element[] elementIndices;
     private int nextChildIndex;
 
-    public IndexProgressStack(int size) {
+    IndexProgressStack(int size) {
         this.elementIndices = new Element[size];
         prefill(0);
         this.nextChildIndex = -1;
@@ -27,14 +27,14 @@ public class IndexProgressStack {
         elementIndices[++this.nextChildIndex].setValues(elementIndex, elementName);
     }
 
-    public Element pop() {
+    Element pop() {
         if (isEmpty()) {
             return null;
         }
         return elementIndices[nextChildIndex--];
     }
 
-    public boolean isEmpty() {
+    boolean isEmpty() {
         return nextChildIndex == -1;
     }
 
@@ -49,11 +49,11 @@ public class IndexProgressStack {
             this.elementName = elementName;
         }
 
-        public int getElementIndex() {
+        int getElementIndex() {
             return elementIndex;
         }
 
-        public String getElementName() {
+        String getElementName() {
             return elementName;
         }
     }
