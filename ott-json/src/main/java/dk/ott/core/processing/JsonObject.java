@@ -97,11 +97,6 @@ public class JsonObject implements InternalStructureElement {
         elementValueCache = null;
     }
 
-    @Override
-    public void skipElement() {
-        // TODO
-    }
-
     public void setKeyName(String keyName) {
         this.keyName = keyName;
     }

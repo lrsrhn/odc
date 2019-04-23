@@ -40,8 +40,8 @@ public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XPPEle
     while (continueLoop) {
           switch (streamReader.next()) {
               case XmlPullParser.START_TAG:
-                  observableTreeTraverser.startElement(XPPElement, currentDepth++);
-                  if (streamReader.getEventType() == XmlPullParser.END_TAG) {
+                  if (observableTreeTraverser.startElement(XPPElement, currentDepth++)) {
+                      skipElement(streamReader);
                       observableTreeTraverser.endElement(XPPElement, --currentDepth);
                   }
                   continue;
@@ -56,5 +56,27 @@ public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XPPEle
           }
       }
     return objectStore;
+  }
+
+  private void skipElement(XmlPullParser xmlPullParser) {
+    try {
+      int currentDepth = 0;
+      xmlPullParser.next(); // Skip current element
+      // Process all child elements if necessary
+      while(xmlPullParser.getEventType() != XmlPullParser.END_TAG || (xmlPullParser.getEventType() == XmlPullParser.END_TAG && currentDepth > 0)) {
+        if (xmlPullParser.getEventType() == XmlPullParser.START_TAG) {
+          currentDepth++;
+          if (xmlPullParser.isEmptyElementTag()) {
+            xmlPullParser.next();
+            currentDepth--;
+          }
+        } else if (xmlPullParser.getEventType() == XmlPullParser.END_TAG) {
+          currentDepth--;
+        }
+        xmlPullParser.next();
+      }
+    } catch (Exception xse) {
+      throw new RuntimeException(xse);
+    }
   }
 }

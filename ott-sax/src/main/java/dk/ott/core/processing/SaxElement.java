@@ -24,7 +24,6 @@ package dk.ott.core.processing;
 
 import dk.ott.xml.TextExtractor;
 import org.xml.sax.Attributes;
-import org.xml.sax.XMLReader;
 
 public class SaxElement implements InternalStructureElement {
   private String elementTextCache;
@@ -32,13 +31,9 @@ public class SaxElement implements InternalStructureElement {
   private String elementNamespaceCache;
   private Attributes attributes;
   private TextExtractor textExtractor;
-  private XMLReader xmlReader;
-  private SaxElementSkippingHandler saxElementSkippingHandler;
 
-  public SaxElement(XMLReader xmlReader, TextExtractor textExtractor, SaxElementSkippingHandler saxElementSkippingHandler) {
-    this.xmlReader = xmlReader;
+  public SaxElement(TextExtractor textExtractor) {
     this.textExtractor = textExtractor;
-    this.saxElementSkippingHandler = saxElementSkippingHandler;
   }
 
   public String getElementName() {
@@ -70,12 +65,6 @@ public class SaxElement implements InternalStructureElement {
   @Override
   public String getRawElementValue() {
     return "";
-  }
-
-  @Override
-  public void skipElement() {
-    saxElementSkippingHandler.resetDepth();
-    xmlReader.setContentHandler(saxElementSkippingHandler);
   }
 
   public void clearCache() {

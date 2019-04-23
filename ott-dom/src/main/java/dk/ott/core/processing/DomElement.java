@@ -69,18 +69,9 @@ public class DomElement implements InternalStructureElement {
     return nodeText.getTextContent();
   }
 
-  /**
-   * NB: Only use this after all attributes have been read - Calling this will
-   * move the XML parser forward
-   */
   @Override
   public String getRawElementValue() {
     return "";
-  }
-
-  @Override
-  public void skipElement() {
-    domNodeProcessor.skipElement();
   }
 
   public void clearCache() {

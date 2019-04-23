@@ -134,31 +134,6 @@ public class XPPElement implements InternalStructureElement {
     this.elementNameCache = null;
   }
 
-
-
-  @Override
-  public void skipElement() {
-    try {
-      int currentDepth = 0;
-      xmlPullParser.next(); // Skip current element
-      // Process all child elements if necessary
-      while(xmlPullParser.getEventType() != XmlPullParser.END_TAG || (xmlPullParser.getEventType() == XmlPullParser.END_TAG && currentDepth > 0)) {
-        if (xmlPullParser.getEventType() == XmlPullParser.START_TAG) {
-          currentDepth++;
-          if (xmlPullParser.isEmptyElementTag()) {
-            xmlPullParser.next();
-            currentDepth--;
-          }
-        } else if (xmlPullParser.getEventType() == XmlPullParser.END_TAG) {
-          currentDepth--;
-        }
-        xmlPullParser.next();
-      }
-    } catch (Exception xse) {
-      throw new RuntimeException(xse);
-    }
-  }
-
   public String getElementNS() {
         return xmlPullParser.getNamespace();
     }

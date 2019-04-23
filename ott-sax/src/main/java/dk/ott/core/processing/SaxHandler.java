@@ -10,13 +10,17 @@ public class SaxHandler extends DefaultHandler {
     private SaxElement saxElement;
     private TextExtractor textExtractor;
     private ObservableTreeTraverser observableTreeTraverser;
+    private XMLReader xmlReader;
+    private SaxElementSkippingHandler saxElementSkippingHandler;
     private int depth;
 
     public SaxHandler(XMLReader xmlReader, ObservableTreeTraverser observableTreeTraverser, SaxElementSkippingHandler saxElementSkippingHandler) {
         this.observableTreeTraverser = observableTreeTraverser;
         this.textExtractor = new TextExtractor();
         saxElementSkippingHandler.setSaxHandler(this);
-        this.saxElement = new SaxElement(xmlReader, textExtractor, saxElementSkippingHandler);
+        this.saxElement = new SaxElement(textExtractor);
+        this.xmlReader = xmlReader;
+        this.saxElementSkippingHandler = saxElementSkippingHandler;
         this.depth = 0;
     }
 
@@ -24,7 +28,10 @@ public class SaxHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         try {
             saxElement.setData(uri, localName, attributes);
-            observableTreeTraverser.startElement(saxElement, depth++);
+            if (observableTreeTraverser.startElement(saxElement, depth++)) {
+                saxElementSkippingHandler.resetDepth();
+                xmlReader.setContentHandler(saxElementSkippingHandler);
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

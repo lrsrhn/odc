@@ -23,6 +23,5 @@
 package dk.ott.core.processing;
 
 interface InternalStructureElement extends StructureElement {
-    void skipElement();
     void clearCache();
 }

@@ -105,37 +105,9 @@ public class VtdElement implements InternalStructureElement {
     }
   }
 
-  /**
-   * NB: Only use this after all attributes have been read - Calling this will
-   * move the XML parser forward
-   *
-   */
   @Override
   public String getRawElementValue() {
-//    try {
-//      if (elementTextCache == null) {
-//        if (xmlStreamReader.getEventType() != XMLStreamConstants.START_ELEMENT) {
-//          throw new RuntimeException("Cannot retrieve raw value from other event then Start_element");
-//        }
-//        xmlRawTextReader.setStartIndex(xmlStreamReader.getLocation().getCharacterOffset());
-//        xmlStreamReader.skipElement();
-//        elementTextCache = xmlRawTextReader.readRawText(xmlStreamReader.getLocation().getCharacterOffset());
-//      }
-//      return elementTextCache;
-//    } catch (XMLStreamException xse) {
-//      throw new RuntimeException(xse);
-//    }
     return "";
-  }
-
-  @Override
-  public void skipElement() {
-    // TODO: implement!
-//    try {
-//      xmlStreamReader.skipElement();
-//    } catch (XMLStreamException xse) {
-//      throw new RuntimeException(xse);
-//    }
   }
 
   public void clearCache() {
