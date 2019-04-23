@@ -38,17 +38,22 @@ public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XPPEle
     int currentDepth = 0;
     boolean continueLoop = true;
     while (continueLoop) {
-          switch (streamReader.next()) {
+        int eventType = streamReader.next();
+          switch (eventType) {
               case XmlPullParser.START_TAG:
+                  XPPElement.setEventType(eventType);
                   if (observableTreeTraverser.startElement(XPPElement, currentDepth++)) {
                       skipElement(streamReader);
+                      XPPElement.setEventType(XmlPullParser.END_TAG);
                       observableTreeTraverser.endElement(XPPElement, --currentDepth);
                   }
                   continue;
               case XmlPullParser.TEXT:
+                  XPPElement.setEventType(eventType);
                   observableTreeTraverser.text(XPPElement);
                   continue;
               case XmlPullParser.END_TAG:
+                  XPPElement.setEventType(eventType);
                   observableTreeTraverser.endElement(XPPElement, --currentDepth);
                   continue;
               case XmlPullParser.END_DOCUMENT:
@@ -61,19 +66,19 @@ public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XPPEle
   private void skipElement(XmlPullParser xmlPullParser) {
     try {
       int currentDepth = 0;
-      xmlPullParser.next(); // Skip current element
+      int eventType = xmlPullParser.next(); // Skip current element
       // Process all child elements if necessary
-      while(xmlPullParser.getEventType() != XmlPullParser.END_TAG || (xmlPullParser.getEventType() == XmlPullParser.END_TAG && currentDepth > 0)) {
-        if (xmlPullParser.getEventType() == XmlPullParser.START_TAG) {
+      while(eventType != XmlPullParser.END_TAG || currentDepth > 0) {
+        if (eventType == XmlPullParser.START_TAG) {
           currentDepth++;
           if (xmlPullParser.isEmptyElementTag()) {
             xmlPullParser.next();
             currentDepth--;
           }
-        } else if (xmlPullParser.getEventType() == XmlPullParser.END_TAG) {
+        } else if (eventType == XmlPullParser.END_TAG) {
           currentDepth--;
         }
-        xmlPullParser.next();
+        eventType = xmlPullParser.next();
       }
     } catch (Exception xse) {
       throw new RuntimeException(xse);

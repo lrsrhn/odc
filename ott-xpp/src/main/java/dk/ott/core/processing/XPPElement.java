@@ -29,10 +29,16 @@ public class XPPElement implements InternalStructureElement {
   private XmlPullParser xmlPullParser;
   private String elementTextCache;
   private String elementNameCache;
+  private int eventType;
 
   public XPPElement(XmlPullParser xmlStreamReader) {
     this.xmlPullParser = xmlStreamReader;
     this.elementNameCache = null;
+    this.eventType = -1;
+  }
+
+  public void setEventType(int eventType) {
+    this.eventType = eventType;
   }
 
   public String getElementName() {
@@ -43,20 +49,16 @@ public class XPPElement implements InternalStructureElement {
   }
 
   public String getAttributeValue(String attributeName) {
-    try {
-      if (xmlPullParser.getEventType() == XmlPullParser.START_TAG) {
-        return xmlPullParser.getAttributeValue(null, attributeName);
-      }
-      return null;
-    } catch (XmlPullParserException xe) {
-      throw new RuntimeException(xe);
+    if (eventType == XmlPullParser.START_TAG) {
+      return xmlPullParser.getAttributeValue(null, attributeName);
     }
+    return null;
   }
 
   public boolean hasAttribute(String attributeName) {
     if (attributeName != null) {
       for (int i = 0; i < xmlPullParser.getAttributeCount(); i++) {
-        if (attributeName.equalsIgnoreCase(xmlPullParser.getAttributeName(i))) {
+        if (attributeName.equals(xmlPullParser.getAttributeName(i))) {
           return true;
         }
       }
@@ -74,13 +76,13 @@ public class XPPElement implements InternalStructureElement {
       return elementTextCache;
     }
     try {
-      if (xmlPullParser.getEventType() == XmlPullParser.TEXT && xmlPullParser.getEventType() != XmlPullParser.IGNORABLE_WHITESPACE) {
+      if (eventType == XmlPullParser.TEXT) {
         elementTextCache = xmlPullParser.getText();
       }
       return elementTextCache;
     } catch (Exception e) {
       // Element has children and does not have a value/text
-      return elementTextCache;
+      return null;
     }
   }
 
@@ -93,7 +95,7 @@ public class XPPElement implements InternalStructureElement {
   public String getRawElementValue() {
     try {
       if (elementTextCache == null) {
-        if (xmlPullParser.getEventType() != XmlPullParser.START_TAG) {
+        if (eventType != XmlPullParser.START_TAG) {
           throw new RuntimeException("Cannot retrieve raw value from other event then Start_element");
         }
         elementTextCache = moveCursorToEndElement();
@@ -108,20 +110,20 @@ public class XPPElement implements InternalStructureElement {
     try {
       StringBuilder builder = new StringBuilder(128);
       int currentDepth = 0;
-      xmlPullParser.next(); // Skip current element
+      int eventType = xmlPullParser.next(); // Skip current element
       // Process all child elements if necessary
-      while(xmlPullParser.getEventType() != XmlPullParser.END_TAG || (xmlPullParser.getEventType() == XmlPullParser.END_TAG && currentDepth > 0)) {
-        if (xmlPullParser.getEventType() == XmlPullParser.START_TAG) {
+      while(eventType != XmlPullParser.END_TAG || currentDepth > 0) {
+        if (eventType == XmlPullParser.START_TAG) {
           currentDepth++;
           if (xmlPullParser.isEmptyElementTag()) {
             xmlPullParser.next();
             currentDepth--;
           }
-        } else if (xmlPullParser.getEventType() == XmlPullParser.END_TAG) {
+        } else if (eventType == XmlPullParser.END_TAG) {
           currentDepth--;
         }
         builder.append(xmlPullParser.getText());
-        xmlPullParser.next();
+        eventType = xmlPullParser.next();
       }
       return builder.toString();
     } catch (Exception xse) {

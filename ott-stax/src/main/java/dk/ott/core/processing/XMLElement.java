@@ -109,15 +109,6 @@ public class XMLElement implements InternalStructureElement {
     }
   }
 
-  @Override
-  public void skipElement() {
-    try {
-      xmlStreamReader.skipElement();
-    } catch (XMLStreamException xse) {
-      throw new RuntimeException(xse);
-    }
-  }
-
   public void clearCache() {
     elementNamespaceCache = null;
     elementNameCache = null;

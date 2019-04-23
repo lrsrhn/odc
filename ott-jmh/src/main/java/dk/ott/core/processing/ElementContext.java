@@ -71,9 +71,4 @@ public class ElementContext implements InternalStructureElement {
     public void clearCache() {
 
     }
-
-    @Override
-    public void skipElement() {
-        // TODO: implement
-    }
 }
