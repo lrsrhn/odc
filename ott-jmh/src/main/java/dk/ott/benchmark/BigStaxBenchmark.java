@@ -49,6 +49,8 @@ public class BigStaxBenchmark {
                 xmlContent = readFile();
                 xmlInputFactory = new WstxInputFactory();
                 xmlInputFactory.configureForConvenience();
+                xmlInputFactory.setProperty(WstxInputFactory.P_INTERN_NAMES, false);
+                xmlInputFactory.setProperty(WstxInputFactory.P_INTERN_NS_URIS, false);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }

@@ -38,6 +38,8 @@ public class StaxObservableTree extends ObservableTree {
   static WstxInputFactory createDefaultFactory() {
     WstxInputFactory xmlInputFactory = new WstxInputFactory();
     xmlInputFactory.configureForConvenience();
+    xmlInputFactory.setProperty(WstxInputFactory.P_INTERN_NAMES, false);
+    xmlInputFactory.setProperty(WstxInputFactory.P_INTERN_NS_URIS, false);
     return xmlInputFactory;
   }
 
@@ -53,6 +55,8 @@ public class StaxObservableTree extends ObservableTree {
   public StaxObservableTree(WstxInputFactory xmlInputFactory) {
     if (xmlInputFactory != DEFAULT_XML_INPUT_FACTORY) {
       xmlInputFactory.configureForConvenience();
+      xmlInputFactory.setProperty(WstxInputFactory.P_INTERN_NAMES, false);
+      xmlInputFactory.setProperty(WstxInputFactory.P_INTERN_NS_URIS, false);
     }
     this.xmlInputFactory = xmlInputFactory;
   }

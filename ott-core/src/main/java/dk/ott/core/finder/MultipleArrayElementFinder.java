@@ -186,11 +186,13 @@ public final class MultipleArrayElementFinder implements ElementFinder {
   private final class SearcLocationList {
     SearchLocation[] searchLocations;
     String[] elementNames;
+    int[] elementNameLengths;
     private int size;
 
     SearcLocationList() {
       this.searchLocations = new SearchLocation[4];
       this.elementNames = new String[4];
+      this.elementNameLengths = new int[4];
       this.size = 0;
     }
 
@@ -198,18 +200,37 @@ public final class MultipleArrayElementFinder implements ElementFinder {
       this.size++;
       searchLocations = addItemToList(searchLocation, searchLocations);
       elementNames = addItemToList(elementName.intern(), elementNames);
+      elementNameLengths = addItemToList(elementName.length(), elementNameLengths);
     }
 
     final SearchLocation lookupSearchLocation(String targetElementName) {
+      int targetElementNameLength = targetElementName.length();
       for (int i = 0; i < size; i++) {
-        if (targetElementName.equals(elementNames[i])) {
+        if (targetElementNameLength == elementNameLengths[i] && targetElementName.equals(elementNames[i])) {
           return searchLocations[i];
         }
       }
       return null;
     }
 
+//    final SearchLocation lookupSearchLocation(String targetElementName) {
+//      for (int i = 0; i < size; i++) {
+//        if (targetElementName.equals(elementNames[i])) {
+//          return searchLocations[i];
+//        }
+//      }
+//      return null;
+//    }
+
     private <E> E[] addItemToList(E item, E[] items) {
+      if (size > items.length) {
+        items = Arrays.copyOf(items, items.length + 1);
+      }
+      items[size - 1] = item;
+      return items;
+    }
+
+    private int[] addItemToList(int item, int[] items) {
       if (size > items.length) {
         items = Arrays.copyOf(items, items.length + 1);
       }
