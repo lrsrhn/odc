@@ -24,7 +24,6 @@ package dk.ott.core.finder;
 
 import dk.ott.core.dsl.expression.SearchLocationReference;
 import dk.ott.core.predicate.Predicate;
-import dk.ott.core.processing.ElementFinderReference;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.StructureElement;
 
@@ -42,6 +41,8 @@ public interface ElementFinder {
 
   ElementFinderReference getReference();
 
+  ElementFinder getDereference();
+
   SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean isRelative);
 
   List<SearchLocationReference> getSeachLocationReferences(boolean isRelative);
@@ -53,4 +54,6 @@ public interface ElementFinder {
   boolean isPredicate();
 
   boolean hasRelative();
+
+  void unreferenceTree();
 }

@@ -56,6 +56,14 @@ public abstract class ObservableTree {
     return new ExpressionBuilder(rootElementFinder, true).elementsAbsolute(elements);
   }
 
+  /**
+   * When the search tree is complete use this method to dereference the search tree for a small performance improvement
+   */
+  public void dereferenceSearchTree() {
+    rootElementFinder.dereferenceElementFinder();
+    rootElementFinder.getElementFinder().unreferenceTree();
+  }
+
   public ObjectStore find(String rawXml) {
     return find(new StringReader(rawXml), new ObjectStore());
   }

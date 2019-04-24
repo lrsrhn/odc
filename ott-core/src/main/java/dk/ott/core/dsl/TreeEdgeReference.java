@@ -24,12 +24,11 @@ package dk.ott.core.dsl;
 
 import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.predicate.Predicate;
-import dk.ott.core.processing.ElementFinderReference;
 
 public class TreeEdgeReference {
   private String lastSearchElement;
   private Predicate lastPredicate;
-  private ElementFinderReference elementFinderReference;
+  private ElementFinder elementFinderReference;
   private boolean isRelative;
 
   public TreeEdgeReference(ElementFinder elementFinder, String lastSearchElement, boolean isRelative) {
@@ -79,5 +78,9 @@ public class TreeEdgeReference {
 
   public void setRelative(boolean relative) {
     isRelative = relative;
+  }
+
+  public void dereferenceElementFinder() {
+    elementFinderReference = elementFinderReference.getDereference();
   }
 }

@@ -24,7 +24,6 @@ package dk.ott.core.finder;
 
 import dk.ott.core.dsl.expression.SearchLocationReference;
 import dk.ott.core.predicate.Predicate;
-import dk.ott.core.processing.ElementFinderReference;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.StructureElement;
 
@@ -101,6 +100,11 @@ public final class SingleElementFinder implements ElementFinder {
   }
 
   @Override
+  public ElementFinder getDereference() {
+    return this;
+  }
+
+  @Override
   public void buildToString(StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder) {
     if (searchElement == null || searchLocation == null) {
       toStringBuilder.append(previousElementsBuilder).append("/null\n");
@@ -160,5 +164,14 @@ public final class SingleElementFinder implements ElementFinder {
   @Override
   public boolean hasRelative() {
     return isRelative;
+  }
+
+  @Override
+  public void unreferenceTree() {
+    if (searchLocation.getElementFinder() != null) {
+      ElementFinder elementFinder = searchLocation.getElementFinder().getDereference();
+      searchLocation.setElementFinder(elementFinder);
+      elementFinder.unreferenceTree();
+    }
   }
 }

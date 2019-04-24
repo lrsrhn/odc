@@ -61,6 +61,7 @@ public abstract class ExpressionXmlTests {
         observableTree.addXpath("/one").handle(assertElementHandler);
         observableTree.addXpath("/one/two").handle(assertElementHandler);
         observableTree.addXpath("/one/two/three").handle(assertElementHandler);
+        observableTree.dereferenceSearchTree();
 
         observableTree.find(new StringReader(builder.toString()));
         assertElementHandler.verify();

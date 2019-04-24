@@ -24,7 +24,6 @@ package dk.ott.core.finder;
 
 import dk.ott.core.dsl.expression.SearchLocationReference;
 import dk.ott.core.predicate.Predicate;
-import dk.ott.core.processing.ElementFinderReference;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.StructureElement;
 
@@ -89,6 +88,11 @@ public final class MultipleArrayElementFinder implements ElementFinder {
   }
 
   @Override
+  public ElementFinder getDereference() {
+    return this;
+  }
+
+  @Override
   public void buildToString(StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder) {
     if (nextXmlElementFinders.isEmpty() && relativeElementFinders.isEmpty()) {
       toStringBuilder.append(previousElementsBuilder).append("/null\n");
@@ -142,6 +146,26 @@ public final class MultipleArrayElementFinder implements ElementFinder {
   @Override
   public boolean hasRelative() {
     return !relativeElementFinders.isEmpty();
+  }
+
+  @Override
+  public void unreferenceTree() {
+    for (int i = 0; i < nextXmlElementFinders.size; i++) {
+      SearchLocation searchLocation = this.nextXmlElementFinders.searchLocations[i];
+      if (searchLocation.getElementFinder() != null) {
+        ElementFinder elementFinder = searchLocation.getElementFinder().getDereference();
+        searchLocation.setElementFinder(elementFinder);
+        elementFinder.unreferenceTree();
+      }
+    }
+    for (int i = 0; i < relativeElementFinders.size; i++) {
+      SearchLocation searchLocation = this.relativeElementFinders.searchLocations[i];
+      if (searchLocation.getElementFinder() != null) {
+        ElementFinder elementFinder = searchLocation.getElementFinder().getDereference();
+        searchLocation.setElementFinder(elementFinder);
+        elementFinder.unreferenceTree();
+      }
+    }
   }
 
   private static void buildToStringForMap(boolean isRelative, StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder, SearcLocationList elementFinders) {

@@ -24,7 +24,6 @@ package dk.ott.core.finder;
 
 import dk.ott.core.dsl.expression.SearchLocationReference;
 import dk.ott.core.predicate.Predicate;
-import dk.ott.core.processing.ElementFinderReference;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.StructureElement;
 
@@ -80,6 +79,11 @@ public class MultiplePredicateMatchFinder implements ElementFinder {
   @Override
   public ElementFinderReference getReference() {
     return thisReference;
+  }
+
+  @Override
+  public ElementFinder getDereference() {
+    return this;
   }
 
   @Override
@@ -142,6 +146,18 @@ public class MultiplePredicateMatchFinder implements ElementFinder {
   @Override
   public boolean hasRelative() {
     return false;
+  }
+
+  @Override
+  public void unreferenceTree() {
+    for (int i = 0; i < this.searchLocationList.size; i++) {
+      SearchLocation searchLocation = this.searchLocationList.searchLocations[i];
+      if (searchLocation.getElementFinder() != null) {
+        ElementFinder elementFinder = searchLocation.getElementFinder().getDereference();
+        searchLocation.setElementFinder(elementFinder);
+        elementFinder.unreferenceTree();
+      }
+    }
   }
 
   private final class SearchLocationList {

@@ -20,13 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.ott.core.processing;
+package dk.ott.core.finder;
 
 import dk.ott.core.dsl.expression.SearchLocationReference;
-import dk.ott.core.finder.ElementFinder;
-import dk.ott.core.finder.SearchLocation;
-import dk.ott.core.finder.SearchLocationBuilder;
 import dk.ott.core.predicate.Predicate;
+import dk.ott.core.processing.ObjectStore;
+import dk.ott.core.processing.StructureElement;
 
 import java.util.List;
 import java.util.Set;
@@ -68,6 +67,11 @@ public class ElementFinderReference implements ElementFinder {
     }
 
     @Override
+    public ElementFinder getDereference() {
+        return elementFinder;
+    }
+
+    @Override
     public void buildToString(StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder) {
         elementFinder.buildToString(previousElementsBuilder, visited, toStringBuilder);
     }
@@ -95,5 +99,10 @@ public class ElementFinderReference implements ElementFinder {
     @Override
     public boolean hasRelative() {
         return elementFinder.hasRelative();
+    }
+
+    @Override
+    public void unreferenceTree() {
+        elementFinder.unreferenceTree();
     }
 }

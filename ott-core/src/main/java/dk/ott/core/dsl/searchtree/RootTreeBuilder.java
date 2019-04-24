@@ -26,7 +26,7 @@ import dk.ott.core.dsl.adders.TreePathAdder;
 import dk.ott.core.dsl.TreeEdgeReference;
 import dk.ott.core.dsl.expression.XpathParser;
 import dk.ott.core.finder.SingleElementFinder;
-import dk.ott.core.processing.ElementFinderReference;
+import dk.ott.core.finder.ElementFinderReference;
 
 import java.util.HashMap;
 import java.util.List;
