@@ -43,8 +43,11 @@ public interface ElementFinder {
 
   ElementFinder getDereference();
 
-  SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean isRelative);
+  SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean includeAbsolutes);
 
+  SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore);
+
+  // TODO: Remove parameter
   List<SearchLocationReference> getSeachLocationReferences(boolean isRelative);
 
   void mergeElementFinder(ElementFinder elementFinder);

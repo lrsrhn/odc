@@ -37,7 +37,7 @@ public class SinglePredicateMatchFinder implements ElementFinder {
   private ElementFinderReference thisReference;
 
   public SinglePredicateMatchFinder() {
-    this.searchLocation = new SearchLocation();
+    this.searchLocation = new SearchLocation(false);
     this.thisReference = new ElementFinderReference(this);
   }
 
@@ -67,17 +67,13 @@ public class SinglePredicateMatchFinder implements ElementFinder {
   public SearchLocationBuilder buildSearchLocation(Predicate predicate) {
     if (this.predicate == null) {
       this.predicate = predicate;
-      this.searchLocation = new SearchLocation();
+      this.searchLocation.setRelative(false);
       return new SearchLocationBuilder(this.searchLocation);
     } else if (this.predicate.equals(predicate)) {
-      if (searchLocation == null) {
-        this.searchLocation = new SearchLocation();
-      }
       return new SearchLocationBuilder(this.searchLocation);
-    } else {
-      MultiplePredicateMatchFinder multiplePredicateMatchFinder = new MultiplePredicateMatchFinder(thisReference, this.predicate, searchLocation);
-      return multiplePredicateMatchFinder.buildSearchLocation(predicate);
     }
+    MultiplePredicateMatchFinder multiplePredicateMatchFinder = new MultiplePredicateMatchFinder(thisReference, this.predicate, searchLocation);
+    return multiplePredicateMatchFinder.buildSearchLocation(predicate);
   }
 
   @Override
@@ -101,8 +97,13 @@ public class SinglePredicateMatchFinder implements ElementFinder {
   }
 
   @Override
-  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean isRelative) {
-    if (!isRelative && predicate.evaluate(structureElement, objectStore)) {
+  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean includeAbsolutes) {
+    return lookupSearchLocation(structureElement, objectStore);
+  }
+
+  @Override
+  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore) {
+    if (predicate.evaluate(structureElement, objectStore)) {
       return searchLocation;
     }
     return null;
@@ -118,6 +119,27 @@ public class SinglePredicateMatchFinder implements ElementFinder {
 
   @Override
   public void mergeElementFinder(ElementFinder elementFinder) {
+    List<SearchLocationReference> searchLocationReferences = elementFinder.getSeachLocationReferences(searchLocation.isRelative());
+    if (searchLocationReferences.size() > 1) {
+      MultiplePredicateMatchFinder multiplePredicateMatchFinder = new MultiplePredicateMatchFinder(thisReference, predicate, searchLocation);
+      multiplePredicateMatchFinder.mergeElementFinder(elementFinder);
+    } else if (searchLocationReferences.size() ==  1) {
+      SearchLocationReference searchLocationReference = searchLocationReferences.get(0);
+      if (searchLocationReference.getSearchElement() != null) {
+        throw new IllegalStateException("Cannot do search elements");
+      }
+      if (searchLocation != null) {
+        if (predicate.equals(searchLocationReference.getSearchElement()) && searchLocation.isRelative() == searchLocationReference.getSearchLocation().isRelative()) {
+          return;
+        }
+        MultiplePredicateMatchFinder multiplePredicateMatchFinder = new MultiplePredicateMatchFinder(thisReference, predicate, searchLocation);
+        multiplePredicateMatchFinder.mergeElementFinder(elementFinder);
+      } else {
+       searchLocation = searchLocationReference.getSearchLocation();
+       predicate = searchLocationReference.getPredicate();
+      }
+    }
+
     MultiplePredicateMatchFinder multiplePredicateMatchFinder = new MultiplePredicateMatchFinder(getReference(), predicate, searchLocation);
     multiplePredicateMatchFinder.mergeElementFinder(elementFinder);
   }

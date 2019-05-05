@@ -27,19 +27,22 @@ import dk.ott.core.event.OnStartHandler;
 import dk.ott.core.predicate.Predicate;
 
 public final class SearchLocation {
+    private boolean isRelative;
     private ElementFinder elementFinder;
     private OnStartHandler onStartHandler;
     private TextLocation textLocation;
     private OnEndHandler onEndHandler;
     private Predicate filter;
 
-    public SearchLocation() {
+    public SearchLocation(boolean isRelative) {
+        this.isRelative = isRelative;
     }
 
-    public SearchLocation(ElementFinder elementFinder, OnStartHandler onStartHandler, OnEndHandler onEndHandler) {
+    public SearchLocation(ElementFinder elementFinder, OnStartHandler onStartHandler, OnEndHandler onEndHandler, boolean isRelative) {
         this.elementFinder = elementFinder;
         this.onStartHandler = onStartHandler;
         this.onEndHandler = onEndHandler;
+        this.isRelative = isRelative;
     }
 
     public ElementFinder getElementFinder() {
@@ -85,7 +88,43 @@ public final class SearchLocation {
         return textLocation;
     }
 
+    public boolean isRelative() {
+        return isRelative;
+    }
+
+    public void setRelative(boolean relative) {
+        isRelative = relative;
+    }
+
     public void setTextLocation(TextLocation textLocation) {
         this.textLocation = textLocation;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SearchLocation that = (SearchLocation) o;
+
+        if (isRelative != that.isRelative) return false;
+        if (elementFinder != null ? !elementFinder.equals(that.elementFinder) : that.elementFinder != null)
+            return false;
+        if (onStartHandler != null ? !onStartHandler.equals(that.onStartHandler) : that.onStartHandler != null)
+            return false;
+        if (textLocation != null ? !textLocation.equals(that.textLocation) : that.textLocation != null) return false;
+        if (onEndHandler != null ? !onEndHandler.equals(that.onEndHandler) : that.onEndHandler != null) return false;
+        return filter != null ? filter.equals(that.filter) : that.filter == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (isRelative ? 1 : 0);
+        result = 31 * result + (elementFinder != null ? elementFinder.hashCode() : 0);
+        result = 31 * result + (onStartHandler != null ? onStartHandler.hashCode() : 0);
+        result = 31 * result + (textLocation != null ? textLocation.hashCode() : 0);
+        result = 31 * result + (onEndHandler != null ? onEndHandler.hashCode() : 0);
+        result = 31 * result + (filter != null ? filter.hashCode() : 0);
+        return result;
     }
 }

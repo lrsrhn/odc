@@ -33,12 +33,11 @@ import java.util.Set;
 
 public final class SingleElementFinder implements ElementFinder {
   private String searchElement;
-  private boolean isRelative;
   private SearchLocation searchLocation;
   private ElementFinderReference thisReference;
 
   public SingleElementFinder() {
-    this.searchLocation = new SearchLocation();
+    this.searchLocation = new SearchLocation(false);
     this.thisReference = new ElementFinderReference(this);
   }
 
@@ -46,20 +45,12 @@ public final class SingleElementFinder implements ElementFinder {
   public ElementFinder setSearchElement(String searchElement, boolean isRelative) {
     if (this.searchElement == null) {
       this.searchElement = searchElement.intern();
-      this.isRelative = isRelative;
-    } else {
-      searchElement = searchElement.intern();
-      if (this.searchElement.equals(searchElement)) {
-        if (this.isRelative != isRelative) {
-          MultipleArrayElementFinder multipleXmlElementFinder = new MultipleArrayElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
-          return multipleXmlElementFinder.setSearchElement(searchElement, isRelative);
-        }
-      } else {
-        MultipleArrayElementFinder multipleXmlElementFinder = new MultipleArrayElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
-        return multipleXmlElementFinder.setSearchElement(searchElement, isRelative);
-      }
+      this.searchLocation.setRelative(isRelative);
+    } else if (this.searchElement.equals(searchElement) && searchLocation.isRelative() == isRelative) {
+      return thisReference;
     }
-    return thisReference;
+    MultipleArrayElementFinder multipleXmlElementFinder = new MultipleArrayElementFinder(thisReference, this.searchElement, searchLocation);
+    return multipleXmlElementFinder.setSearchElement(searchElement, isRelative);
   }
 
   @Override
@@ -69,24 +60,15 @@ public final class SingleElementFinder implements ElementFinder {
 
   @Override
   public SearchLocationBuilder buildSearchLocation(String searchElement, boolean isRelative) {
-    if (this.isRelative == isRelative) {
-      if (this.searchElement == null) {
-        this.searchElement = searchElement.intern();
-        this.searchLocation = new SearchLocation();
-        return new SearchLocationBuilder(this.searchLocation);
-      } else if (this.searchElement.equals(searchElement)) {
-        if (this.searchLocation == null) {
-          this.searchLocation = new SearchLocation();
-        }
-        return new SearchLocationBuilder(this.searchLocation);
-      } else {
-        MultipleArrayElementFinder multipleXmlElementFinder = new MultipleArrayElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
-        return multipleXmlElementFinder.buildSearchLocation(searchElement, isRelative);
-      }
-    } else {
-      MultipleArrayElementFinder multipleXmlElementFinder = new MultipleArrayElementFinder(thisReference, this.isRelative, this.searchElement, searchLocation);
-      return multipleXmlElementFinder.buildSearchLocation(searchElement, isRelative);
+    if (this.searchElement == null) {
+      this.searchElement = searchElement.intern();
+      this.searchLocation.setRelative(isRelative);
+      return new SearchLocationBuilder(this.searchLocation);
+    } else if (this.searchElement.equals(searchElement) && searchLocation.isRelative() == isRelative) {
+      return new SearchLocationBuilder(this.searchLocation);
     }
+    MultipleArrayElementFinder multipleXmlElementFinder = new MultipleArrayElementFinder(thisReference, this.searchElement, searchLocation);
+    return multipleXmlElementFinder.buildSearchLocation(searchElement, isRelative);
   }
 
   @Override
@@ -111,14 +93,19 @@ public final class SingleElementFinder implements ElementFinder {
       return;
     }
     previousElementsBuilder
-            .append(isRelative ? "//" : "/")
+            .append(searchLocation.isRelative() ? "//" : "/")
             .append(searchElement);
     PrettyPrintHelper.printSearchLocation(searchLocation, previousElementsBuilder, visited, toStringBuilder);
   }
 
   @Override
-  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean isRelative) {
-    if (this.isRelative == isRelative && this.searchElement.equals(structureElement.getElementName())) {
+  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean includeAbsolutes) {
+    return includeAbsolutes | searchLocation.isRelative() ? lookupSearchLocation(structureElement, objectStore) : null;
+  }
+
+  @Override
+  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore) {
+      if (searchElement.equals(structureElement.getElementName())) {
       return searchLocation;
     }
     return null;
@@ -126,7 +113,7 @@ public final class SingleElementFinder implements ElementFinder {
 
   @Override
   public List<SearchLocationReference> getSeachLocationReferences(boolean isRelative) {
-    if (isRelative == this.isRelative) {
+    if (searchLocation != null) {
       return Collections.singletonList(new SearchLocationReference(searchLocation, searchElement, false));
     }
     return Collections.emptyList();
@@ -134,25 +121,25 @@ public final class SingleElementFinder implements ElementFinder {
 
   @Override
   public void mergeElementFinder(ElementFinder elementFinder) {
-    // TODO: remember case: empty:one and empty:multiple
-    List<SearchLocationReference> searchLocationReferences = elementFinder.getSeachLocationReferences(isRelative);
-    if (searchElement == null) {
-      if (searchLocationReferences.size() == 1) {
-        SearchLocationReference searchLocationReference = searchLocationReferences.get(0);
-        if (searchLocationReference.getPredicate() != null) {
-          throw new RuntimeException("Cannot merge element finder with a predicate finder");
-        }
-        searchElement = searchLocationReference.getSearchElement();
-        searchLocation = searchLocationReference.getSearchLocation();
-        isRelative = searchLocationReference.isRelative();
-      } else {
-        MultipleArrayElementFinder multipleArrayElementFinder = new MultipleArrayElementFinder(getReference(), isRelative, null, searchLocation);
-        multipleArrayElementFinder.mergeElementFinder(elementFinder);
-      }
-    } else {
-      MultipleArrayElementFinder multipleArrayElementFinder = new MultipleArrayElementFinder(getReference(), isRelative, searchElement, searchLocation);
+    List<SearchLocationReference> searchLocationReferences = elementFinder.getSeachLocationReferences(searchLocation.isRelative());
+    if (searchLocationReferences.size() > 1) {
+      MultipleArrayElementFinder multipleArrayElementFinder = new MultipleArrayElementFinder(thisReference, searchElement, searchLocation);
       multipleArrayElementFinder.mergeElementFinder(elementFinder);
-      // TODO: Maybe do some more checking here
+    } else if (searchLocationReferences.size() ==  1) {
+      SearchLocationReference searchLocationReference = searchLocationReferences.get(0);
+      if (searchLocationReference.getPredicate() != null) {
+        throw new IllegalStateException("Cannot do predicate");
+      }
+      if (searchLocation != null) {
+        if (searchElement.equals(searchLocationReference.getSearchElement()) && searchLocation.isRelative() == searchLocationReference.getSearchLocation().isRelative()) {
+          return;
+        }
+        MultipleArrayElementFinder multipleArrayElementFinder = new MultipleArrayElementFinder(thisReference, searchElement, searchLocation);
+        multipleArrayElementFinder.mergeElementFinder(elementFinder);
+      } else {
+       searchLocation = searchLocationReference.getSearchLocation();
+       searchElement = searchLocationReference.getSearchElement();
+      }
     }
   }
 
@@ -163,7 +150,7 @@ public final class SingleElementFinder implements ElementFinder {
 
   @Override
   public boolean hasRelative() {
-    return isRelative;
+    return searchLocation.isRelative();
   }
 
   @Override

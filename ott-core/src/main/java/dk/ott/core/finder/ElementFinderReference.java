@@ -77,8 +77,13 @@ public class ElementFinderReference implements ElementFinder {
     }
 
     @Override
-    public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean isRelative) {
-        return elementFinder.lookupSearchLocation(structureElement, objectStore, isRelative);
+    public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean includeAbsolutes) {
+        return elementFinder.lookupSearchLocation(structureElement, objectStore, includeAbsolutes);
+    }
+
+    @Override
+    public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore) {
+        return elementFinder.lookupSearchLocation(structureElement, objectStore);
     }
 
     @Override

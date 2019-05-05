@@ -50,20 +50,12 @@ public final class ObservableTreeTraverser {
 
     public boolean startElement(final InternalStructureElement structureElement, final int currentDepth) throws Exception {
         structureElement.clearCache();
-        if (childDepth == currentDepth) {
-            SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, objectStore, false);
-            if (searchLocation != null) {
-                handleSearchLocation(searchLocation, structureElement, currentDepth);
-                return false;
-            } else if (!currentElementFinder.hasRelative()) {
-                return true;
-            }
-        }
-        SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, objectStore, true);
+        SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, objectStore, childDepth == currentDepth);
         if (searchLocation != null) {
             handleSearchLocation( searchLocation, structureElement, currentDepth);
+            return false;
         }
-        return false;
+        return !currentElementFinder.hasRelative();
     }
 
     private void handleSearchLocation(final SearchLocation searchLocation, final InternalStructureElement structureElement, final int currentDepth) throws Exception {
@@ -82,7 +74,6 @@ public final class ObservableTreeTraverser {
             }
         }
         if (onEndHandler == null) {
-
             if (nextElementFinder != null) {
                 handleStacks(currentDepth, null);
                 handleNextElementFinder(structureElement, currentDepth, nextElementFinder);
@@ -108,7 +99,7 @@ public final class ObservableTreeTraverser {
     private void handleNextElementFinder(final InternalStructureElement structureElement, final int currentDepth, final ElementFinder nextElementFinder) throws Exception {
         currentElementFinder = nextElementFinder;
         if (currentElementFinder.isPredicate()) {
-            SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, objectStore, false);
+            SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, objectStore);
             if (searchLocation != null) {
                 handleSearchLocation(searchLocation, structureElement, currentDepth);
             }

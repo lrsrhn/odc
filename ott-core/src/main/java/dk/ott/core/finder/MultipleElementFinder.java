@@ -32,26 +32,22 @@ import java.util.*;
 public class MultipleElementFinder implements ElementFinder {
   private HashMap<String, SearchLocation> nextXmlElementFinders;
   private ElementFinderReference thisReference;
-  private HashMap<String, SearchLocation> relativeElementFinders;
+  private boolean hasRelatives;
 
-  MultipleElementFinder(ElementFinderReference thisReference, boolean isRelative, String searchElement, SearchLocation searchLocation) {
+  MultipleElementFinder(ElementFinderReference thisReference, String searchElement, SearchLocation searchLocation) {
     this.thisReference = thisReference;
     thisReference.setElementFinder(this);
     this.nextXmlElementFinders = new HashMap<String, SearchLocation>(4);
-    this.relativeElementFinders = new HashMap<String, SearchLocation>(2);
-    if (isRelative) {
-      this.relativeElementFinders.put(searchElement.intern(), searchLocation);
-    } else {
-      this.nextXmlElementFinders.put(searchElement.intern(), searchLocation);
-    }
+    hasRelatives = searchLocation.isRelative();
+    this.nextXmlElementFinders.put(searchElement.intern(), searchLocation);
   }
 
   @Override
   public ElementFinder setSearchElement(String searchElement, boolean isRelative) {
-    Map<String, SearchLocation> elementFinderMap = selectElementFinderMapByRelativity(isRelative);
-    SearchLocation searchLocation = elementFinderMap.get(searchElement);
-    if (searchLocation == null) {
-      elementFinderMap.put(searchElement.intern(), new SearchLocation(null, null, null));
+    SearchLocation searchLocation = nextXmlElementFinders.get(searchElement);
+    if (searchLocation == null || searchLocation.isRelative() != isRelative) {
+      hasRelatives |= isRelative;
+      nextXmlElementFinders.put(searchElement.intern(), new SearchLocation(null, null, null, isRelative));
     }
     return this;
   }
@@ -63,11 +59,11 @@ public class MultipleElementFinder implements ElementFinder {
 
   @Override
   public SearchLocationBuilder buildSearchLocation(String searchElement, boolean isRelative) {
-    Map<String, SearchLocation> elementFinderMap = selectElementFinderMapByRelativity(isRelative);
-    SearchLocation searchLocation = elementFinderMap.get(searchElement);
-    if (searchLocation == null) {
-      searchLocation = new SearchLocation(null, null, null);
-      elementFinderMap.put(searchElement.intern(), searchLocation);
+    SearchLocation searchLocation = nextXmlElementFinders.get(searchElement);
+    if (searchLocation == null || searchLocation.isRelative() != isRelative) {
+      searchLocation = new SearchLocation(null, null, null, isRelative);
+      nextXmlElementFinders.put(searchElement.intern(), searchLocation);
+      hasRelatives |= isRelative;
     }
     return new SearchLocationBuilder(searchLocation);
   }
@@ -89,26 +85,35 @@ public class MultipleElementFinder implements ElementFinder {
 
   @Override
   public void buildToString(StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder) {
-    if (nextXmlElementFinders.isEmpty() && relativeElementFinders.isEmpty()) {
+    if (nextXmlElementFinders.isEmpty()) {
       toStringBuilder.append(previousElementsBuilder).append("/null\n");
       return;
     }
     buildToStringForMap(false, previousElementsBuilder, visited, toStringBuilder, nextXmlElementFinders);
-    buildToStringForMap(true, previousElementsBuilder, visited, toStringBuilder, relativeElementFinders);
   }
 
   @Override
-  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean isRelative) {
-    Map<String, SearchLocation> elementFinder = selectElementFinderMapByRelativity(isRelative);
-    return elementFinder.isEmpty() ? null : elementFinder.get(structureElement.getElementName());
+  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean includeAbsolutes) {
+    String targetElementName = structureElement.getElementName();
+    SearchLocation searchLocation = this.nextXmlElementFinders.get(targetElementName);
+    if (searchLocation != null && searchLocation.isRelative() | includeAbsolutes) {
+      return searchLocation;
+    }
+    return null;
+  }
+
+  @Override
+  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore) {
+    return lookupSearchLocation(structureElement, objectStore, true);
   }
 
   @Override
   public List<SearchLocationReference> getSeachLocationReferences(boolean isRelative) {
-    Map<String, SearchLocation> elementFinders = selectElementFinderMapByRelativity(isRelative);
-    List<SearchLocationReference> references = new ArrayList<SearchLocationReference>(elementFinders.size());
-    for (Map.Entry<String, SearchLocation> entry : elementFinders.entrySet()) {
-      references.add(new SearchLocationReference(entry.getValue(), entry.getKey(), isRelative));
+    List<SearchLocationReference> references = new ArrayList<SearchLocationReference>(nextXmlElementFinders.size());
+    for (Map.Entry<String, SearchLocation> entry : nextXmlElementFinders.entrySet()) {
+      if (entry.getValue().isRelative() == isRelative) {
+        references.add(new SearchLocationReference(entry.getValue(), entry.getKey(), isRelative));
+      }
     }
     return references;
   }
@@ -121,15 +126,16 @@ public class MultipleElementFinder implements ElementFinder {
 
   private void mergeElementFinder(ElementFinder elementFinder, boolean isRelative) {
     List<SearchLocationReference> searchLocationReferences = elementFinder.getSeachLocationReferences(isRelative);
-    Map<String, SearchLocation> elementFinders = selectElementFinderMapByRelativity(isRelative);
     for (SearchLocationReference searchLocationReference : searchLocationReferences) {
       if (searchLocationReference.getPredicate() != null) {
         throw new RuntimeException("Unable to add reference using a predicate!");
       }
-      if (elementFinders.containsKey(searchLocationReference.getSearchElement())) {
+      SearchLocation searchLocation = nextXmlElementFinders.get(searchLocationReference.getSearchElement());
+      if (searchLocation != null && searchLocation.isRelative() == isRelative) {
         throw new RuntimeException("A searchElement already exists: " + searchLocationReference.getSearchElement());
       }
-      elementFinders.put(searchLocationReference.getSearchElement(), searchLocationReference.getSearchLocation());
+      hasRelatives |= isRelative;
+      nextXmlElementFinders.put(searchLocationReference.getSearchElement(), searchLocationReference.getSearchLocation());
     }
   }
 
@@ -140,7 +146,7 @@ public class MultipleElementFinder implements ElementFinder {
 
   @Override
   public boolean hasRelative() {
-    return !relativeElementFinders.isEmpty();
+    return hasRelatives;
   }
 
   @Override
@@ -159,10 +165,6 @@ public class MultipleElementFinder implements ElementFinder {
         elementFinder.unreferenceTree();
       }
     }
-  }
-
-  private Map<String, SearchLocation> selectElementFinderMapByRelativity(boolean isRelative) {
-    return isRelative ? relativeElementFinders : nextXmlElementFinders;
   }
 
   private static void buildToStringForMap(boolean isRelative, StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder, Map<String, SearchLocation> elementFinders) {

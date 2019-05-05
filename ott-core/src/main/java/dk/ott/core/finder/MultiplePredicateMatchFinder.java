@@ -54,7 +54,7 @@ public class MultiplePredicateMatchFinder implements ElementFinder {
   public ElementFinder setPredicate(Predicate predicate) {
     int index = searchLocationList.findIndexByPredicate(predicate);
     if (index == -1) {
-      searchLocationList.addSearchLocation(new SearchLocation(), predicate);
+      searchLocationList.addSearchLocation(new SearchLocation(false), predicate);
     }
     return this;
   }
@@ -70,7 +70,7 @@ public class MultiplePredicateMatchFinder implements ElementFinder {
     if (index != -1) {
       return new SearchLocationBuilder(searchLocationList.searchLocations[index]);
     } else {
-      SearchLocation searchLocation = new SearchLocation();
+      SearchLocation searchLocation = new SearchLocation(false);
       searchLocationList.addSearchLocation(searchLocation, predicate);
       return new SearchLocationBuilder(searchLocation);
     }
@@ -104,15 +104,18 @@ public class MultiplePredicateMatchFinder implements ElementFinder {
   }
 
   @Override
-  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean isRelative) {
-    if (!isRelative) {
-        for (int i = 0; i < searchLocationList.getSize(); i++) {
-          if (searchLocationList.predicates[i].evaluate(structureElement, objectStore)) {
-            return searchLocationList.searchLocations[i];
-          }
-        }
+  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean includeAbsolutes) {
+    for (int i = 0; i < searchLocationList.getSize(); i++) {
+      if (searchLocationList.predicates[i].evaluate(structureElement, objectStore)) {
+        return searchLocationList.searchLocations[i];
+      }
     }
     return null;
+  }
+
+  @Override
+  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore) {
+    return lookupSearchLocation(structureElement, objectStore, false);
   }
 
   @Override

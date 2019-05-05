@@ -24,11 +24,11 @@ package dk.ott.core.dsl.searchtree;
 
 import dk.ott.core.event.EventHandler;
 import dk.ott.core.event.OnStartHandler;
-import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
 import dk.ott.core.processing.StructureElement;
+import dk.ott.core.xml.builder.XmlPrettyPrinter;
 import dk.ott.core.xml.builder.XmlStreamBuilder;
 import org.junit.Assert;
 import org.junit.Before;
@@ -67,6 +67,42 @@ public abstract class TreeBuilderTests {
                     .element("two").onStart().to(assertElementHandler)
                         .element("three").onStart().to(assertElementHandler)
                         .end(assertElementHandler)
+                    .end(assertElementHandler)
+                .end(assertElementHandler)
+            .build();
+
+        observableTree.find(new StringReader(builder.toString()));
+        assertElementHandler.verify();
+    }
+
+    // Todo: do mixed content test
+    @Test
+    public void mixedContentTest() throws IOException {
+        StringBuilder builder = new StringBuilder();
+        withXmlBuilder(builder)
+                .element("one")
+                    .element("two")
+                        .valueNoEscaping("This is <p>pure</p> evil<break/>")
+                        .element("three")
+                        .elementEnd()
+                    .elementEnd()
+                    .element("two")
+                        .value("but still nice")
+                    .elementEnd()
+                .elementEnd();
+
+        System.out.println(builder.toString());
+
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
+        assertElementHandler.exptectedStartElements("one", "two", "three", "two");
+        assertElementHandler.exptectedEndElements("three", "two", "two", "one");
+
+        observableTree.treeBuilder()
+                .element("one").onStart().to(assertElementHandler)
+                    .element("two").onStart().to(assertElementHandler)
+                        .onText().to(assertElementHandler)
+                            .element("three").onStart().to(assertElementHandler)
+                            .end(assertElementHandler)
                     .end(assertElementHandler)
                 .end(assertElementHandler)
             .build();
@@ -425,6 +461,8 @@ public abstract class TreeBuilderTests {
                     .elementEnd()
                     .element("two")
                     .elementShortEnd()
+                    .element("three")
+                    .elementEnd()
                 .elementEnd();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
@@ -433,12 +471,15 @@ public abstract class TreeBuilderTests {
 
         observableTree.treeBuilder()
                 .element("one")
-                    .relativeElement("five").onStart().to(assertElementHandler)
-                        .onText().to(assertElementHandler)
-                    .end(assertElementHandler)
                     .element("two")
                         .onText().to(assertElementHandler)
                     .end()
+                    .element("three")
+                        .onText().to(assertElementHandler)
+                    .end()
+                    .relativeElement("five").onStart().to(assertElementHandler)
+                        .onText().to(assertElementHandler)
+                    .end(assertElementHandler)
                 .end()
                 .build();
 
@@ -571,10 +612,10 @@ public abstract class TreeBuilderTests {
     // @formatter:on
 
     private XmlStreamBuilder withXmlBuilder(StringBuilder builder) {
-        return new XmlStreamBuilder(builder);
+        return new XmlStreamBuilder(builder, new XmlPrettyPrinter());
     }
 
-    private static class AssertEventHandler implements EventHandler, OnTextHandler {
+    private static class AssertEventHandler implements EventHandler {
         private List<String> expectedStartElements;
         private List<String> expectedEndElements;
         private List<String> startElementsActual;

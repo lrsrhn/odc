@@ -35,7 +35,7 @@ public class AllElementFinder implements ElementFinder {
     private SearchLocation searchLocation;
 
     public AllElementFinder() {
-        this.searchLocation = new SearchLocation();
+        this.searchLocation = new SearchLocation(true);
         this.elementFinderReference = new ElementFinderReference(this);
     }
 
@@ -70,7 +70,12 @@ public class AllElementFinder implements ElementFinder {
     }
 
     @Override
-    public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean isRelative) {
+    public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean includeAbsolutes) {
+        return searchLocation;
+    }
+
+    @Override
+    public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore) {
         return searchLocation;
     }
 
@@ -95,6 +100,7 @@ public class AllElementFinder implements ElementFinder {
         return false;
     }
 
+    // Returning true will make ObservableTreeTraveser not skip any elements
     @Override
     public boolean hasRelative() {
         return true;
@@ -102,10 +108,10 @@ public class AllElementFinder implements ElementFinder {
 
     @Override
     public void unreferenceTree() {
-    if (searchLocation.getElementFinder() != null) {
-      ElementFinder elementFinder = searchLocation.getElementFinder().getDereference();
-      searchLocation.setElementFinder(elementFinder);
-      elementFinder.unreferenceTree();
-    }
+        if (searchLocation.getElementFinder() != null) {
+          ElementFinder elementFinder = searchLocation.getElementFinder().getDereference();
+          searchLocation.setElementFinder(elementFinder);
+          elementFinder.unreferenceTree();
+        }
     }
 }
