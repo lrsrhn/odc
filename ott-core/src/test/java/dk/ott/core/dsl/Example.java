@@ -45,7 +45,7 @@ public abstract class Example {
 
     // @formatter:off
     @Test
-    public void example() {
+    public void exampleTree() {
         observableTree.treeBuilder()
                 .element("bookstore")
                     .element("book")
@@ -78,6 +78,19 @@ public abstract class Example {
                     .end()
                 .end()
             .build();
+        System.out.println(observableTree.toString());
+        observableTree.find(xmlFileContent);
+    }
+
+    @Test
+    public void exampleExpression() {
+        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("")).path("/author/first-name").onText(new MyOnStartHandler("Author", false));
+        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("")).path("/author/publication").onStart(new MyOnStartHandler("Publication", true));
+        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("")).path("//p").onStart(new MyOnStartHandler("Paragraph", true));
+        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("uri:mynamespace")).path("/author").onText(new MyOnStartHandler("My author", false));
+        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("uri:mynamespace")).path("/title").onText(new MyOnStartHandler("My title", false));
+        observableTree.addXpath("/bookstore/magazine/price").onText(new MyOnStartHandler("Magazine price", false));
+
         System.out.println(observableTree.toString());
         observableTree.find(xmlFileContent);
     }
