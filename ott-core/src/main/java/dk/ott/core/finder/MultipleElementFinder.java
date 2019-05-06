@@ -89,7 +89,14 @@ public class MultipleElementFinder implements ElementFinder {
       toStringBuilder.append(previousElementsBuilder).append("/null\n");
       return;
     }
-    buildToStringForMap(false, previousElementsBuilder, visited, toStringBuilder, nextXmlElementFinders);
+    int previousElementBuilderLength = previousElementsBuilder.length();
+    for (Map.Entry<String, SearchLocation> entries : nextXmlElementFinders.entrySet()) {
+      previousElementsBuilder.setLength(previousElementBuilderLength);
+      previousElementsBuilder
+              .append(entries.getValue().isRelative() ? "//" : "/")
+              .append(entries.getKey());
+      PrettyPrintHelper.printSearchLocation(entries.getValue(), previousElementsBuilder, visited, toStringBuilder);
+    }
   }
 
   @Override

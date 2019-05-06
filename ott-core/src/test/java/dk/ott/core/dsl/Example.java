@@ -78,6 +78,7 @@ public abstract class Example {
                     .end()
                 .end()
             .build();
+        System.out.println(observableTree.toString());
         observableTree.find(xmlFileContent);
     }
 

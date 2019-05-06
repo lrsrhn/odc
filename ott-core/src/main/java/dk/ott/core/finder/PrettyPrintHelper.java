@@ -30,7 +30,8 @@ class PrettyPrintHelper {
 
     static void printSearchLocation(SearchLocation searchLocation, StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder) {
         Predicate filter = searchLocation.getFilter();
-        printOnEventHandler(previousElementsBuilder, toStringBuilder, filter, searchLocation.getOnStartHandler(), true);
+        printOnEventHandler(previousElementsBuilder, toStringBuilder, filter, searchLocation.getOnStartHandler(), " [S]=> ");
+        printOnEventHandler(previousElementsBuilder, toStringBuilder, searchLocation.getOrCreateTextLocation().getTextFilter(), searchLocation.getOrCreateTextLocation().getOnTextHandler(), " [T]=> ");
         ElementFinder nextElementFinder = searchLocation.getElementFinder();
         if (nextElementFinder != null) {
             if (!visited.contains(nextElementFinder)) {
@@ -45,24 +46,18 @@ class PrettyPrintHelper {
                         .append(" <=>\n");
             }
         }
-        printOnEventHandler(previousElementsBuilder, toStringBuilder, filter, searchLocation.getOnEndHandler(), false);
+        printOnEventHandler(previousElementsBuilder, toStringBuilder, filter, searchLocation.getOnEndHandler(), " [E]=> ");
     }
 
-    private static void printOnEventHandler(StringBuilder previousElementsBuilder, StringBuilder toStringBuilder, Predicate filter, Object handler, boolean isStart) {
+    private static void printOnEventHandler(StringBuilder previousElementsBuilder, StringBuilder toStringBuilder, Predicate filter, Object handler, String handlerTypeText) {
         if (handler != null) {
             toStringBuilder.append(previousElementsBuilder);
             if (filter != null) {
                 toStringBuilder.append('[').append(filter.toString()).append(']');
             }
-            if (isStart) {
-                toStringBuilder.append(" [S]=> ")
-                        .append(handler.getClass().getName())
-                        .append('\n');
-            } else {
-                toStringBuilder.append(" [E]=> ")
-                        .append(handler.getClass().getName())
-                        .append('\n');
-            }
+            toStringBuilder.append(handlerTypeText)
+                    .append(handler.getClass().getName())
+                    .append('\n');
         }
     }
 }

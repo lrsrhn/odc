@@ -94,8 +94,14 @@ public final class MultipleArrayElementFinder implements ElementFinder {
       toStringBuilder.append(previousElementsBuilder).append("/null\n");
       return;
     }
-    buildToStringForMap(false, previousElementsBuilder, visited, toStringBuilder, nextXmlElementFinders);
-    buildToStringForMap(true, previousElementsBuilder, visited, toStringBuilder, nextXmlElementFinders);
+    int previousElementBuilderLength = previousElementsBuilder.length();
+    for (int i = 0; i < nextXmlElementFinders.getSize(); i++) {
+      previousElementsBuilder.setLength(previousElementBuilderLength);
+      previousElementsBuilder
+              .append(nextXmlElementFinders.searchLocations[i].isRelative() ? "//" : "/")
+              .append(nextXmlElementFinders.elementNames[i]);
+      PrettyPrintHelper.printSearchLocation(nextXmlElementFinders.searchLocations[i], previousElementsBuilder, visited, toStringBuilder);
+    }
   }
 
   @Override
@@ -154,17 +160,6 @@ public final class MultipleArrayElementFinder implements ElementFinder {
         searchLocation.setElementFinder(elementFinder);
         elementFinder.unreferenceTree();
       }
-    }
-  }
-
-  private static void buildToStringForMap(boolean isRelative, StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder, SearcLocationList elementFinders) {
-    int previousElementBuilderLength = previousElementsBuilder.length();
-    for (int i = 0; i < elementFinders.getSize(); i++) {
-      previousElementsBuilder.setLength(previousElementBuilderLength);
-      previousElementsBuilder
-              .append(isRelative ? "//" : "/")
-              .append(elementFinders.elementNames[i]);
-      PrettyPrintHelper.printSearchLocation(elementFinders.searchLocations[i], previousElementsBuilder, visited, toStringBuilder);
     }
   }
 
