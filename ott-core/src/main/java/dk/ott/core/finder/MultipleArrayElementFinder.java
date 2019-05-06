@@ -120,7 +120,7 @@ public final class MultipleArrayElementFinder implements ElementFinder {
     for (int i = 0; i < nextXmlElementFinders.getSize(); i++) {
       SearchLocation searchLocation = nextXmlElementFinders.searchLocations[i];
       if (searchLocation.isRelative() == isRelative) {
-        references.add(new SearchLocationReference(searchLocation, nextXmlElementFinders.elementNames[i], isRelative));
+        references.add(new SearchLocationReference(searchLocation, nextXmlElementFinders.elementNames[i]));
       }
     }
     return references;

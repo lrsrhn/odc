@@ -119,7 +119,7 @@ public class MultipleElementFinder implements ElementFinder {
     List<SearchLocationReference> references = new ArrayList<SearchLocationReference>(nextXmlElementFinders.size());
     for (Map.Entry<String, SearchLocation> entry : nextXmlElementFinders.entrySet()) {
       if (entry.getValue().isRelative() == isRelative) {
-        references.add(new SearchLocationReference(entry.getValue(), entry.getKey(), isRelative));
+        references.add(new SearchLocationReference(entry.getValue(), entry.getKey()));
       }
     }
     return references;

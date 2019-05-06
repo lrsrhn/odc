@@ -29,17 +29,14 @@ public class SearchLocationReference {
     private String searchElement;
     private Predicate predicate;
     private SearchLocation searchLocation;
-    private boolean isRelative;
 
-    public SearchLocationReference(SearchLocation searchLocation, String searchElement, boolean isRelative) {
+    public SearchLocationReference(SearchLocation searchLocation, String searchElement) {
         this.searchLocation = searchLocation;
         this.searchElement = searchElement;
-        this.isRelative = isRelative;
     }
 
-    public SearchLocationReference(SearchLocation searchLocation, Predicate predicate, boolean isRelative) {
+    public SearchLocationReference(SearchLocation searchLocation, Predicate predicate) {
         this.searchLocation = searchLocation;
-        this.isRelative = isRelative;
         this.predicate = predicate;
     }
 
@@ -68,10 +65,6 @@ public class SearchLocationReference {
     }
 
     public boolean isRelative() {
-        return isRelative;
-    }
-
-    public void setRelative(boolean relative) {
-        isRelative = relative;
+        return searchLocation.isRelative();
     }
 }

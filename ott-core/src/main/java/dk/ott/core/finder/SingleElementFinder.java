@@ -88,7 +88,7 @@ public final class SingleElementFinder implements ElementFinder {
 
   @Override
   public void buildToString(StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder) {
-    if (searchElement == null || searchLocation == null) {
+    if (searchElement == null) {
       toStringBuilder.append(previousElementsBuilder).append("/null\n");
       return;
     }
@@ -114,7 +114,7 @@ public final class SingleElementFinder implements ElementFinder {
   @Override
   public List<SearchLocationReference> getSeachLocationReferences(boolean isRelative) {
     if (searchLocation != null) {
-      return Collections.singletonList(new SearchLocationReference(searchLocation, searchElement, false));
+      return Collections.singletonList(new SearchLocationReference(searchLocation, searchElement));
     }
     return Collections.emptyList();
   }
@@ -131,7 +131,7 @@ public final class SingleElementFinder implements ElementFinder {
         throw new IllegalStateException("Cannot do predicate");
       }
       if (searchLocation != null) {
-        if (searchElement.equals(searchLocationReference.getSearchElement()) && searchLocation.isRelative() == searchLocationReference.getSearchLocation().isRelative()) {
+        if (searchElement.equals(searchLocationReference.getSearchElement()) && searchLocation.isRelative() == searchLocationReference.isRelative()) {
           return;
         }
         MultipleArrayElementFinder multipleArrayElementFinder = new MultipleArrayElementFinder(thisReference, searchElement, searchLocation);

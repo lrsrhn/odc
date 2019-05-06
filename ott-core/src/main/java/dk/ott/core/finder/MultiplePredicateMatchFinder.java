@@ -122,7 +122,7 @@ public class MultiplePredicateMatchFinder implements ElementFinder {
   public List<SearchLocationReference> getSeachLocationReferences(boolean isRelative) {
     List<SearchLocationReference> references = new ArrayList<SearchLocationReference>(searchLocationList.getSize());
     for (int i = 0; i < searchLocationList.getSize(); i++) {
-      references.add(new SearchLocationReference(searchLocationList.searchLocations[i], searchLocationList.predicates[i], false));
+      references.add(new SearchLocationReference(searchLocationList.searchLocations[i], searchLocationList.predicates[i]));
     }
     return references;
   }
