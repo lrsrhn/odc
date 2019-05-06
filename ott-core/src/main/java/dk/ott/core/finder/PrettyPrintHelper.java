@@ -31,7 +31,9 @@ class PrettyPrintHelper {
     static void printSearchLocation(SearchLocation searchLocation, StringBuilder previousElementsBuilder, Set<ElementFinder> visited, StringBuilder toStringBuilder) {
         Predicate filter = searchLocation.getFilter();
         printOnEventHandler(previousElementsBuilder, toStringBuilder, filter, searchLocation.getOnStartHandler(), " [S]=> ");
-        printOnEventHandler(previousElementsBuilder, toStringBuilder, searchLocation.getOrCreateTextLocation().getTextFilter(), searchLocation.getOrCreateTextLocation().getOnTextHandler(), " [T]=> ");
+        if (searchLocation.getTextLocation() != null) {
+            printOnEventHandler(previousElementsBuilder, toStringBuilder, searchLocation.getTextLocation().getTextFilter(), searchLocation.getTextLocation().getOnTextHandler(), " [T]=> ");
+        }
         ElementFinder nextElementFinder = searchLocation.getElementFinder();
         if (nextElementFinder != null) {
             if (!visited.contains(nextElementFinder)) {
