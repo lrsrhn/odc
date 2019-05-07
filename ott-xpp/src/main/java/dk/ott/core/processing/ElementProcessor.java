@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.ott.xpp;
+package dk.ott.core.processing;
 
 import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.processing.BaseElementProcessor;
@@ -34,27 +34,37 @@ public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XPPEle
     super(nextElementFinder, objectStore);
   }
 
-  public ObjectStore search(XmlPullParser streamReader, XPPElement XPPElement) throws Exception {
+  public ObjectStore search(XmlPullParser streamReader, XPPElement xppElement) throws Exception {
     int currentDepth = 0;
     boolean continueLoop = true;
     while (continueLoop) {
         int eventType = streamReader.next();
           switch (eventType) {
               case XmlPullParser.START_TAG:
-                  XPPElement.setEventType(eventType);
-                  if (observableTreeTraverser.startElement(XPPElement, currentDepth++)) {
-                      skipElement(streamReader);
-                      XPPElement.setEventType(XmlPullParser.END_TAG);
-                      observableTreeTraverser.endElement(XPPElement, --currentDepth);
+                  xppElement.setEventType(eventType);
+                  switch (observableTreeTraverser.startElement(xppElement, currentDepth++)) {
+                      case SKIP_ELEMENT:
+                          skipElement(streamReader);
+                          xppElement.setEventType(XmlPullParser.END_TAG);
+                          observableTreeTraverser.endElement(xppElement, --currentDepth);
+                          continue;
+                      case READ_RAW_TEXT:
+                          // Read raw and set on element
+                          xppElement.setText(readRaw(streamReader));
+                          observableTreeTraverser.text(xppElement);
+                          // Handle end element
+                          xppElement.setEventType(XmlPullParser.END_TAG);
+                          observableTreeTraverser.endElement(xppElement, --currentDepth);
+                          continue;
                   }
                   continue;
               case XmlPullParser.TEXT:
-                  XPPElement.setEventType(eventType);
-                  observableTreeTraverser.text(XPPElement);
+                  xppElement.setEventType(eventType);
+                  observableTreeTraverser.text(xppElement);
                   continue;
               case XmlPullParser.END_TAG:
-                  XPPElement.setEventType(eventType);
-                  observableTreeTraverser.endElement(XPPElement, --currentDepth);
+                  xppElement.setEventType(eventType);
+                  observableTreeTraverser.endElement(xppElement, --currentDepth);
                   continue;
               case XmlPullParser.END_DOCUMENT:
                   continueLoop = false;
@@ -80,6 +90,31 @@ public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XPPEle
         }
         eventType = xmlPullParser.next();
       }
+    } catch (Exception xse) {
+      throw new RuntimeException(xse);
+    }
+  }
+
+    private String readRaw(XmlPullParser xmlPullParser) {
+    try {
+      StringBuilder builder = new StringBuilder(128);
+      int currentDepth = 0;
+      int eventType = xmlPullParser.next(); // Skip current element
+      // Process all child elements if necessary
+      while(eventType != XmlPullParser.END_TAG || currentDepth > 0) {
+        if (eventType == XmlPullParser.START_TAG) {
+          currentDepth++;
+          if (xmlPullParser.isEmptyElementTag()) {
+            xmlPullParser.next();
+            currentDepth--;
+          }
+        } else if (eventType == XmlPullParser.END_TAG) {
+          currentDepth--;
+        }
+        builder.append(xmlPullParser.getText());
+        eventType = xmlPullParser.next();
+      }
+      return builder.toString();
     } catch (Exception xse) {
       throw new RuntimeException(xse);
     }

@@ -50,7 +50,7 @@ public class SaxHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         try {
             saxElement.setData(uri, localName, attributes);
-            if (observableTreeTraverser.startElement(saxElement, depth++)) {
+            if (observableTreeTraverser.startElement(saxElement, depth++) == EventAction.SKIP_ELEMENT) {
                 saxElementSkippingHandler.resetDepth();
                 xmlReader.setContentHandler(saxElementSkippingHandler);
             }

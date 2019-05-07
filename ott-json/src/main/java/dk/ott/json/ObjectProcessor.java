@@ -24,6 +24,7 @@ package dk.ott.json;
 
 import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.processing.BaseElementProcessor;
+import dk.ott.core.processing.EventAction;
 import dk.ott.core.processing.JsonObject;
 import dk.ott.core.processing.ObjectStore;
 
@@ -66,7 +67,7 @@ class ObjectProcessor extends BaseElementProcessor<JsonParser, JsonObject> {
                     stringStack.push(jsonObject.getElementName());
                     jsonEventStack.push(currentEvent);
                     jsonObject.setKeyName(jsonParser.getString());
-                    if (observableTreeTraverser.startElement(jsonObject, currentDepth++)) {
+                    if (observableTreeTraverser.startElement(jsonObject, currentDepth++) == EventAction.SKIP_ELEMENT) {
                         currentDepth = skipElement(currentDepth, jsonParser, jsonObject);
                     }
                     break;
@@ -74,7 +75,7 @@ class ObjectProcessor extends BaseElementProcessor<JsonParser, JsonObject> {
                     if (jsonEventStack.peek() != JsonParser.Event.KEY_NAME) {
                         stringStack.push(jsonObject.getElementName());
                         jsonObject.setKeyName("[]");
-                        if (observableTreeTraverser.startElement(jsonObject, currentDepth++)) {
+                        if (observableTreeTraverser.startElement(jsonObject, currentDepth++) == EventAction.SKIP_ELEMENT) {
                             currentDepth = skipElement(currentDepth, jsonParser, jsonObject);
                         }
                     }
@@ -84,7 +85,7 @@ class ObjectProcessor extends BaseElementProcessor<JsonParser, JsonObject> {
                    if (jsonEventStack.peek() != JsonParser.Event.KEY_NAME) {
                        stringStack.push(jsonObject.getElementName());
                         jsonObject.setKeyName("{}");
-                        if (observableTreeTraverser.startElement(jsonObject, currentDepth++)) {
+                        if (observableTreeTraverser.startElement(jsonObject, currentDepth++) == EventAction.SKIP_ELEMENT) {
                             currentDepth = skipElement(currentDepth, jsonParser, jsonObject);
                         }
                     }

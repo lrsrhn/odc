@@ -20,36 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.ott.core.dsl.searchtree;
+package dk.ott.core.dsl.adders;
 
-import dk.ott.core.event.OnTextHandler;
-import dk.ott.core.finder.SearchLocationBuilder;
-import dk.ott.core.predicate.Predicate;
+import dk.ott.core.dsl.TreeEdgeReference;
+import dk.ott.core.dsl.searchtree.ExpressionHelper;
 
-public class PartialSearchTextLocationBuilder<T> {
-    private T parentTreeBuilder;
-    private SearchLocationBuilder searchLocationBuilder;
+public class TreeElementRawTextAdder implements TreePathAdder {
 
-    public PartialSearchTextLocationBuilder(T parentTreeBuilder, SearchLocationBuilder searchLocationBuilder) {
-        if (searchLocationBuilder == null) {
-            throw new RuntimeException("Passed SearchLocationBuilder is null!");
-        }
-        this.searchLocationBuilder = searchLocationBuilder;
-        this.parentTreeBuilder = parentTreeBuilder;
-    }
-
-    public PartialSearchTextLocationBuilder<T> filter(Predicate filter) {
-        this.searchLocationBuilder.textFilter(filter);
-        return this;
-    }
-
-    public PartialSearchTextLocationBuilder<T> isRaw() {
-        this.searchLocationBuilder.textIsRaw();
-        return this;
-    }
-
-    public T to(OnTextHandler onTextHandler) {
-        this.searchLocationBuilder.onTextHandler(onTextHandler);
-        return parentTreeBuilder;
+    @Override
+    public TreeEdgeReference addTreePath(TreeEdgeReference reference, boolean hasRoot) {
+        ExpressionHelper.getSearchLocationBuilder(reference).textIsRaw();
+        return reference;
     }
 }

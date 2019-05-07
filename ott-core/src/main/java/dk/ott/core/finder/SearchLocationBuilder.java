@@ -52,6 +52,11 @@ public class SearchLocationBuilder {
         return this;
     }
 
+    public SearchLocationBuilder textIsRaw() {
+        searchLocation.getOrCreateTextLocation().setRaw(true);
+        return this;
+    }
+
     public SearchLocationBuilder onTextHandler(OnTextHandler onTextHandler) {
         this.searchLocation.getOrCreateTextLocation().setOnTextHandler(onTextHandler);
         return this;

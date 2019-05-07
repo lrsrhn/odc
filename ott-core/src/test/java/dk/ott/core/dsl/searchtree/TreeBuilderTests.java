@@ -23,7 +23,7 @@
 package dk.ott.core.dsl.searchtree;
 
 import dk.ott.core.event.EventHandler;
-import dk.ott.core.event.OnStartHandler;
+import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
@@ -587,9 +587,9 @@ public abstract class TreeBuilderTests {
         observableTree.treeBuilder()
                 .element("one")
                     .element("two")
-                        .onStart().to(new OnStartHandler() {
+                        .onText().isRaw().to(new OnTextHandler() {
             @Override
-            public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+            public void onText(StructureElement structureElement, ObjectStore objectStore) throws Exception {
                 Assert.assertEquals(longValue.length(), structureElement.getRawElementValue().length());
                 Assert.assertEquals(longValue, structureElement.getRawElementValue());
             }

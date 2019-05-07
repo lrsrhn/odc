@@ -45,7 +45,7 @@ public final class DomNodeProcessor extends BaseElementProcessor<Document, DomEl
             int nextChildIndex = currentNodeProgress.getNextChildIndex();
             domElement.setNode(currentNode);
             if (nextChildIndex == 0) {
-                observableTreeTraverser.startElement(domElement, currentDepth++);
+                skipElement = observableTreeTraverser.startElement(domElement, currentDepth++) == EventAction.SKIP_ELEMENT;
             }
             if (!skipElement && currentNode.hasChildNodes()) {
                 NodeList nodeList = currentNode.getChildNodes();
@@ -69,9 +69,5 @@ public final class DomNodeProcessor extends BaseElementProcessor<Document, DomEl
             }
         }
         return objectStore;
-    }
-
-    public void skipElement() {
-        this.skipElement = true;
     }
 }

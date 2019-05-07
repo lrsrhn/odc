@@ -23,6 +23,7 @@
 package dk.ott.core.processing;
 
 import dk.ott.core.finder.ElementFinder;
+import dk.ott.xml.XmlRawTextReader2;
 import org.codehaus.stax2.XMLStreamReader2;
 
 import javax.xml.stream.XMLStreamConstants;
@@ -30,8 +31,11 @@ import javax.xml.stream.XMLStreamReader;
 
 public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamReader2, XMLElement> {
 
-    public XmlElementProcessor(ElementFinder nextElementFinder, ObjectStore objectStore) {
+    private XmlRawTextReader2 xmlRawTextReader;
+
+    public XmlElementProcessor(ElementFinder nextElementFinder, ObjectStore objectStore, XmlRawTextReader2 xmlRawTextReader) {
         super(nextElementFinder, objectStore);
+        this.xmlRawTextReader = xmlRawTextReader;
     }
 
     public ObjectStore search(XMLStreamReader2 streamReader, XMLElement xmlElement) throws Exception {
@@ -41,13 +45,26 @@ public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamRea
             switch (eventType) {
                 case XMLStreamReader.START_ELEMENT:
                     xmlElement.setEventType(eventType);
-                    if (observableTreeTraverser.startElement(xmlElement, currentDepth++)) {
-                        streamReader.skipElement();
-                        xmlElement.setEventType(XMLStreamReader.END_ELEMENT);
-                        observableTreeTraverser.endElement(xmlElement, --currentDepth);
-                    } else if (streamReader.getEventType() == XMLStreamConstants.END_ELEMENT) {
-                        xmlElement.setEventType(XMLStreamReader.END_ELEMENT);
-                        observableTreeTraverser.endElement(xmlElement, --currentDepth);
+                    switch (observableTreeTraverser.startElement(xmlElement, currentDepth++)) {
+                        case SKIP_ELEMENT:
+                            streamReader.skipElement();
+                            xmlElement.setEventType(XMLStreamReader.END_ELEMENT);
+                            observableTreeTraverser.endElement(xmlElement, --currentDepth);
+                            continue;
+                        case READ_RAW_TEXT:
+                            if (xmlRawTextReader == null) {
+                                throw new IllegalStateException("Raw text read disabled - please enable");
+                            }
+                            // Read raw text until end of element
+                            xmlRawTextReader.setStartIndex(streamReader.getLocation().getCharacterOffset());
+                            streamReader.skipElement();
+                            xmlElement.setText(xmlRawTextReader.readRawText(streamReader.getLocation().getCharacterOffset()));
+                            // Notify OnTextHandler
+                            observableTreeTraverser.text(xmlElement);
+                            // Notify OnEndHandler
+                            xmlElement.setEventType(XMLStreamReader.END_ELEMENT);
+                            observableTreeTraverser.endElement(xmlElement, --currentDepth);
+                            continue;
                     }
                     continue;
                 case XMLStreamConstants.CHARACTERS:

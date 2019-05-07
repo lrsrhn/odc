@@ -22,11 +22,9 @@
  */
 package dk.ott.core.processing;
 
-import dk.ott.xml.XmlRawTextReader2;
 import org.codehaus.stax2.XMLStreamReader2;
 
 import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 public class XMLElement implements InternalStructureElement {
@@ -34,15 +32,13 @@ public class XMLElement implements InternalStructureElement {
   private String elementTextCache;
   private String elementNameCache;
   private String elementNamespaceCache;
-  private XmlRawTextReader2 xmlRawTextReader;
   private int eventType;
 
-  public XMLElement(XMLStreamReader2 xmlStreamReader, XmlRawTextReader2 xmlRawTextReader) {
+  public XMLElement(XMLStreamReader2 xmlStreamReader) {
     this.xmlStreamReader = xmlStreamReader;
-    this.xmlRawTextReader = xmlRawTextReader;
   }
 
-  public void setEventType(int eventType) {
+  void setEventType(int eventType) {
     this.eventType = eventType;
   }
 
@@ -85,6 +81,10 @@ public class XMLElement implements InternalStructureElement {
     return elementTextCache;
   }
 
+  void setText(String text) {
+    this.elementTextCache = text;
+  }
+
   /**
    * NB: Only use this after all attributes have been read - Calling this will
    * move the XML parser forward
@@ -92,19 +92,7 @@ public class XMLElement implements InternalStructureElement {
    */
   @Override
   public String getRawElementValue() {
-    try {
-      if (elementTextCache == null) {
-        if (eventType != XMLStreamConstants.START_ELEMENT) {
-          throw new RuntimeException("Cannot retrieve raw value from other event then Start_element");
-        }
-        xmlRawTextReader.setStartIndex(xmlStreamReader.getLocation().getCharacterOffset());
-        xmlStreamReader.skipElement();
-        elementTextCache = xmlRawTextReader.readRawText(xmlStreamReader.getLocation().getCharacterOffset());
-      }
-      return elementTextCache;
-    } catch (XMLStreamException xse) {
-      throw new RuntimeException(xse);
-    }
+    return elementTextCache;
   }
 
   public void clearCache() {

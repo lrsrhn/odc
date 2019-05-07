@@ -52,28 +52,28 @@ public abstract class Example {
                         .predicate(Predicates.namespace(""))
                             .element("author")
                                 .element("first-name")
-                                    .onText().to(new MyOnStartHandler("Author", false))
+                                    .onText().to(new MyOnStartHandler("Author" ))
                                 .end()
                                 .element("publication")
-                                    .onStart().to(new MyOnStartHandler("Publication", true))
+                                    .onText().isRaw().to(new MyOnStartHandler("Publication" ))
                                 .end()
                             .end()
                             .relativeElement("p")
-                                .onStart().to(new MyOnStartHandler("Paragraph", true))
+                                .onText().isRaw().to(new MyOnStartHandler("Paragraph" ))
                             .end()
                         .end()
                         .predicate(Predicates.namespace("uri:mynamespace"))
                             .element("author")
-                                .onText().to(new MyOnStartHandler("My author", false))
+                                .onText().to(new MyOnStartHandler("My author" ))
                             .end()
                             .element("title")
-                                .onText().to(new MyOnStartHandler("My title", false))
+                                .onText().to(new MyOnStartHandler("My title" ))
                             .end()
                         .end()
                     .end()
                     .element("magazine")
                         .element("price")
-                            .onText().to(new MyOnStartHandler("Magazine price", false))
+                            .onText().to(new MyOnStartHandler("Magazine price" ))
                         .end()
                     .end()
                 .end()
@@ -84,12 +84,12 @@ public abstract class Example {
 
     @Test
     public void exampleExpression() {
-        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("")).path("/author/first-name").onText(new MyOnStartHandler("Author", false));
-        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("")).path("/author/publication").onStart(new MyOnStartHandler("Publication", true));
-        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("")).path("//p").onStart(new MyOnStartHandler("Paragraph", true));
-        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("uri:mynamespace")).path("/author").onText(new MyOnStartHandler("My author", false));
-        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("uri:mynamespace")).path("/title").onText(new MyOnStartHandler("My title", false));
-        observableTree.addXpath("/bookstore/magazine/price").onText(new MyOnStartHandler("Magazine price", false));
+        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("")).path("/author/first-name").onText(new MyOnStartHandler("Author" ));
+        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("")).path("/author/publication").onText(new MyOnStartHandler("Publication" ));
+        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("")).path("//p").onText(new MyOnStartHandler("Paragraph" ));
+        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("uri:mynamespace")).path("/author").onText(new MyOnStartHandler("My author" ));
+        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("uri:mynamespace")).path("/title").onText(new MyOnStartHandler("My title" ));
+        observableTree.addXpath("/bookstore/magazine/price").onText(new MyOnStartHandler("Magazine price" ));
 
         System.out.println(observableTree.toString());
         observableTree.find(xmlFileContent);
@@ -113,20 +113,11 @@ public abstract class Example {
         }
     }
 
-    private static class MyOnStartHandler implements OnStartHandler, OnTextHandler {
+    private static class MyOnStartHandler implements OnTextHandler {
         private String prefix;
-        private boolean isRaw;
 
-        MyOnStartHandler(String prefix, boolean isRaw) {
+        MyOnStartHandler(String prefix) {
             this.prefix = prefix;
-            this.isRaw = isRaw;
-        }
-
-        @Override
-        public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-            if (isRaw) {
-                System.out.println(prefix + ": " + structureElement.getRawElementValue());
-            }
         }
 
         @Override

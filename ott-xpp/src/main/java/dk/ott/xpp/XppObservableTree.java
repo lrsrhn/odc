@@ -22,6 +22,7 @@
  */
 package dk.ott.xpp;
 
+import dk.ott.core.processing.ElementProcessor;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
 import dk.ott.core.processing.XPPElement;

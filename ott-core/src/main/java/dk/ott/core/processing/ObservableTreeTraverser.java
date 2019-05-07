@@ -48,17 +48,16 @@ public final class ObservableTreeTraverser {
         this.childDepth = 0;
     }
 
-    public boolean startElement(final InternalStructureElement structureElement, final int currentDepth) throws Exception {
+    public EventAction startElement(final InternalStructureElement structureElement, final int currentDepth) throws Exception {
         structureElement.clearCache();
         SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, objectStore, childDepth == currentDepth);
         if (searchLocation != null) {
-            handleSearchLocation( searchLocation, structureElement, currentDepth);
-            return false;
+            return handleSearchLocation( searchLocation, structureElement, currentDepth);
         }
-        return !currentElementFinder.hasRelative();
+        return !currentElementFinder.hasRelative() ? EventAction.SKIP_ELEMENT : EventAction.NOTHING;
     }
 
-    private void handleSearchLocation(final SearchLocation searchLocation, final InternalStructureElement structureElement, final int currentDepth) throws Exception {
+    private EventAction handleSearchLocation(final SearchLocation searchLocation, final InternalStructureElement structureElement, final int currentDepth) throws Exception {
         OnStartHandler onStartHandler = searchLocation.getOnStartHandler();
         Predicate filter = searchLocation.getFilter();
         currentOnTextLocation = searchLocation.getTextLocation();
@@ -80,6 +79,9 @@ public final class ObservableTreeTraverser {
             }
             else if (currentOnTextLocation != null) {
                 handleStacks(currentDepth, null);
+                return currentOnTextLocation.isRaw() ? EventAction.READ_RAW_TEXT : EventAction.NOTHING;
+            } else {
+                return EventAction.SKIP_ELEMENT;
             }
         } else {
             handleStacks(currentDepth, onEndHandler);
@@ -87,6 +89,7 @@ public final class ObservableTreeTraverser {
                 handleNextElementFinder(structureElement, currentDepth, nextElementFinder);
             }
         }
+        return EventAction.NOTHING;
     }
 
     private void handleStacks(final int currentDepth, final OnEndHandler onEndHandler) {

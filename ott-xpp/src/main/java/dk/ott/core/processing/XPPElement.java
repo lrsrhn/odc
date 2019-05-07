@@ -66,11 +66,6 @@ public class XPPElement implements InternalStructureElement {
     return false;
   }
 
-  /**
-   * NB: Only use this after all attributes have been read - Calling this will
-   * move the XML parser forward
-   * 
-   */
   public String getText() {
     if (elementTextCache != null) {
       return elementTextCache;
@@ -86,50 +81,11 @@ public class XPPElement implements InternalStructureElement {
     }
   }
 
-  /**
-   * NB: Only use this after all attributes have been read - Calling this will
-   * move the XML parser forward
-   *
-   */
   @Override
   public String getRawElementValue() {
-    try {
-      if (elementTextCache == null) {
-        if (eventType != XmlPullParser.START_TAG) {
-          throw new RuntimeException("Cannot retrieve raw value from other event then Start_element");
-        }
-        elementTextCache = moveCursorToEndElement();
-      }
-      return elementTextCache;
-    } catch (Exception xse) {
-      throw new RuntimeException(xse);
-    }
+    return elementTextCache;
   }
 
-  private String moveCursorToEndElement() {
-    try {
-      StringBuilder builder = new StringBuilder(128);
-      int currentDepth = 0;
-      int eventType = xmlPullParser.next(); // Skip current element
-      // Process all child elements if necessary
-      while(eventType != XmlPullParser.END_TAG || currentDepth > 0) {
-        if (eventType == XmlPullParser.START_TAG) {
-          currentDepth++;
-          if (xmlPullParser.isEmptyElementTag()) {
-            xmlPullParser.next();
-            currentDepth--;
-          }
-        } else if (eventType == XmlPullParser.END_TAG) {
-          currentDepth--;
-        }
-        builder.append(xmlPullParser.getText());
-        eventType = xmlPullParser.next();
-      }
-      return builder.toString();
-    } catch (Exception xse) {
-      throw new RuntimeException(xse);
-    }
-  }
 
   public void clearCache() {
     this.elementTextCache = null;
@@ -139,4 +95,8 @@ public class XPPElement implements InternalStructureElement {
   public String getElementNS() {
         return xmlPullParser.getNamespace();
     }
+
+  void setText(String text) {
+    this.elementTextCache = text;
+  }
 }

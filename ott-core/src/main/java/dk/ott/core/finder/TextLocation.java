@@ -27,21 +27,33 @@ import dk.ott.core.predicate.Predicate;
 
 public class TextLocation {
     private Predicate textFilter;
+    private boolean isRaw;
     private OnTextHandler onTextHandler;
 
     public Predicate getTextFilter() {
         return textFilter;
     }
 
-    public void setTextFilter(Predicate textFilter) {
+    public TextLocation setTextFilter(Predicate textFilter) {
         this.textFilter = textFilter;
+        return this;
     }
 
     public OnTextHandler getOnTextHandler() {
         return onTextHandler;
     }
 
-    public void setOnTextHandler(OnTextHandler onTextHandler) {
+    public TextLocation setOnTextHandler(OnTextHandler onTextHandler) {
         this.onTextHandler = onTextHandler;
+        return this;
+    }
+
+    public boolean isRaw() {
+        return isRaw;
+    }
+
+    public TextLocation setRaw(boolean raw) {
+        isRaw = raw;
+        return this;
     }
 }
