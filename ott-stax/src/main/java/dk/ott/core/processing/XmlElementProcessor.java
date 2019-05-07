@@ -45,6 +45,9 @@ public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamRea
                         streamReader.skipElement();
                         xmlElement.setEventType(XMLStreamReader.END_ELEMENT);
                         observableTreeTraverser.endElement(xmlElement, --currentDepth);
+                    } else if (streamReader.getEventType() == XMLStreamConstants.END_ELEMENT) {
+                        xmlElement.setEventType(XMLStreamReader.END_ELEMENT);
+                        observableTreeTraverser.endElement(xmlElement, --currentDepth);
                     }
                     continue;
                 case XMLStreamConstants.CHARACTERS:
