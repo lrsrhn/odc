@@ -112,7 +112,7 @@ public final class SingleElementFinder implements ElementFinder {
   }
 
   @Override
-  public List<SearchLocationReference> getSeachLocationReferences(boolean isRelative) {
+  public List<SearchLocationReference> getSeachLocationReferences() {
     if (searchLocation != null) {
       return Collections.singletonList(new SearchLocationReference(searchLocation, searchElement));
     }
@@ -121,7 +121,7 @@ public final class SingleElementFinder implements ElementFinder {
 
   @Override
   public void mergeElementFinder(ElementFinder elementFinder) {
-    List<SearchLocationReference> searchLocationReferences = elementFinder.getSeachLocationReferences(searchLocation.isRelative());
+    List<SearchLocationReference> searchLocationReferences = elementFinder.getSeachLocationReferences();
     if (searchLocationReferences.size() > 1) {
       MultipleArrayElementFinder multipleArrayElementFinder = new MultipleArrayElementFinder(thisReference, searchElement, searchLocation);
       multipleArrayElementFinder.mergeElementFinder(elementFinder);

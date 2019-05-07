@@ -80,7 +80,7 @@ public class AllElementFinder implements ElementFinder {
     }
 
     @Override
-    public List<SearchLocationReference> getSeachLocationReferences(boolean isRelative) {
+    public List<SearchLocationReference> getSeachLocationReferences() {
         throw new UnsupportedOperationException("Not supported by All element finder");
     }
 

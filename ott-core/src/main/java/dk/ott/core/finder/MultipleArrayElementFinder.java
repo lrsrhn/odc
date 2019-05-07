@@ -115,20 +115,17 @@ public final class MultipleArrayElementFinder implements ElementFinder {
   }
 
   @Override
-  public List<SearchLocationReference> getSeachLocationReferences(boolean isRelative) {
+  public List<SearchLocationReference> getSeachLocationReferences() {
     List<SearchLocationReference> references = new ArrayList<SearchLocationReference>(nextXmlElementFinders.getSize());
     for (int i = 0; i < nextXmlElementFinders.getSize(); i++) {
-      SearchLocation searchLocation = nextXmlElementFinders.searchLocations[i];
-      if (searchLocation.isRelative() == isRelative) {
-        references.add(new SearchLocationReference(searchLocation, nextXmlElementFinders.elementNames[i]));
-      }
+      references.add(new SearchLocationReference(nextXmlElementFinders.searchLocations[i], nextXmlElementFinders.elementNames[i]));
     }
     return references;
   }
 
   @Override
   public void mergeElementFinder(ElementFinder elementFinder) {
-    List<SearchLocationReference> searchLocationReferences = elementFinder.getSeachLocationReferences(false);
+    List<SearchLocationReference> searchLocationReferences = elementFinder.getSeachLocationReferences();
     for (SearchLocationReference searchLocationReference : searchLocationReferences) {
       if (searchLocationReference.getPredicate() != null) {
         throw new RuntimeException("Unable to add reference using a predicate!");

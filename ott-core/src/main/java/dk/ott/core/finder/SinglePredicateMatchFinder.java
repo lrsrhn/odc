@@ -110,7 +110,7 @@ public class SinglePredicateMatchFinder implements ElementFinder {
   }
 
   @Override
-  public List<SearchLocationReference> getSeachLocationReferences(boolean isRelative) {
+  public List<SearchLocationReference> getSeachLocationReferences() {
     if (predicate != null) {
       return Collections.singletonList(new SearchLocationReference(searchLocation, predicate));
     }
@@ -119,7 +119,7 @@ public class SinglePredicateMatchFinder implements ElementFinder {
 
   @Override
   public void mergeElementFinder(ElementFinder elementFinder) {
-    List<SearchLocationReference> searchLocationReferences = elementFinder.getSeachLocationReferences(searchLocation.isRelative());
+    List<SearchLocationReference> searchLocationReferences = elementFinder.getSeachLocationReferences();
     if (searchLocationReferences.size() > 1) {
       MultiplePredicateMatchFinder multiplePredicateMatchFinder = new MultiplePredicateMatchFinder(thisReference, predicate, searchLocation);
       multiplePredicateMatchFinder.mergeElementFinder(elementFinder);

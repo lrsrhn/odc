@@ -87,8 +87,8 @@ public class ElementFinderReference implements ElementFinder {
     }
 
     @Override
-    public List<SearchLocationReference> getSeachLocationReferences(boolean isRelative) {
-        return elementFinder.getSeachLocationReferences(isRelative);
+    public List<SearchLocationReference> getSeachLocationReferences() {
+        return elementFinder.getSeachLocationReferences();
     }
 
     @Override

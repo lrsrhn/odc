@@ -119,7 +119,7 @@ public class MultiplePredicateMatchFinder implements ElementFinder {
   }
 
   @Override
-  public List<SearchLocationReference> getSeachLocationReferences(boolean isRelative) {
+  public List<SearchLocationReference> getSeachLocationReferences() {
     List<SearchLocationReference> references = new ArrayList<SearchLocationReference>(searchLocationList.getSize());
     for (int i = 0; i < searchLocationList.getSize(); i++) {
       references.add(new SearchLocationReference(searchLocationList.searchLocations[i], searchLocationList.predicates[i]));
@@ -129,7 +129,7 @@ public class MultiplePredicateMatchFinder implements ElementFinder {
 
   @Override
   public void mergeElementFinder(ElementFinder elementFinder) {
-    List<SearchLocationReference> searchLocationReferences = elementFinder.getSeachLocationReferences(false);
+    List<SearchLocationReference> searchLocationReferences = elementFinder.getSeachLocationReferences();
     for (SearchLocationReference searchLocationReference : searchLocationReferences) {
       if (searchLocationReference.getSearchElement() != null) {
         throw new RuntimeException("Unable to add reference using a searchElement!");

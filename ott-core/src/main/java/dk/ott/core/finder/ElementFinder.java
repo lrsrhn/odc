@@ -47,8 +47,7 @@ public interface ElementFinder {
 
   SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore);
 
-  // TODO: Remove parameter
-  List<SearchLocationReference> getSeachLocationReferences(boolean isRelative);
+  List<SearchLocationReference> getSeachLocationReferences();
 
   void mergeElementFinder(ElementFinder elementFinder);
 
