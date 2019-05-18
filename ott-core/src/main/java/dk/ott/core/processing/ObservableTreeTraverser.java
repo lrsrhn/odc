@@ -50,6 +50,7 @@ public final class ObservableTreeTraverser {
 
     public EventAction startElement(final InternalStructureElement structureElement, final int currentDepth) throws Exception {
         structureElement.clearCache();
+        currentOnTextLocation = null;
         SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, objectStore, childDepth == currentDepth);
         if (searchLocation != null) {
             return handleSearchLocation( searchLocation, structureElement, currentDepth);

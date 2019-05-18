@@ -61,6 +61,8 @@ public class SaxObservableTree extends ObservableTree {
       xmlReader.setContentHandler(saxHandler);
       xmlReader.parse(new InputSource(reader));
       return objectStore;
+    } catch (StopProcessingException ex) {
+      return objectStore;
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);
     }

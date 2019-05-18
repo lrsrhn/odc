@@ -26,12 +26,9 @@ import com.ximpleware.AutoPilot;
 import com.ximpleware.NavException;
 import com.ximpleware.VTDNav;
 
-public class VtdElement implements InternalStructureElement {
+public class VtdElement extends BaseStructureElement {
   private VTDNav vtdNav;
   private AutoPilot autoPilot;
-  private String elementTextCache;
-  private String elementNameCache;
-  private String elementNamespaceCache;
   private int tokenIndex;
 
   public VtdElement(VTDNav vtdNav, AutoPilot autoPilot) {
@@ -97,23 +94,12 @@ public class VtdElement implements InternalStructureElement {
   public String getText() {
     try {
       if (elementTextCache == null && vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_CHARACTER_DATA) {
-        elementTextCache = vtdNav.toNormalizedString(tokenIndex);
+        elementTextCache = vtdNav.toNormalizedString2(tokenIndex);
       }
       return elementTextCache;
     } catch (NavException e) {
       throw new RuntimeException(e.getMessage(), e);
     }
-  }
-
-  @Override
-  public String getRawElementValue() {
-    return "";
-  }
-
-  public void clearCache() {
-    elementNamespaceCache = null;
-    elementNameCache = null;
-    elementTextCache = null;
   }
 
   public String getElementNS() {

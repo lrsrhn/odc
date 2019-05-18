@@ -36,7 +36,7 @@ public final class VtdIndexProcessor extends BaseElementProcessor<VTDNav, VtdEle
         int currentDepth = 0;
         IndexProgressStack indexProgressStack = new IndexProgressStack(10);
         if (vtdNav.toElement(VTDNav.ROOT)) {
-            for (int tokenIndex = vtdNav.getCurrentIndex(); tokenIndex < vtdNav.getTokenCount(); tokenIndex++) {
+            for (int tokenIndex = vtdNav.getCurrentIndex(); tokenIndex < vtdNav.getTokenCount() && !xmlElement.mustStopProcessing(); tokenIndex++) {
                 switch (vtdNav.getTokenType(tokenIndex)) {
                     case VTDNav.TOKEN_STARTING_TAG:
                         int elementDepth = vtdNav.getTokenDepth(tokenIndex);

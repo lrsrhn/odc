@@ -43,13 +43,13 @@ class ObjectProcessor extends BaseElementProcessor<JsonParser, JsonObject> {
 
     public ObjectStore search(JsonParser jsonParser, JsonObject jsonObject) throws Exception {
         int currentDepth = 0;
-        while (jsonParser.hasNext()) {
+        while (jsonParser.hasNext() && !jsonObject.mustStopProcessing()) {
             JsonParser.Event currentEvent = jsonParser.next();
             jsonObject.setCurrentEvent(currentEvent);
             switch (currentEvent) {
                 case START_OBJECT:
                 case START_ARRAY:
-                    jsonObject.setKeyName("$");
+                    jsonObject.setElementNameCache("$");
                     jsonEventStack.push(currentEvent);
                     observableTreeTraverser.startElement(jsonObject, currentDepth++);
                     process(currentDepth, jsonObject, jsonParser);
@@ -59,14 +59,14 @@ class ObjectProcessor extends BaseElementProcessor<JsonParser, JsonObject> {
     }
 
     private int process(int currentDepth, JsonObject jsonObject, JsonParser jsonParser) throws Exception {
-        while (jsonParser.hasNext()) {
+        while (jsonParser.hasNext() && !jsonObject.mustStopProcessing()) {
             JsonParser.Event currentEvent = jsonParser.next();
             jsonObject.setCurrentEvent(currentEvent);
             switch (currentEvent) {
                 case KEY_NAME:
                     stringStack.push(jsonObject.getElementName());
                     jsonEventStack.push(currentEvent);
-                    jsonObject.setKeyName(jsonParser.getString());
+                    jsonObject.setElementNameCache(jsonParser.getString());
                     if (observableTreeTraverser.startElement(jsonObject, currentDepth++) == EventAction.SKIP_ELEMENT) {
                         currentDepth = skipElement(currentDepth, jsonParser, jsonObject);
                     }
@@ -74,7 +74,7 @@ class ObjectProcessor extends BaseElementProcessor<JsonParser, JsonObject> {
                 case START_ARRAY:
                     if (jsonEventStack.peek() != JsonParser.Event.KEY_NAME) {
                         stringStack.push(jsonObject.getElementName());
-                        jsonObject.setKeyName("[]");
+                        jsonObject.setElementNameCache("[]");
                         if (observableTreeTraverser.startElement(jsonObject, currentDepth++) == EventAction.SKIP_ELEMENT) {
                             currentDepth = skipElement(currentDepth, jsonParser, jsonObject);
                         }
@@ -84,7 +84,7 @@ class ObjectProcessor extends BaseElementProcessor<JsonParser, JsonObject> {
                 case START_OBJECT:
                    if (jsonEventStack.peek() != JsonParser.Event.KEY_NAME) {
                        stringStack.push(jsonObject.getElementName());
-                        jsonObject.setKeyName("{}");
+                        jsonObject.setElementNameCache("{}");
                         if (observableTreeTraverser.startElement(jsonObject, currentDepth++) == EventAction.SKIP_ELEMENT) {
                             currentDepth = skipElement(currentDepth, jsonParser, jsonObject);
                         }
@@ -101,7 +101,7 @@ class ObjectProcessor extends BaseElementProcessor<JsonParser, JsonObject> {
                     if (jsonEventStack.peek() == JsonParser.Event.KEY_NAME) {
                         observableTreeTraverser.endElement(jsonObject, --currentDepth);
                         jsonEventStack.pop();
-                        jsonObject.setKeyName(stringStack.pop());
+                        jsonObject.setElementNameCache(stringStack.pop());
                     }
                     break;
                 case END_ARRAY:
@@ -112,7 +112,7 @@ class ObjectProcessor extends BaseElementProcessor<JsonParser, JsonObject> {
                     }
                     observableTreeTraverser.endElement(jsonObject, --currentDepth);
                     if (currentDepth != 0) {
-                        jsonObject.setKeyName(stringStack.pop());
+                        jsonObject.setElementNameCache(stringStack.pop());
                     }
             }
         }
@@ -155,7 +155,7 @@ class ObjectProcessor extends BaseElementProcessor<JsonParser, JsonObject> {
                     break;
             }
         }
-        jsonObject.setKeyName(stringStack.pop());
+        jsonObject.setElementNameCache(stringStack.pop());
         return currentDepth;
     }
 }

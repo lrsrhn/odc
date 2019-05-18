@@ -24,11 +24,9 @@ package dk.ott.core.processing;
 
 import javax.json.stream.JsonParser;
 
-public class JsonObject implements InternalStructureElement {
+public class JsonObject extends BaseStructureElement {
     private JsonParser.Event currentEvent;
     private JsonParser jsonParser;
-    private String keyName;
-    private String elementValueCache;
 
     public JsonObject(JsonParser jsonParser) {
         this.jsonParser = jsonParser;
@@ -40,25 +38,25 @@ public class JsonObject implements InternalStructureElement {
 
     @Override
     public String getText() {
-        if (elementValueCache == null) {
+        if (elementTextCache == null) {
             switch (currentEvent) {
                 case VALUE_NULL:
                     break;
                 case VALUE_TRUE:
-                    elementValueCache = "true";
+                    elementTextCache = "true";
                     break;
                 case VALUE_FALSE:
-                    elementValueCache = "false";
+                    elementTextCache = "false";
                     break;
                 case VALUE_NUMBER:
                 case VALUE_STRING:
-                    elementValueCache = jsonParser.getString();
+                    elementTextCache = jsonParser.getString();
                     break;
                 default:
                     throw new RuntimeException("Unexpected event on while getText: " + currentEvent.name());
             }
         }
-        return elementValueCache;
+        return elementTextCache;
     }
 
     @Override
@@ -68,7 +66,7 @@ public class JsonObject implements InternalStructureElement {
 
     @Override
     public String getElementName() {
-        return keyName;
+        return elementNameCache;
     }
 
     @Override
@@ -82,16 +80,11 @@ public class JsonObject implements InternalStructureElement {
     }
 
     @Override
-    public String getRawElementValue() {
-        return getText();
-    }
-
-    @Override
     public void clearCache() {
-        elementValueCache = null;
+        elementTextCache = null;
     }
 
-    public void setKeyName(String keyName) {
-        this.keyName = keyName;
+    public void setElementNameCache(String elementNameCache) {
+        this.elementNameCache = elementNameCache;
     }
 }

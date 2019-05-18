@@ -25,10 +25,7 @@ package dk.ott.core.processing;
 import dk.ott.xml.TextExtractor;
 import org.xml.sax.Attributes;
 
-public class SaxElement implements InternalStructureElement {
-  private String elementTextCache;
-  private String elementNameCache;
-  private String elementNamespaceCache;
+public class SaxElement extends BaseStructureElement {
   private Attributes attributes;
   private TextExtractor textExtractor;
 
@@ -57,10 +54,6 @@ public class SaxElement implements InternalStructureElement {
   }
 
   @Override
-  public String getRawElementValue() {
-    return "";
-  }
-
   public void clearCache() {
     this.elementTextCache = null;
   }

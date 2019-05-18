@@ -37,7 +37,7 @@ public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XPPEle
   public ObjectStore search(XmlPullParser streamReader, XPPElement xppElement) throws Exception {
     int currentDepth = 0;
     boolean continueLoop = true;
-    while (continueLoop) {
+    while (continueLoop && !xppElement.mustStopProcessing()) {
         int eventType = streamReader.next();
           switch (eventType) {
               case XmlPullParser.START_TAG:

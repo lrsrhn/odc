@@ -27,11 +27,8 @@ import org.codehaus.stax2.XMLStreamReader2;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
-public class XMLElement implements InternalStructureElement {
+public class XMLElement extends BaseStructureElement {
   private XMLStreamReader2 xmlStreamReader;
-  private String elementTextCache;
-  private String elementNameCache;
-  private String elementNamespaceCache;
   private int eventType;
 
   public XMLElement(XMLStreamReader2 xmlStreamReader) {
@@ -83,22 +80,6 @@ public class XMLElement implements InternalStructureElement {
 
   void setText(String text) {
     this.elementTextCache = text;
-  }
-
-  /**
-   * NB: Only use this after all attributes have been read - Calling this will
-   * move the XML parser forward
-   *
-   */
-  @Override
-  public String getRawElementValue() {
-    return elementTextCache;
-  }
-
-  public void clearCache() {
-    elementNamespaceCache = null;
-    elementNameCache = null;
-    elementTextCache = null;
   }
 
   public String getElementNS() {

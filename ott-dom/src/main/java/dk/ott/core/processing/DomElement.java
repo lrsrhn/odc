@@ -28,6 +28,7 @@ import org.w3c.dom.Node;
 public class DomElement implements InternalStructureElement {
   private Node node;
   private Node nodeText;
+  private boolean stopProcessing;
 
   void setNode(Node node) {
     this.node = node;
@@ -63,10 +64,16 @@ public class DomElement implements InternalStructureElement {
   }
 
   @Override
-  public String getRawElementValue() {
-    return "";
+  public void stopProcessing() {
+    this.stopProcessing = true;
   }
 
+  @Override
+  public boolean mustStopProcessing() {
+    return stopProcessing;
+  }
+
+  @Override
   public void clearCache() {
     nodeText = null;
     // Do nothing

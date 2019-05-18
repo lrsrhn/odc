@@ -25,10 +25,8 @@ package dk.ott.core.processing;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-public class XPPElement implements InternalStructureElement {
+public class XPPElement extends BaseStructureElement {
   private XmlPullParser xmlPullParser;
-  private String elementTextCache;
-  private String elementNameCache;
   private int eventType;
 
   public XPPElement(XmlPullParser xmlStreamReader) {
@@ -81,20 +79,9 @@ public class XPPElement implements InternalStructureElement {
     }
   }
 
-  @Override
-  public String getRawElementValue() {
-    return elementTextCache;
-  }
-
-
-  public void clearCache() {
-    this.elementTextCache = null;
-    this.elementNameCache = null;
-  }
-
   public String getElementNS() {
-        return xmlPullParser.getNamespace();
-    }
+      return xmlPullParser.getNamespace();
+  }
 
   void setText(String text) {
     this.elementTextCache = text;

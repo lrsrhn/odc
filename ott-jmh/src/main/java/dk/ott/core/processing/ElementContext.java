@@ -27,6 +27,7 @@ import dk.ott.core.stub.Element;
 public class ElementContext implements InternalStructureElement {
     private ObjectStore objectStore;
     private Element currentElement;
+    private boolean stopProcessing;
 
     public ElementContext(ObjectStore objectStore) {
         this.objectStore = objectStore == null ? new ObjectStore() : objectStore;
@@ -52,6 +53,16 @@ public class ElementContext implements InternalStructureElement {
     }
 
     @Override
+    public void stopProcessing() {
+        this.stopProcessing = true;
+    }
+
+    @Override
+    public boolean mustStopProcessing() {
+        return stopProcessing;
+    }
+
+    @Override
     public String getAttributeValue(String attributeName) {
         return null;
     }
@@ -61,11 +72,6 @@ public class ElementContext implements InternalStructureElement {
         return false;
     }
 
-
-    @Override
-    public String getRawElementValue() {
-        return currentElement.getTextValue();
-    }
 
     @Override
     public void clearCache() {

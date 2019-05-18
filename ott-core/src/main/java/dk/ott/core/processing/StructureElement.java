@@ -31,7 +31,9 @@ public interface StructureElement {
 
     boolean hasAttribute(String attributeName);
 
-    String getRawElementValue();
-
     String getText();
+
+    void stopProcessing();
+
+    boolean mustStopProcessing();
 }

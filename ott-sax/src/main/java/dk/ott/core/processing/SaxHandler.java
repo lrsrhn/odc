@@ -49,6 +49,11 @@ public class SaxHandler extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         try {
+            if (saxElement.mustStopProcessing()) {
+                throw new StopProcessingException();
+            }
+            observableTreeTraverser.text(saxElement);
+            textExtractor.clear();
             saxElement.setData(uri, localName, attributes);
             if (observableTreeTraverser.startElement(saxElement, depth++) == EventAction.SKIP_ELEMENT) {
                 saxElementSkippingHandler.resetDepth();
@@ -61,14 +66,24 @@ public class SaxHandler extends DefaultHandler {
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
-        if (observableTreeTraverser.isTextHandlerSet()) {
-            textExtractor.append(ch, start, length);
+        try {
+            if (saxElement.mustStopProcessing()) {
+                throw new StopProcessingException();
+            }
+            if (observableTreeTraverser.isTextHandlerSet()) {
+                textExtractor.append(ch, start, length);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         try {
+            if (saxElement.mustStopProcessing()) {
+                throw new StopProcessingException();
+            }
             saxElement.setData(uri, localName, null);
             observableTreeTraverser.text(saxElement);
             observableTreeTraverser.endElement(saxElement, --depth);

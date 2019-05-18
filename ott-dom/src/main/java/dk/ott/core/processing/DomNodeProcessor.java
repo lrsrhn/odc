@@ -40,7 +40,7 @@ public final class DomNodeProcessor extends BaseElementProcessor<Document, DomEl
         NodeProgressStack nodeProgressStack = new NodeProgressStack(10);
         nodeProgressStack.push(0, document.getDocumentElement());
 
-        for (NodeProgressStack.NodeProgress currentNodeProgress = nodeProgressStack.pop(); currentNodeProgress != null; currentNodeProgress = nodeProgressStack.pop()) {
+        for (NodeProgressStack.NodeProgress currentNodeProgress = nodeProgressStack.pop(); currentNodeProgress != null && !domElement.mustStopProcessing(); currentNodeProgress = nodeProgressStack.pop()) {
             Node currentNode = currentNodeProgress.getNodeElement();
             int nextChildIndex = currentNodeProgress.getNextChildIndex();
             domElement.setNode(currentNode);

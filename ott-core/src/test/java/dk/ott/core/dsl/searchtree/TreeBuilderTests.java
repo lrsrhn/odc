@@ -75,7 +75,6 @@ public abstract class TreeBuilderTests {
         assertElementHandler.verify();
     }
 
-    // Todo: do mixed content test
     @Test
     public void mixedContentTest() throws IOException {
         StringBuilder builder = new StringBuilder();
@@ -91,11 +90,10 @@ public abstract class TreeBuilderTests {
                     .elementEnd()
                 .elementEnd();
 
-        System.out.println(builder.toString());
-
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "two");
         assertElementHandler.exptectedEndElements("three", "two", "two", "one");
+        assertElementHandler.exptectedTexts("This is ", "but still nice");
 
         observableTree.treeBuilder()
                 .element("one").onStart().to(assertElementHandler)
@@ -468,6 +466,7 @@ public abstract class TreeBuilderTests {
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("five");
         assertElementHandler.exptectedEndElements("five");
+        assertElementHandler.exptectedTexts("This is the value");
 
         observableTree.treeBuilder()
                 .element("one")
@@ -590,8 +589,8 @@ public abstract class TreeBuilderTests {
                         .onText().isRaw().to(new OnTextHandler() {
             @Override
             public void onText(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-                Assert.assertEquals(longValue.length(), structureElement.getRawElementValue().length());
-                Assert.assertEquals(longValue, structureElement.getRawElementValue());
+                Assert.assertEquals(longValue.length(), structureElement.getText().length());
+                Assert.assertEquals(longValue, structureElement.getText());
             }
         });
 
@@ -620,10 +619,14 @@ public abstract class TreeBuilderTests {
         private List<String> expectedEndElements;
         private List<String> startElementsActual;
         private List<String> endElementsActual;
+        private List<String> expectedTexts;
+        private List<String> textsActual;
 
         public AssertEventHandler() {
             this.startElementsActual = new ArrayList<String>();
             this.endElementsActual = new ArrayList<String>();
+            this.textsActual = new ArrayList<String>();
+            this.expectedTexts = new ArrayList<String>();
         }
 
         public void exptectedStartElements(String... elements) {
@@ -634,9 +637,14 @@ public abstract class TreeBuilderTests {
             this.expectedEndElements = Arrays.asList(elements);
         }
 
+        public void exptectedTexts(String... texts) {
+            this.expectedTexts = Arrays.asList(texts);
+        }
+
         public void verify() {
             Assert.assertEquals(expectedStartElements, startElementsActual);
             Assert.assertEquals(expectedEndElements, endElementsActual);
+            Assert.assertEquals(expectedTexts, textsActual);
         }
 
         @Override
@@ -652,7 +660,7 @@ public abstract class TreeBuilderTests {
 
         @Override
         public void onText(StructureElement structureElement, ObjectStore objectStore) {
-            System.out.println(structureElement.getText());
+            this.textsActual.add(structureElement.getText());
         }
     }
 }

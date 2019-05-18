@@ -40,7 +40,7 @@ public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamRea
 
     public ObjectStore search(XMLStreamReader2 streamReader, XMLElement xmlElement) throws Exception {
         int currentDepth = 0;
-        while (streamReader.hasNext()) {
+        while (streamReader.hasNext() && !xmlElement.mustStopProcessing()) {
             int eventType = streamReader.next();
             switch (eventType) {
                 case XMLStreamReader.START_ELEMENT:

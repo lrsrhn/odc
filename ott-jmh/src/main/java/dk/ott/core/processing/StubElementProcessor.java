@@ -35,7 +35,7 @@ public class StubElementProcessor extends BaseElementProcessor<InputReader, Elem
     @Override
     public ObjectStore search(InputReader parser, ElementContext structureElement) throws Exception {
         int currentDepth = 0;
-        while(parser.hasNext()) {
+        while(parser.hasNext() && !structureElement.mustStopProcessing()) {
             Element element = parser.next();
             structureElement.setCurrentElement(element);
             if (element.isStartElement()) {
