@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.ott.core.xml.builder;
+package dk.ott.xml;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
@@ -88,7 +88,17 @@ public class XmlPrettyPrinter {
     }
   }
 
+  public void appendIndentation(XmlStreamBuilder xmlStreamBuilder, int depth) throws XMLStreamException {
+    if (depth > 0 && indentations.length > depth) {
+      xmlStreamBuilder.valueNoEscaping(indentations[depth]);
+    }
+  }
+
   public void appendNewline(Appendable appendable) throws IOException {
     appendable.append(newline);
+  }
+
+  public void appendNewline(XmlStreamBuilder xmlStreamBuilder) throws XMLStreamException {
+    xmlStreamBuilder.valueNoEscaping(newline);
   }
 }

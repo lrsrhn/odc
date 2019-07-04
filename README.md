@@ -1,7 +1,6 @@
 # Observable Tree Traverser
 
-Stop processing condition
-Otherwise processing condition
+v Stop processing condition
 ExpressionBuilder overhaul: Better support for relative and readRaw text (builder style like tree dsl)
 Go through and note stuff that needs refactoring
 
