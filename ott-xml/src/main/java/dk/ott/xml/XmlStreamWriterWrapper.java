@@ -9,16 +9,19 @@ import java.io.OutputStream;
 public class XmlStreamWriterWrapper implements XmlStreamBuilder {
     private static final WstxOutputFactory WSTX_OUTPUT_FACTORY = new WstxOutputFactory();
     private XMLStreamWriter2 xmlStreamWriter;
-    private SwappableOutputStream swappableOutputStream;
+    private SwappableByteOutputStream swappableByteOutputStream;
 
     public XmlStreamWriterWrapper(OutputStream outputStream) {
-        this.swappableOutputStream = new SwappableOutputStream(outputStream);
+        this.swappableByteOutputStream = new SwappableByteOutputStream(outputStream);
+        createXMLStreamWriter();
+    }
+
+    private void createXMLStreamWriter() {
         try {
-            xmlStreamWriter = (XMLStreamWriter2) WSTX_OUTPUT_FACTORY.createXMLStreamWriter(swappableOutputStream);
+            xmlStreamWriter = (XMLStreamWriter2) WSTX_OUTPUT_FACTORY.createXMLStreamWriter(swappableByteOutputStream);
         } catch (XMLStreamException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-
     }
 
     @Override
@@ -80,6 +83,6 @@ public class XmlStreamWriterWrapper implements XmlStreamBuilder {
         } catch (XMLStreamException e) {
             // Eat it man!
         }
-        return swappableOutputStream.swapOutputStream(newOutputStream);
+        return swappableByteOutputStream.swapOutputStream(newOutputStream);
     }
 }

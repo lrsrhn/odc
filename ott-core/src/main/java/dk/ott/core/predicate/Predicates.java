@@ -47,6 +47,14 @@ public class Predicates {
     return new NamespacePredicate(namespace);
   }
 
+  public static Predicate noNamespace() {
+    return new NamespacePredicate(null);
+  }
+
+  public static Predicate namespaceEmpty() {
+    return new NamespacePredicate(null);
+  }
+
   public static Predicate alwaysTrue() {
     return TruePredicate.INSTANCE;
   }

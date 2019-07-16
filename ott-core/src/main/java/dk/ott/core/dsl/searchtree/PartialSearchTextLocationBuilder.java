@@ -43,7 +43,7 @@ public class PartialSearchTextLocationBuilder<T> {
         return this;
     }
 
-    public PartialSearchTextLocationBuilder<T> isRaw() {
+    public PartialSearchTextLocationBuilder<T> asRaw() {
         this.searchLocationBuilder.textIsRaw();
         return this;
     }

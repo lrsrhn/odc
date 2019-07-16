@@ -28,6 +28,7 @@ import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.finder.SearchLocation;
 import dk.ott.core.finder.TextLocation;
 import dk.ott.core.predicate.Predicate;
+import jdk.nashorn.internal.objects.NativeString;
 
 public final class ObservableTreeTraverser {
     private ElementFinder currentElementFinder;
@@ -111,7 +112,7 @@ public final class ObservableTreeTraverser {
     }
 
     public void text(final InternalStructureElement structureElement) throws Exception {
-        if (currentOnTextLocation != null) {
+        if (currentOnTextLocation != null && structureElement.getText() != null) {
             Predicate filter = currentOnTextLocation.getTextFilter();
             if (filter == null) {
                 currentOnTextLocation.getOnTextHandler().onText(structureElement, objectStore);

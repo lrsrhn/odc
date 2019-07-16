@@ -24,6 +24,8 @@ package dk.ott.core.processing;
 
 import javax.json.stream.JsonParser;
 
+import static dk.ott.core.processing.TextTrimmer.trimToNull;
+
 public class JsonObject extends BaseStructureElement {
     private JsonParser.Event currentEvent;
     private JsonParser jsonParser;
@@ -50,7 +52,7 @@ public class JsonObject extends BaseStructureElement {
                     break;
                 case VALUE_NUMBER:
                 case VALUE_STRING:
-                    elementTextCache = jsonParser.getString();
+                    elementTextCache = trimToNull(jsonParser.getString());
                     break;
                 default:
                     throw new RuntimeException("Unexpected event on while getText: " + currentEvent.name());

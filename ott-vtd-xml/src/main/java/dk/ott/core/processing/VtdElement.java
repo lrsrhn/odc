@@ -26,6 +26,8 @@ import com.ximpleware.AutoPilot;
 import com.ximpleware.NavException;
 import com.ximpleware.VTDNav;
 
+import static dk.ott.core.processing.TextTrimmer.trimToNull;
+
 public class VtdElement extends BaseStructureElement {
   private VTDNav vtdNav;
   private AutoPilot autoPilot;
@@ -66,7 +68,7 @@ public class VtdElement extends BaseStructureElement {
       if (vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_STARTING_TAG) {
         for (int index = tokenIndex + 1; index < vtdNav.getTokenCount() && vtdNav.getTokenType(index) == VTDNav.TOKEN_ATTR_NAME; index++) {
           if (attributeName.equals(vtdNav.toNormalizedString(index)) && vtdNav.getTokenType(++index) == VTDNav.TOKEN_ATTR_VAL) {
-            return vtdNav.toNormalizedString(index);
+            return trimToNull(vtdNav.toNormalizedString(index));
           }
         }
       }
@@ -94,7 +96,7 @@ public class VtdElement extends BaseStructureElement {
   public String getText() {
     try {
       if (elementTextCache == null && vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_CHARACTER_DATA) {
-        elementTextCache = vtdNav.toNormalizedString2(tokenIndex);
+        elementTextCache = trimToNull(vtdNav.toNormalizedString2(tokenIndex));
       }
       return elementTextCache;
     } catch (NavException e) {
@@ -106,7 +108,7 @@ public class VtdElement extends BaseStructureElement {
     try {
       if (elementNamespaceCache == null && vtdNav.getTokenType(tokenIndex) == VTDNav.TOKEN_STARTING_TAG) {
         vtdNav.recoverNode(tokenIndex);
-        elementNamespaceCache = autoPilot.evalXPathToString();
+        elementNamespaceCache = trimToNull(autoPilot.evalXPathToString());
       }
       return elementNamespaceCache;
     } catch (Exception e) {

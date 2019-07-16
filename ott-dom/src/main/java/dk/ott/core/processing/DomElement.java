@@ -25,17 +25,26 @@ package dk.ott.core.processing;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import static dk.ott.core.processing.TextTrimmer.trimToNull;
+
 public class DomElement implements InternalStructureElement {
   private Node node;
-  private Node nodeText;
   private boolean stopProcessing;
+  private String elementTextCache;
+  protected String elementNamespaceCache;
 
   void setNode(Node node) {
     this.node = node;
   }
 
   void setNodeText(Node nodeText) {
-    this.nodeText = nodeText;
+    if (elementTextCache == null) {
+      if (nodeText == null) {
+        elementTextCache = null;
+        return;
+      }
+      this.elementTextCache = trimToNull(nodeText.getTextContent());
+    }
   }
 
   public String getElementName() {
@@ -51,7 +60,7 @@ public class DomElement implements InternalStructureElement {
     if (node == null) {
       return null;
     }
-    return node.getNodeValue();
+    return trimToNull(node.getNodeValue());
   }
 
   public boolean hasAttribute(String attributeName) {
@@ -60,7 +69,7 @@ public class DomElement implements InternalStructureElement {
   }
 
   public String getText() {
-    return nodeText == null  ? null : nodeText.getTextContent();
+    return elementTextCache;
   }
 
   @Override
@@ -75,12 +84,15 @@ public class DomElement implements InternalStructureElement {
 
   @Override
   public void clearCache() {
-    nodeText = null;
-    // Do nothing
+    elementTextCache = null;
+    elementNamespaceCache = null;
   }
 
   public String getElementNS() {
-    String elementNS = node.getNamespaceURI();
-    return elementNS == null ? "" : elementNS;
+    if (elementNamespaceCache == null) {
+      elementNamespaceCache = trimToNull(node.getNamespaceURI());
+      return elementNamespaceCache;
+    }
+    return elementNamespaceCache;
   }
 }

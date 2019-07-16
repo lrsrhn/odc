@@ -22,20 +22,17 @@
  */
 package dk.ott.core.dsl.expression;
 
+import dk.ott.core.dsl.AssertEventHandler;
 import dk.ott.core.dsl.ObservableTreeFragment;
-import dk.ott.core.event.EventHandler;
 import dk.ott.core.predicate.Predicates;
-import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
-import dk.ott.core.processing.StructureElement;
 import dk.ott.core.xml.builder.XmlStreamBuilder;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.io.StringReader;
-import java.util.*;
+
+import static dk.ott.xml.XmlStreamBuilderFactory.createXmlStreamBuilderToString;
 
 public abstract class ExpressionXmlTests {
     protected ObservableTree observableTree;
@@ -44,15 +41,15 @@ public abstract class ExpressionXmlTests {
     public abstract void setObservablePathFinder();
 
     @Test
-    public void singleElementFinderForAll() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void singleElementFinderForAll() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
             .element("one")
                 .element("two")
                     .element("three")
                     .elementEnd()
                 .elementEnd()
-            .elementEnd();
+            .elementEnd()
+        .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three");
@@ -63,24 +60,24 @@ public abstract class ExpressionXmlTests {
         observableTree.addXpath("/one/two/three").handle(assertElementHandler);
         observableTree.dereferenceSearchTree();
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void textTest() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void textTest() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("two")
                         .element("three")
                             .value("Something darkside")
                         .elementEnd()
                     .elementEnd()
-                .elementEnd();
+                .elementEnd()
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
-        assertElementHandler.expectedValue("three", "Something darkside");
+        assertElementHandler.exptectedTexts("Something darkside");
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
@@ -88,20 +85,20 @@ public abstract class ExpressionXmlTests {
         observableTree.addXpath("/one/two").handle(assertElementHandler);
         observableTree.addXpath("/one/two/three").handle(assertElementHandler);
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void multipleRoot() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void multipleRoot() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("four")
                         .element("five")
                         .elementEnd()
                     .elementEnd()
-                .elementEnd();
+                .elementEnd()
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("five");
@@ -110,14 +107,13 @@ public abstract class ExpressionXmlTests {
         observableTree.addXpath("/one/four/five").handle(assertElementHandler);
         observableTree.addXpath("/two/four/five").handle(assertElementHandler);
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void singleElementFinderIgnoreSomeElements() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void singleElementFinderIgnoreSomeElements() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
             .element("one")
                 .element("faketwo")
                 .elementEnd()
@@ -129,7 +125,8 @@ public abstract class ExpressionXmlTests {
                         .elementEnd()
                     .elementEnd()
                 .elementEnd()
-            .elementEnd();
+            .elementEnd()
+        .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three");
@@ -139,14 +136,13 @@ public abstract class ExpressionXmlTests {
         observableTree.addXpath("/one/two").handle(assertElementHandler);
         observableTree.addXpath("/one/two/three").handle(assertElementHandler);
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void multipleElementFinderForAll() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void multipleElementFinderForAll() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
             .element("one")
                 .element("two")
                     .element("three")
@@ -154,8 +150,8 @@ public abstract class ExpressionXmlTests {
                     .element("four")
                     .elementEnd()
                 .elementEnd()
-            .elementEnd();
-
+            .elementEnd()
+        .toString();
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
@@ -165,14 +161,13 @@ public abstract class ExpressionXmlTests {
         observableTree.addXpath("/one/two/three").handle(assertElementHandler);
         observableTree.addXpath("/one/two/four").handle(assertElementHandler);
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void multipleElementFinderIgnoreSomeElements() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void multipleElementFinderIgnoreSomeElements() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
             .element("one")
                 .element("faketwo")
                 .elementEnd()
@@ -188,7 +183,8 @@ public abstract class ExpressionXmlTests {
                 .elementEnd()
                 .element("six")
                 .elementEnd()
-            .elementEnd();
+            .elementEnd()
+        .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
@@ -199,20 +195,20 @@ public abstract class ExpressionXmlTests {
         observableTree.addXpath("/one/two/three").handle(assertElementHandler);
         observableTree.addXpath("/one/two/four").handle(assertElementHandler);
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void singleElementFinderForAllWithFilter() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void singleElementFinderForAllWithFilter() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
             .element("one")
                 .element("two")
                     .element("three")
                     .elementEnd()
                 .elementEnd()
-            .elementEnd();
+            .elementEnd()
+        .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three");
@@ -222,14 +218,13 @@ public abstract class ExpressionXmlTests {
         observableTree.addXpath("/one/two").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
         observableTree.addXpath("/one/two/three").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void multipleElementFinderForAllWithPredicate() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void multipleElementFinderForAllWithPredicate() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
             .element("one")
                 .element("two")
                     .element("three").attribute("att", "one")
@@ -237,7 +232,8 @@ public abstract class ExpressionXmlTests {
                     .element("four")
                     .elementEnd()
                 .elementEnd()
-            .elementEnd();
+            .elementEnd()
+        .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
@@ -248,14 +244,13 @@ public abstract class ExpressionXmlTests {
         observableTree.addXpath("/one/two/three").predicate(Predicates.attribute("att", "one")).handle(assertElementHandler);
         observableTree.addXpath("/one/two/four").handle(assertElementHandler);
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void multiplePredicate() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void multiplePredicate() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
             .element("one")
                 .element("two").attribute("att", "bla")
                     .element("three")
@@ -265,7 +260,8 @@ public abstract class ExpressionXmlTests {
                     .element("five")
                     .elementEnd()
                 .elementEnd()
-            .elementEnd();
+            .elementEnd()
+        .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "two", "five");
@@ -276,14 +272,13 @@ public abstract class ExpressionXmlTests {
         observableTree.addXpath("/one/two").predicate(Predicates.attribute("att", "bla")).elementsAbsolute("three").handle(assertElementHandler);
         observableTree.addXpath("/one/two").predicate(Predicates.attribute("att", "wee")).elementsAbsolute("five").handle(assertElementHandler);
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void singlePredicateNoMatch() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void singlePredicateNoMatch() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
             .element("one")
                 .element("two").attribute("att", "bla")
                     .element("three")
@@ -293,7 +288,8 @@ public abstract class ExpressionXmlTests {
                     .element("five")
                     .elementEnd()
                 .elementEnd()
-            .elementEnd();
+            .elementEnd()
+        .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "two", "five");
@@ -304,14 +300,13 @@ public abstract class ExpressionXmlTests {
         observableTree.addXpath("/one/two").predicate(Predicates.attribute("att", "bla")).elementsAbsolute("three").handle(assertElementHandler);
         observableTree.addXpath("/one/two").predicate(Predicates.attribute("att", "wee")).elementsAbsolute("five").handle(assertElementHandler);
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void testRecursion() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void testRecursion() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
             .element("one")
                 .element("two").attribute("att", "bla")
                     .element("three")
@@ -327,7 +322,8 @@ public abstract class ExpressionXmlTests {
                     .element("five")
                     .elementEnd()
                 .elementEnd()
-            .elementEnd();
+            .elementEnd()
+        .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "one", "two", "three", "two", "five");
@@ -339,7 +335,7 @@ public abstract class ExpressionXmlTests {
         observableTree.addXpath("/one/two").elementsAbsolute("five").handle(assertElementHandler);
         observableTree.addXpath("/one/two").recursion(recursion);
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
@@ -347,52 +343,52 @@ public abstract class ExpressionXmlTests {
         return new XmlStreamBuilder(builder);
     }
 
-    private static class AssertEventHandler implements EventHandler {
-        private List<String> expectedStartElements;
-        private List<String> expectedEndElements;
-        private List<String> startElementsActual;
-        private List<String> endElementsActual;
-        private Map<String, String> elementsToRead;
-
-        public AssertEventHandler() {
-            this.startElementsActual = new ArrayList<String>();
-            this.endElementsActual = new ArrayList<String>();
-            this.elementsToRead = new HashMap<String, String>();
-        }
-
-        public void exptectedStartElements(String...elements) {
-            this.expectedStartElements = Arrays.asList(elements);
-        }
-
-        public void exptectedEndElements(String...elements) {
-            this.expectedEndElements = Arrays.asList(elements);
-        }
-
-        public void verify() {
-            Assert.assertEquals(expectedStartElements, startElementsActual);
-            Assert.assertEquals(expectedEndElements, endElementsActual);
-        }
-
-        @Override
-        public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-            startElementsActual.add(structureElement.getElementName());
-        }
-
-        @Override
-        public void onEnd(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-            endElementsActual.add(structureElement.getElementName());
-        }
-
-        public void expectedValue(String key, String value) {
-            elementsToRead.put(key, value);
-        }
-
-        @Override
-        public void onText(StructureElement structureElement, ObjectStore objectStore) {
-            String expectedValue = elementsToRead.get(structureElement.getElementName());
-            if (expectedValue != null) {
-                Assert.assertEquals(expectedValue, structureElement.getText());
-            }
-        }
-    }
+//    private static class AssertEventHandler implements EventHandler {
+//        private List<String> expectedStartElements;
+//        private List<String> expectedEndElements;
+//        private List<String> startElementsActual;
+//        private List<String> endElementsActual;
+//        private Map<String, String> elementsToRead;
+//
+//        public AssertEventHandler() {
+//            this.startElementsActual = new ArrayList<String>();
+//            this.endElementsActual = new ArrayList<String>();
+//            this.elementsToRead = new HashMap<String, String>();
+//        }
+//
+//        public void exptectedStartElements(String...elements) {
+//            this.expectedStartElements = Arrays.asList(elements);
+//        }
+//
+//        public void exptectedEndElements(String...elements) {
+//            this.expectedEndElements = Arrays.asList(elements);
+//        }
+//
+//        public void verify() {
+//            Assert.assertEquals(expectedStartElements, startElementsActual);
+//            Assert.assertEquals(expectedEndElements, endElementsActual);
+//        }
+//
+//        @Override
+//        public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+//            startElementsActual.add(structureElement.getElementName());
+//        }
+//
+//        @Override
+//        public void onEnd(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+//            endElementsActual.add(structureElement.getElementName());
+//        }
+//
+//        public void expectedValue(String key, String value) {
+//            elementsToRead.put(key, value);
+//        }
+//
+//        @Override
+//        public void onText(StructureElement structureElement, ObjectStore objectStore) {
+//            String expectedValue = elementsToRead.get(structureElement.getElementName());
+//            if (expectedValue != null) {
+//                Assert.assertEquals(expectedValue, structureElement.getText());
+//            }
+//        }
+//    }
 }

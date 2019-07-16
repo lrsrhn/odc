@@ -27,6 +27,8 @@ import org.codehaus.stax2.XMLStreamReader2;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
+import static dk.ott.core.processing.TextTrimmer.trimToNull;
+
 public class XMLElement extends BaseStructureElement {
   private XMLStreamReader2 xmlStreamReader;
   private int eventType;
@@ -48,7 +50,7 @@ public class XMLElement extends BaseStructureElement {
 
   public String getAttributeValue(String attributeName) {
     if (eventType == XMLStreamReader.START_ELEMENT) {
-      return xmlStreamReader.getAttributeValue(null, attributeName);
+      return trimToNull(xmlStreamReader.getAttributeValue(null, attributeName));
     }
     return null;
   }
@@ -70,7 +72,7 @@ public class XMLElement extends BaseStructureElement {
     }
     if (eventType == XMLStreamConstants.CHARACTERS || eventType == XMLStreamConstants.CDATA) {
       try {
-        elementTextCache = xmlStreamReader.getText();
+        elementTextCache = trimToNull(xmlStreamReader.getText());
       } catch (IllegalStateException e) {
         // Element has children and does not have a value/text
       }
@@ -84,7 +86,7 @@ public class XMLElement extends BaseStructureElement {
 
   public String getElementNS() {
     if (elementNamespaceCache == null) {
-      elementNamespaceCache = xmlStreamReader.getNamespaceURI();
+      elementNamespaceCache = trimToNull(xmlStreamReader.getNamespaceURI());
     }
     return elementNamespaceCache;
   }

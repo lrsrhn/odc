@@ -22,7 +22,7 @@
  */
 package dk.ott.core.dsl.searchtree;
 
-import dk.ott.core.event.EventHandler;
+import dk.ott.core.dsl.AssertEventHandler;
 import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
@@ -34,11 +34,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+import static dk.ott.xml.XmlStreamBuilderFactory.createXmlStreamBuilderToString;
 
 public abstract class TreeBuilderTests {
     protected ObservableTree observableTree;
@@ -48,15 +46,15 @@ public abstract class TreeBuilderTests {
 
     // @formatter:off
     @Test
-    public void singleElementFinderForAll() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void singleElementFinderForAll() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("two")
                         .element("three")
                         .elementEnd()
                     .elementEnd()
-                .elementEnd();
+                .elementEnd()
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three");
@@ -71,29 +69,27 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void mixedContentTest() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void mixedContentTest() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("two")
-                        .valueNoEscaping("This is <p>pure</p> evil<break/>")
-                        .element("three")
-                        .elementEnd()
+                        .valueNoEscaping("This is <p>pure</p> evil<break/><three></three>")
                     .elementEnd()
                     .element("two")
                         .value("but still nice")
                     .elementEnd()
-                .elementEnd();
+                .elementEnd()
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "two");
         assertElementHandler.exptectedEndElements("three", "two", "two", "one");
-        assertElementHandler.exptectedTexts("This is ", "but still nice");
+        assertElementHandler.exptectedTexts("This is", "but still nice");
 
         observableTree.treeBuilder()
                 .element("one").onStart().to(assertElementHandler)
@@ -105,14 +101,13 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void singleElementFinderIgnoreSomeElements() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void singleElementFinderIgnoreSomeElements() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("faketwo")
                     .elementEnd()
@@ -124,7 +119,8 @@ public abstract class TreeBuilderTests {
                             .elementEnd()
                         .elementEnd()
                     .elementEnd()
-                .elementEnd();
+                .elementEnd()
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three");
@@ -139,14 +135,13 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void multipleElementFinderForAll() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void multipleElementFinderForAll() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("two")
                         .element("three")
@@ -154,7 +149,8 @@ public abstract class TreeBuilderTests {
                         .element("four")
                         .elementEnd()
                     .elementEnd()
-                .elementEnd();
+                .elementEnd()
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
@@ -171,14 +167,13 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void multipleElementFinderIgnoreSomeElements() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void multipleElementFinderIgnoreSomeElements() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("faketwo")
                     .elementEnd()
@@ -194,7 +189,8 @@ public abstract class TreeBuilderTests {
                     .elementEnd()
                     .element("six")
                     .elementEnd()
-                .elementEnd();
+                .elementEnd()
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
@@ -211,20 +207,20 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void singleElementFinderForAllWithFilter() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void singleElementFinderForAllWithFilter() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("two")
                         .element("three")
                         .elementEnd()
                     .elementEnd()
-                .elementEnd();
+                .elementEnd()
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three");
@@ -239,14 +235,13 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void multipleElementFinderForAllWithPredicate() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void multipleElementFinderForAllWithPredicate() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("two")
                         .element("three").attribute("att", "one")
@@ -254,7 +249,8 @@ public abstract class TreeBuilderTests {
                         .element("four")
                         .elementEnd()
                     .elementEnd()
-                .elementEnd();
+                .elementEnd()
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
@@ -274,14 +270,13 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void multiplePredicate() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void multiplePredicate() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("two").attribute("att", "bla")
                         .element("three")
@@ -291,7 +286,8 @@ public abstract class TreeBuilderTests {
                         .element("five")
                         .elementEnd()
                     .elementEnd()
-                .elementEnd();
+                .elementEnd()
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "two", "five");
@@ -314,14 +310,13 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void singlePredicateNoMatch() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void singlePredicateNoMatch() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("two").attribute("att", "bla")
                         .element("three")
@@ -331,7 +326,8 @@ public abstract class TreeBuilderTests {
                         .element("five")
                         .elementEnd()
                     .elementEnd()
-                .elementEnd();
+                .elementEnd()
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "two", "five");
@@ -354,15 +350,14 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
 
     @Test
-    public void multipleRelative() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void multipleRelative() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("two")
                         .element("three")
@@ -372,7 +367,8 @@ public abstract class TreeBuilderTests {
                         .element("five")
                         .elementEnd()
                     .elementEnd()
-                .elementEnd();
+                .elementEnd()
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("three", "five");
@@ -389,20 +385,20 @@ public abstract class TreeBuilderTests {
                 .end()
                 .build();
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void singleRelative() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void singleRelative() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("four")
                         .element("five")
                         .elementEnd()
                     .elementEnd()
-                .elementEnd();
+                .elementEnd()
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("five");
@@ -415,20 +411,20 @@ public abstract class TreeBuilderTests {
                 .end()
                 .build();
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void multipleRoot() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void multipleRoot() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("four")
                         .element("five")
                         .elementEnd()
                     .elementEnd()
-                .elementEnd();
+                .elementEnd()
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("five");
@@ -443,25 +439,24 @@ public abstract class TreeBuilderTests {
                 .end()
                 .build();
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void onText() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void onText() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("four")
                         .element("five")
                             .value("This is the value")
                         .elementEnd()
                     .elementEnd()
-                    .element("two")
-                    .elementShortEnd()
+                    .elementShort("two")
                     .element("three")
                     .elementEnd()
-                .elementEnd();
+                .elementEnd()
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("five");
@@ -482,14 +477,13 @@ public abstract class TreeBuilderTests {
                 .end()
                 .build();
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void testRecursion() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void testRecursion() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("two").attribute("att", "bla")
                         .element("three")
@@ -505,7 +499,8 @@ public abstract class TreeBuilderTests {
                         .element("five")
                         .elementEnd()
                     .elementEnd()
-                .elementEnd();
+                .elementEnd()
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
         assertElementHandler.exptectedStartElements("one", "two", "three", "one", "two", "three", "two", "five");
@@ -527,24 +522,24 @@ public abstract class TreeBuilderTests {
                 .end(assertElementHandler)
             .build();
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
     @Test
-    public void allFinder() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        withXmlBuilder(builder)
+    public void allFinder() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
                 .element("one")
                     .element("two").attribute("att", "bla")
                         .element("three")
                         .elementEnd()
                     .elementEnd()
-                .element("two").attribute("att", "wee")
-                    .element("five")
+                    .element("two").attribute("att", "wee")
+                        .element("five")
+                        .elementEnd()
                     .elementEnd()
                 .elementEnd()
-            .elementEnd();
+            .toString();
 
         AssertEventHandler assertElementHandler = new AssertEventHandler();
 
@@ -561,7 +556,7 @@ public abstract class TreeBuilderTests {
                 .end()
                 .build();
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
     }
 
@@ -570,7 +565,7 @@ public abstract class TreeBuilderTests {
      * Please prettify this test.
      */
     @Test
-    public void testRaw() throws IOException {
+    public void testRaw() throws Exception {
         StringBuilder builder = new StringBuilder();
         XmlStreamBuilder xmlBuilder = withXmlBuilder(builder)
                 .element("one");
@@ -579,14 +574,15 @@ public abstract class TreeBuilderTests {
         for (int i = 0; i < 10000; i++) {
             xmlBuilder.element("two")
                     .valueNoEscaping(longValue)
-                    .elementEnd();
+                    .elementEnd()
+            .toString();
         }
         xmlBuilder.elementEnd();
 
         observableTree.treeBuilder()
                 .element("one")
                     .element("two")
-                        .onText().isRaw().to(new OnTextHandler() {
+                        .onText().asRaw().to(new OnTextHandler() {
             @Override
             public void onText(StructureElement structureElement, ObjectStore objectStore) throws Exception {
                 Assert.assertEquals(longValue.length(), structureElement.getText().length());
@@ -614,53 +610,4 @@ public abstract class TreeBuilderTests {
         return new XmlStreamBuilder(builder, new XmlPrettyPrinter());
     }
 
-    private static class AssertEventHandler implements EventHandler {
-        private List<String> expectedStartElements;
-        private List<String> expectedEndElements;
-        private List<String> startElementsActual;
-        private List<String> endElementsActual;
-        private List<String> expectedTexts;
-        private List<String> textsActual;
-
-        public AssertEventHandler() {
-            this.startElementsActual = new ArrayList<String>();
-            this.endElementsActual = new ArrayList<String>();
-            this.textsActual = new ArrayList<String>();
-            this.expectedTexts = new ArrayList<String>();
-        }
-
-        public void exptectedStartElements(String... elements) {
-            this.expectedStartElements = Arrays.asList(elements);
-        }
-
-        public void exptectedEndElements(String... elements) {
-            this.expectedEndElements = Arrays.asList(elements);
-        }
-
-        public void exptectedTexts(String... texts) {
-            this.expectedTexts = Arrays.asList(texts);
-        }
-
-        public void verify() {
-            Assert.assertEquals(expectedStartElements, startElementsActual);
-            Assert.assertEquals(expectedEndElements, endElementsActual);
-            Assert.assertEquals(expectedTexts, textsActual);
-        }
-
-        @Override
-        public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-            startElementsActual.add(structureElement.getElementName());
-        }
-
-        @Override
-        public void onEnd(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-            endElementsActual.add(structureElement.getElementName());
-        }
-
-
-        @Override
-        public void onText(StructureElement structureElement, ObjectStore objectStore) {
-            this.textsActual.add(structureElement.getText());
-        }
-    }
 }

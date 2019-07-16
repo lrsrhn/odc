@@ -29,13 +29,18 @@ public class NamespacePredicate implements Predicate {
     private String expectedNamespace;
 
     public NamespacePredicate(String expectedNamespace) {
-        if (expectedNamespace != null) {
-            this.expectedNamespace = expectedNamespace.intern();
+        if (expectedNamespace == null) {
+            this.expectedNamespace = expectedNamespace;
+            return;
         }
+        this.expectedNamespace = expectedNamespace.intern();
     }
 
     @Override
     public boolean evaluate(StructureElement structureElement, ObjectStore objectStore) {
+        if (expectedNamespace == null) {
+            return structureElement.getElementNS() == null;
+        }
         return expectedNamespace.equals(structureElement.getElementNS());
     }
 

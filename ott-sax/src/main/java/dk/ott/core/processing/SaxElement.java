@@ -25,6 +25,8 @@ package dk.ott.core.processing;
 import dk.ott.xml.TextExtractor;
 import org.xml.sax.Attributes;
 
+import static dk.ott.core.processing.TextTrimmer.trimToNull;
+
 public class SaxElement extends BaseStructureElement {
   private Attributes attributes;
   private TextExtractor textExtractor;
@@ -38,7 +40,7 @@ public class SaxElement extends BaseStructureElement {
   }
 
   public String getAttributeValue(String attributeName) {
-    return attributeName == null ? null : attributes.getValue("", attributeName);
+    return attributeName == null ? null : trimToNull(attributes.getValue("", attributeName));
   }
 
   public boolean hasAttribute(String attributeName) {
@@ -49,7 +51,7 @@ public class SaxElement extends BaseStructureElement {
     if (elementTextCache != null) {
       return elementTextCache;
     }
-    elementTextCache = textExtractor.extract();
+    elementTextCache = trimToNull(textExtractor.extract());
     return elementTextCache;
   }
 
@@ -64,7 +66,7 @@ public class SaxElement extends BaseStructureElement {
 
   void setData(String namespace, String elementName, Attributes attributes) {
     this.elementNamespaceCache = namespace;
-    this.elementNameCache = elementName;
+    this.elementNameCache = trimToNull(elementName);
     this.attributes = attributes;
   }
 }

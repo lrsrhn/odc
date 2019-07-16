@@ -31,6 +31,13 @@
 
 		<dependency>
 			<groupId>dk.ott</groupId>
+			<artifactId>ott-xml</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>dk.ott</groupId>
 			<artifactId>ott-core</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<type>test-jar</type>

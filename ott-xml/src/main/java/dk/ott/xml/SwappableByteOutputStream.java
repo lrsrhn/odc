@@ -3,11 +3,11 @@ package dk.ott.xml;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class SwappableOutputStream extends OutputStream {
+public class SwappableByteOutputStream extends OutputStream {
 
     private OutputStream outputStream;
 
-    public SwappableOutputStream(OutputStream outputStream) {
+    public SwappableByteOutputStream(OutputStream outputStream) {
         this.outputStream = outputStream;
     }
 

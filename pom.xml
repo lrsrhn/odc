@@ -16,8 +16,8 @@
     </properties>
 
     <modules>
-        <module>ott-core</module>
         <module>ott-xml</module>
+        <module>ott-core</module>
         <module>ott-dom</module>
         <module>ott-sax</module>
         <module>ott-stax</module>

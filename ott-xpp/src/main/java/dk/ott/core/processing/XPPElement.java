@@ -25,6 +25,8 @@ package dk.ott.core.processing;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import static dk.ott.core.processing.TextTrimmer.trimToNull;
+
 public class XPPElement extends BaseStructureElement {
   private XmlPullParser xmlPullParser;
   private int eventType;
@@ -48,7 +50,7 @@ public class XPPElement extends BaseStructureElement {
 
   public String getAttributeValue(String attributeName) {
     if (eventType == XmlPullParser.START_TAG) {
-      return xmlPullParser.getAttributeValue(null, attributeName);
+      return trimToNull(xmlPullParser.getAttributeValue(null, attributeName));
     }
     return null;
   }
@@ -70,7 +72,7 @@ public class XPPElement extends BaseStructureElement {
     }
     try {
       if (eventType == XmlPullParser.TEXT) {
-        elementTextCache = xmlPullParser.getText();
+        elementTextCache = trimToNull(xmlPullParser.getText());
       }
       return elementTextCache;
     } catch (Exception e) {
@@ -80,7 +82,10 @@ public class XPPElement extends BaseStructureElement {
   }
 
   public String getElementNS() {
-      return xmlPullParser.getNamespace();
+    if (elementNamespaceCache == null) {
+      elementNamespaceCache = trimToNull(xmlPullParser.getNamespace());
+    }
+    return elementNamespaceCache;
   }
 
   void setText(String text) {

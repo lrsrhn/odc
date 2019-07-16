@@ -59,8 +59,10 @@ public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XPPEle
                   }
                   continue;
               case XmlPullParser.TEXT:
-                  xppElement.setEventType(eventType);
-                  observableTreeTraverser.text(xppElement);
+                  if (!streamReader.isWhitespace()) {
+                      xppElement.setEventType(eventType);
+                      observableTreeTraverser.text(xppElement);
+                  }
                   continue;
               case XmlPullParser.END_TAG:
                   xppElement.setEventType(eventType);

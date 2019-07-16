@@ -22,7 +22,6 @@
  */
 package dk.ott.core.dsl;
 
-import dk.ott.core.event.OnStartHandler;
 import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
@@ -49,17 +48,17 @@ public abstract class Example {
         observableTree.treeBuilder()
                 .element("bookstore")
                     .element("book")
-                        .predicate(Predicates.namespace(""))
+                        .predicate(Predicates.noNamespace())
                             .element("author")
                                 .element("first-name")
                                     .onText().to(new MyOnStartHandler("Author" ))
                                 .end()
                                 .element("publication")
-                                    .onText().isRaw().to(new MyOnStartHandler("Publication" ))
+                                    .onText().asRaw().to(new MyOnStartHandler("Publication" ))
                                 .end()
                             .end()
                             .relativeElement("p")
-                                .onText().isRaw().to(new MyOnStartHandler("Paragraph" ))
+                                .onText().asRaw().to(new MyOnStartHandler("Paragraph" ))
                             .end()
                         .end()
                         .predicate(Predicates.namespace("uri:mynamespace"))
@@ -84,9 +83,9 @@ public abstract class Example {
 
     @Test
     public void exampleExpression() {
-        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("")).path("/author/first-name").onText(new MyOnStartHandler("Author" ));
-        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("")).path("/author/publication").onText(new MyOnStartHandler("Publication" ));
-        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("")).path("//p").onText(new MyOnStartHandler("Paragraph" ));
+        observableTree.addXpath("/bookstore/book").predicate(Predicates.noNamespace()).path("/author/first-name").onText(new MyOnStartHandler("Author" ));
+        observableTree.addXpath("/bookstore/book").predicate(Predicates.noNamespace()).path("/author/publication").onText(new MyOnStartHandler("Publication" ));
+        observableTree.addXpath("/bookstore/book").predicate(Predicates.noNamespace()).path("//p").onText(new MyOnStartHandler("Paragraph" ));
         observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("uri:mynamespace")).path("/author").onText(new MyOnStartHandler("My author" ));
         observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("uri:mynamespace")).path("/title").onText(new MyOnStartHandler("My title" ));
         observableTree.addXpath("/bookstore/magazine/price").onText(new MyOnStartHandler("Magazine price" ));

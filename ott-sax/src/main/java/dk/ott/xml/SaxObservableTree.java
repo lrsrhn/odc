@@ -34,8 +34,8 @@ public class SaxObservableTree extends ObservableTree {
   private static final SAXParserFactory DEFAULT_XML_INPUT_FACTORY = createDefaultFactory();
 
   static SAXParserFactory createDefaultFactory() {
-    SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-    return saxParserFactory;
+      SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+      return saxParserFactory;
   }
 
   private SAXParserFactory saxParserFactory;
