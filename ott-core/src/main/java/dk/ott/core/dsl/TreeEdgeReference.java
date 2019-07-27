@@ -23,35 +23,29 @@
 package dk.ott.core.dsl;
 
 import dk.ott.core.finder.ElementFinder;
-import dk.ott.core.finder.SearchLocation;
-import dk.ott.core.finder.SearchLocationBuilder;
+import dk.ott.core.predicate.Predicate;
 
 public class TreeEdgeReference {
-//  private String lastSearchElement;
-//  private Predicate lastPredicate;
+  private String lastSearchElement;
+  private Predicate lastPredicate;
   private ElementFinder elementFinderReference;
-  private SearchLocation searchLocation;
-//  private boolean isRelative;
+  private boolean isRelative;
 
-//  public TreeEdgeReference(ElementFinder elementFinder, String lastSearchElement, boolean isRelative) {
-//    this.elementFinderReference = elementFinder.getReference();
-//    this.lastSearchElement = lastSearchElement;
-//    this.isRelative = isRelative;
-//  }
-//
-//  public TreeEdgeReference(ElementFinder elementFinder, Predicate lastPredicate, boolean isRelative) {
-//    this.elementFinderReference = elementFinder.getReference();
-//    this.lastPredicate = lastPredicate;
-//    this.isRelative = isRelative;
-//  }
-
-  public TreeEdgeReference(ElementFinder elementFinder) {
+  public TreeEdgeReference(ElementFinder elementFinder, String lastSearchElement, boolean isRelative) {
     this.elementFinderReference = elementFinder.getReference();
+    this.lastSearchElement = lastSearchElement;
+    this.isRelative = isRelative;
   }
 
-  public TreeEdgeReference(ElementFinder elementFinder, SearchLocation searchLocation) {
-    this.elementFinderReference = elementFinder;
-    this.searchLocation = searchLocation;
+  public TreeEdgeReference(ElementFinder elementFinder, Predicate lastPredicate, boolean isRelative) {
+    this.elementFinderReference = elementFinder.getReference();
+    this.lastPredicate = lastPredicate;
+    this.isRelative = isRelative;
+  }
+
+  public TreeEdgeReference(ElementFinder elementFinder, boolean isRelative) {
+    this.elementFinderReference = elementFinder.getReference();
+    this.isRelative = isRelative;
   }
 
   public ElementFinder getElementFinder() {
@@ -62,49 +56,17 @@ public class TreeEdgeReference {
     this.elementFinderReference = reference.getReference();
   }
 
-  public ElementFinder getElementFinderReference() {
-    return elementFinderReference;
+  public String getLastSearchElement() {
+    return lastSearchElement;
   }
 
-  public void setElementFinderReference(ElementFinder elementFinderReference) {
-    this.elementFinderReference = elementFinderReference;
+  public Predicate getLastPredicate() {
+    return lastPredicate;
   }
 
-  public SearchLocation getSearchLocation() {
-    return searchLocation;
+  public boolean isRelative() {
+    return isRelative;
   }
-
-  public SearchLocationBuilder getSearchLocationBuilder() {
-    return new SearchLocationBuilder(searchLocation);
-  }
-
-  public void setSearchLocation(SearchLocation searchLocation) {
-    this.searchLocation = searchLocation;
-  }
-
-  //  public String getLastSearchElement() {
-//    return lastSearchElement;
-//  }
-//
-//  public void setLastSearchElement(String lastSearchElement) {
-//    this.lastSearchElement = lastSearchElement;
-//  }
-//
-//  public Predicate getLastPredicate() {
-//    return lastPredicate;
-//  }
-//
-//  public void setLastPredicate(Predicate lastPredicate) {
-//    this.lastPredicate = lastPredicate;
-//  }
-//
-//  public boolean isRelative() {
-//    return isRelative;
-//  }
-//
-//  public void setRelative(boolean relative) {
-//    isRelative = relative;
-//  }
 
   public void dereferenceElementFinder() {
     elementFinderReference = elementFinderReference.getDereference();

@@ -28,8 +28,7 @@ import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
 import dk.ott.core.processing.StructureElement;
-import dk.ott.core.xml.builder.XmlPrettyPrinter;
-import dk.ott.core.xml.builder.XmlStreamBuilder;
+import dk.ott.xml.XmlStreamBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -566,22 +565,19 @@ public abstract class TreeBuilderTests {
      */
     @Test
     public void testRaw() throws Exception {
-        StringBuilder builder = new StringBuilder();
-        XmlStreamBuilder xmlBuilder = withXmlBuilder(builder)
-                .element("one");
+        XmlStreamBuilder xmlBuilder = createXmlStreamBuilderToString(true);
+        xmlBuilder.element("one");
         final String longValue = veryLongValue();
 
         for (int i = 0; i < 10000; i++) {
             xmlBuilder.element("two")
                     .valueNoEscaping(longValue)
-                    .elementEnd()
-            .toString();
+                .elementEnd();
         }
         xmlBuilder.elementEnd();
 
         observableTree.treeBuilder()
-                .element("one")
-                    .element("two")
+                .elementPath("/one/two")
                         .onText().asRaw().to(new OnTextHandler() {
             @Override
             public void onText(StructureElement structureElement, ObjectStore objectStore) throws Exception {
@@ -590,7 +586,7 @@ public abstract class TreeBuilderTests {
             }
         });
 
-        observableTree.find(new StringReader(builder.toString()));
+        observableTree.find(new StringReader(xmlBuilder.toString()));
 
     }
 
@@ -605,9 +601,5 @@ public abstract class TreeBuilderTests {
     }
 
     // @formatter:on
-
-    private XmlStreamBuilder withXmlBuilder(StringBuilder builder) {
-        return new XmlStreamBuilder(builder, new XmlPrettyPrinter());
-    }
 
 }

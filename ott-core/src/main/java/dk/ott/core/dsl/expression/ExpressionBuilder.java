@@ -99,6 +99,9 @@ public class ExpressionBuilder {
         searchLocationBuilder.onStartHandler(onStartHandler);
     }
     if (onTextHandler != null) {
+      if (textFilter != null) {
+        searchLocationBuilder.textFilter(textFilter);
+      }
       searchLocationBuilder.onTextHandler(onTextHandler);
     }
     if (onEndHandler != null) {
@@ -142,7 +145,7 @@ public class ExpressionBuilder {
     if (textFilter != null) {
       searchLocationBuilder.textFilter(textFilter);
     }
-    searchLocationBuilder.textIsRaw().onTextHandler(onTextHandler);
+    searchLocationBuilder.textAsRaw().onTextHandler(onTextHandler);
     return toFragment();
   }
 

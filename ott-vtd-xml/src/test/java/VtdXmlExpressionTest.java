@@ -22,6 +22,7 @@
  */
 import dk.ott.core.dsl.expression.ExpressionXmlTests;
 import dk.ott.xml.VtdXmlObservableTree;
+import org.junit.Ignore;
 
 public class VtdXmlExpressionTest extends ExpressionXmlTests {
 
@@ -29,5 +30,11 @@ public class VtdXmlExpressionTest extends ExpressionXmlTests {
     public void setObservablePathFinder() {
         VtdXmlObservableTree staxPathFinder = new VtdXmlObservableTree();
         this.observableTree = staxPathFinder;
+    }
+
+    @Override
+    @Ignore
+    public void testRaw() {
+        // vtd xml does not support raw text extraction
     }
 }

@@ -52,7 +52,7 @@ public class SearchLocationBuilder {
         return this;
     }
 
-    public SearchLocationBuilder textIsRaw() {
+    public SearchLocationBuilder textAsRaw() {
         searchLocation.getOrCreateTextLocation().setRaw(true);
         return this;
     }

@@ -23,11 +23,18 @@
 
 import dk.ott.core.dsl.expression.ExpressionXmlTests;
 import dk.ott.xml.DomObservableTree;
+import org.junit.Ignore;
 
 public class DomExpressionTest extends ExpressionXmlTests {
 
     @Override
     public void setObservablePathFinder() {
         super.observableTree = new DomObservableTree();
+    }
+
+    @Override
+    @Ignore
+    public void testRaw() {
+        // Dom parser does not support raw text extraction
     }
 }

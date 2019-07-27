@@ -23,6 +23,7 @@
 
 import dk.ott.core.dsl.expression.ExpressionXmlTests;
 import dk.ott.xml.SaxObservableTree;
+import org.junit.Ignore;
 
 
 public class SaxExpressionTest extends ExpressionXmlTests {
@@ -31,5 +32,11 @@ public class SaxExpressionTest extends ExpressionXmlTests {
     public void setObservablePathFinder() {
         SaxObservableTree saxPathFinder = new SaxObservableTree();
         super.observableTree = saxPathFinder;
+    }
+
+    @Override
+    @Ignore
+    public void testRaw() {
+        // Sax parser does not support raw text extraction
     }
 }

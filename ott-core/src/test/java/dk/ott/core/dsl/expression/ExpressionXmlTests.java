@@ -24,9 +24,13 @@ package dk.ott.core.dsl.expression;
 
 import dk.ott.core.dsl.AssertEventHandler;
 import dk.ott.core.dsl.ObservableTreeFragment;
+import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.predicate.Predicates;
+import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
-import dk.ott.core.xml.builder.XmlStreamBuilder;
+import dk.ott.core.processing.StructureElement;
+import dk.ott.xml.XmlStreamBuilder;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -339,8 +343,39 @@ public abstract class ExpressionXmlTests {
         assertElementHandler.verify();
     }
 
-    private XmlStreamBuilder withXmlBuilder(StringBuilder builder) {
-        return new XmlStreamBuilder(builder);
+    @Test
+    public void testRaw() throws Exception {
+        XmlStreamBuilder xmlBuilder = createXmlStreamBuilderToString(true);
+        xmlBuilder.element("one");
+        final String longValue = veryLongValue();
+
+        for (int i = 0; i < 10000; i++) {
+            xmlBuilder.element("two")
+                    .valueNoEscaping(longValue)
+                .elementEnd();
+        }
+        xmlBuilder.elementEnd();
+
+        observableTree.elementPath("/one/two").onRawText(new OnTextHandler() {
+            @Override
+            public void onText(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+                Assert.assertEquals(longValue.length(), structureElement.getText().length());
+                Assert.assertEquals(longValue, structureElement.getText());
+            }
+        });
+
+        observableTree.find(new StringReader(xmlBuilder.toString()));
+
+    }
+
+    private String veryLongValue() {
+        String value = "adcadca¤%¤%¤%¤¤WEFSD<QEDFAS/>";
+        StringBuilder builder = new StringBuilder(10000);
+        for (int i = 0; i < 500; i++) {
+            builder.append(value);
+        }
+        return builder.toString();
+
     }
 
 }
