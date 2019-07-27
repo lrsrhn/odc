@@ -50,8 +50,8 @@ public class BigJsonPathFinderBenchmark {
                 xmlContent = readFile();
                 jsonPath = new JsonObservableTree();
                 ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
-                jsonPath.addXpath("/$/{}/registered").onText(testHandler);
-                jsonPath.addXpath("/$/{}/tags").onText(testHandler);
+                jsonPath.elementPath("/$/{}/registered").onText(testHandler);
+                jsonPath.elementPath("/$/{}/tags").onText(testHandler);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }

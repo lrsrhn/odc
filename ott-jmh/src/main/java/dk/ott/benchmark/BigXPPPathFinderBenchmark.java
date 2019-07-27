@@ -50,10 +50,10 @@ public class BigXPPPathFinderBenchmark {
                 xmlContent = readFile();
                 xppPathFinder = new XppObservableTree();
                 ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
-                xppPathFinder.addXpath("/root/row/registered").onText(testHandler);
+                xppPathFinder.elementPath("/root/row/registered").onText(testHandler);
 //                xppPathFinder.addXpath("/root/row/greeting").onText(testHandler);
 //                xppPathFinder.addXpath("/root/row/latitude").onText(testHandler);
-                xppPathFinder.addXpath("/root/row/tags").onText(testHandler);
+                xppPathFinder.elementPath("/root/row/tags").onText(testHandler);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }

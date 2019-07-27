@@ -83,12 +83,12 @@ public abstract class Example {
 
     @Test
     public void exampleExpression() {
-        observableTree.addXpath("/bookstore/book").predicate(Predicates.noNamespace()).path("/author/first-name").onText(new MyOnStartHandler("Author" ));
-        observableTree.addXpath("/bookstore/book").predicate(Predicates.noNamespace()).path("/author/publication").onText(new MyOnStartHandler("Publication" ));
-        observableTree.addXpath("/bookstore/book").predicate(Predicates.noNamespace()).path("//p").onText(new MyOnStartHandler("Paragraph" ));
-        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("uri:mynamespace")).path("/author").onText(new MyOnStartHandler("My author" ));
-        observableTree.addXpath("/bookstore/book").predicate(Predicates.namespace("uri:mynamespace")).path("/title").onText(new MyOnStartHandler("My title" ));
-        observableTree.addXpath("/bookstore/magazine/price").onText(new MyOnStartHandler("Magazine price" ));
+        observableTree.elementPath("/bookstore/book").predicate(Predicates.noNamespace()).elementPath("/author/first-name").onText(new MyOnStartHandler("Author" ));
+        observableTree.elementPath("/bookstore/book").predicate(Predicates.noNamespace()).elementPath("/author/publication").onText(new MyOnStartHandler("Publication" ));
+        observableTree.elementPath("/bookstore/book").predicate(Predicates.noNamespace()).elementPath("//p").onText(new MyOnStartHandler("Paragraph" ));
+        observableTree.elementPath("/bookstore/book").predicate(Predicates.namespace("uri:mynamespace")).elementPath("/author").onText(new MyOnStartHandler("My author" ));
+        observableTree.elementPath("/bookstore/book").predicate(Predicates.namespace("uri:mynamespace")).elementPath("/title").onText(new MyOnStartHandler("My title" ));
+        observableTree.elementPath("/bookstore/magazine/price").onText(new MyOnStartHandler("Magazine price" ));
 
         System.out.println(observableTree.toString());
         observableTree.find(xmlFileContent);

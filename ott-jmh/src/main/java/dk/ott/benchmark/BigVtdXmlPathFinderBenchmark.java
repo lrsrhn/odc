@@ -50,10 +50,10 @@ public class BigVtdXmlPathFinderBenchmark {
                 xmlContent = VtdXmlObservableTree.toByteArray(new StringReader(readFile()));
                 vtdXmlObservableTree = new VtdXmlObservableTree();
                 ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
-                vtdXmlObservableTree.addXpath("/root/row/registered").onText(testHandler);
+                vtdXmlObservableTree.elementPath("/root/row/registered").onText(testHandler);
 //                vtdXmlObservableTree.addXpath("/root/row/greeting").onText(testHandler);
 //                vtdXmlObservableTree.addXpath("/root/row/latitude").onText(testHandler);
-                vtdXmlObservableTree.addXpath("/root/row/tags").onText(testHandler);
+                vtdXmlObservableTree.elementPath("/root/row/tags").onText(testHandler);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }

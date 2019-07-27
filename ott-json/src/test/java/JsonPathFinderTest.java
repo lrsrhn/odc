@@ -40,7 +40,7 @@ public class JsonPathFinderTest {
     public void singleValue() throws Exception {
         JsonObservableTree jsonPathFinder = new JsonObservableTree();
         TestingHandler testingHandler = new TestingHandler(false);
-        jsonPathFinder.addXpath("/$/squadName").handle(testingHandler);
+        jsonPathFinder.elementPath("/$/squadName").handle(testingHandler);
         jsonPathFinder.find(readFile());
     }
 
@@ -48,9 +48,9 @@ public class JsonPathFinderTest {
     public void multipleSameDepthValue() throws Exception {
         JsonObservableTree jsonPathFinder = new JsonObservableTree();
         TestingHandler testingHandler = new TestingHandler(false);
-        jsonPathFinder.addXpath("/$/squadName").handle(testingHandler);
-        jsonPathFinder.addXpath("/$/formed").handle(testingHandler);
-        jsonPathFinder.addXpath("/$/active").handle(testingHandler);
+        jsonPathFinder.elementPath("/$/squadName").handle(testingHandler);
+        jsonPathFinder.elementPath("/$/formed").handle(testingHandler);
+        jsonPathFinder.elementPath("/$/active").handle(testingHandler);
         ObjectStore objectStore = jsonPathFinder.find(readFile());
 
         System.out.println("ObjectStore object: " + objectStore.get("something", String.class));
@@ -62,7 +62,7 @@ public class JsonPathFinderTest {
     public void arrayLookup() throws Exception {
         JsonObservableTree jsonPathFinder = new JsonObservableTree();
         TestingHandler testingHandler = new TestingHandler(false);
-        jsonPathFinder.addXpath("/$/members/{}/name").handle(testingHandler);
+        jsonPathFinder.elementPath("/$/members/{}/name").handle(testingHandler);
         jsonPathFinder.find(readFile());
     }
 
@@ -70,7 +70,7 @@ public class JsonPathFinderTest {
     public void arrayPredicateLookup() throws Exception {
         JsonObservableTree jsonPathFinder = new JsonObservableTree();
         TestingHandler testingHandler = new TestingHandler(false);
-        jsonPathFinder.addXpath("/$/members/{}/name")
+        jsonPathFinder.elementPath("/$/members/{}/name")
                 .handle(testingHandler);
         jsonPathFinder.find(readFile());
     }
@@ -79,7 +79,7 @@ public class JsonPathFinderTest {
     public void innerArrayLookup() throws Exception {
         JsonObservableTree jsonPathFinder = new JsonObservableTree();
         TestingHandler testingHandler = new TestingHandler(true);
-        jsonPathFinder.addXpath("/$/members/{}/powers").handle(testingHandler);
+        jsonPathFinder.elementPath("/$/members/{}/powers").handle(testingHandler);
         jsonPathFinder.find(readFile());
     }
 

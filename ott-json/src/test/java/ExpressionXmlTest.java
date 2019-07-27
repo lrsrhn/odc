@@ -69,9 +69,9 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observableTree.addXpath("/$/one").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two/three").handle(assertElementHandler);
+        observableTree.elementPath("/$/one").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two/three").handle(assertElementHandler);
 
         observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
@@ -95,9 +95,9 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observableTree.addXpath("/$/one").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two/three").handle(assertElementHandler);
+        observableTree.elementPath("/$/one").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two/three").handle(assertElementHandler);
 
         observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
@@ -122,9 +122,9 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observableTree.addXpath("/$/one").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two/three").handle(assertElementHandler);
+        observableTree.elementPath("/$/one").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two/three").handle(assertElementHandler);
 
         observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
@@ -147,10 +147,10 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observableTree.addXpath("/$/one").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two/three").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two/four").handle(assertElementHandler);
+        observableTree.elementPath("/$/one").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two/three").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two/four").handle(assertElementHandler);
 
         observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
@@ -178,10 +178,10 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observableTree.addXpath("/$/one").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two/three").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two/four").handle(assertElementHandler);
+        observableTree.elementPath("/$/one").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two/three").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two/four").handle(assertElementHandler);
 
         observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
@@ -203,9 +203,9 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three");
         assertElementHandler.exptectedEndElements("three", "two", "one");
 
-        observableTree.addXpath("/$/one").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two/three").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
+        observableTree.elementPath("/$/one").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two/three").filter(Predicates.alwaysTrue()).handle(assertElementHandler);
 
         observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
@@ -229,11 +229,11 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three", "four");
         assertElementHandler.exptectedEndElements("three", "four", "two", "one");
 
-        observableTree.addXpath("/$/one").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two/att").onText(EventForwarderBuilder.builder().textValueCollector("att").build());
-        observableTree.addXpath("/$/one/two/three").predicate(Predicates.storedValue("att", "one")).handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two/four").handle(assertElementHandler);
+        observableTree.elementPath("/$/one").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two/att").onText(EventForwarderBuilder.builder().textValueCollector("att").build());
+        observableTree.elementPath("/$/one/two/three").predicate(Predicates.storedValue("att", "one")).handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two/four").handle(assertElementHandler);
 
         observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();
@@ -261,11 +261,11 @@ public class ExpressionXmlTest {
         assertElementHandler.exptectedStartElements("one", "two", "three", "one", "two", "three", "five");
         assertElementHandler.exptectedEndElements("three", "three", "two", "one", "five", "two", "one");
 
-        ObservableTreeFragment recursion = observableTree.addXpath("/$/one").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two").elementsAbsolute("three").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two").elementsAbsolute("five").handle(assertElementHandler);
-        observableTree.addXpath("/$/one/two").recursion(recursion);
+        ObservableTreeFragment recursion = observableTree.elementPath("/$/one").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two/three").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two/five").handle(assertElementHandler);
+        observableTree.elementPath("/$/one/two").recursion(recursion);
 
         observableTree.find(new StringReader(jsonText));
         assertElementHandler.verify();

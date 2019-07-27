@@ -55,10 +55,10 @@ public class BigStubPathFinderBenchmark {
                 inputReader = new XmlToInputReader().processXml(new StringReader(xmlContent));
                 stubPathFinder = new StubObservableTree();
                 ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
-                stubPathFinder.addXpath("/root/row/registered").onText(testHandler);
+                stubPathFinder.elementPath("/root/row/registered").onText(testHandler);
 //                xppPathFinder.addXpath("/root/row/greeting").onText(testHandler);
 //                xppPathFinder.addXpath("/root/row/latitude").onText(testHandler);
-                stubPathFinder.addXpath("/root/row/tags").onText(testHandler);
+                stubPathFinder.elementPath("/root/row/tags").onText(testHandler);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }

@@ -48,12 +48,8 @@ public abstract class ObservableTree {
     return new RootTreeBuilder(rootElementFinder.getElementFinder().getReference());
   }
 
-  public ExpressionBuilder addXpath(String xpath) {
-    return new ExpressionBuilder(rootElementFinder, true).path(xpath);
-  }
-
-  public ExpressionBuilder addElements(String...elements) {
-    return new ExpressionBuilder(rootElementFinder, true).elementsAbsolute(elements);
+  public ExpressionBuilder elementPath(String elementPath) {
+    return new ExpressionBuilder(rootElementFinder, true).elementPath(elementPath);
   }
 
   /**

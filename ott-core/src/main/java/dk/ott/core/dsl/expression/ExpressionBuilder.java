@@ -24,59 +24,36 @@ package dk.ott.core.dsl.expression;
 
 import dk.ott.core.dsl.ObservableTreeFragment;
 import dk.ott.core.dsl.TreeEdgeReference;
-import dk.ott.core.dsl.adders.*;
+import dk.ott.core.dsl.searchtree.ExpressionHelper;
 import dk.ott.core.event.EventHandler;
 import dk.ott.core.event.OnEndHandler;
 import dk.ott.core.event.OnStartHandler;
 import dk.ott.core.event.OnTextHandler;
+import dk.ott.core.finder.ElementFinder;
+import dk.ott.core.finder.SearchLocationBuilder;
 import dk.ott.core.predicate.Predicate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static dk.ott.core.dsl.expression.XpathParser.parseXpath;
-
 public class ExpressionBuilder {
-  private final boolean hasRoot;
-  private List<TreePathAdder> treePathAdders;
-  private TreeEdgeReference rootReference;
+  private boolean hasRoot;
+  private TreeEdgeReference treeEdgeReference;
   private Predicate filter;
+  private Predicate textFilter;
 
-  public ExpressionBuilder(TreeEdgeReference rootReference, boolean hasRoot) {
-    this.rootReference = rootReference;
+  public ExpressionBuilder(TreeEdgeReference treeEdgeReference, boolean hasRoot) {
+    this.treeEdgeReference = treeEdgeReference;
     this.filter = null;
-    this.treePathAdders = new ArrayList<TreePathAdder>();
     this.hasRoot = hasRoot;
   }
 
-  public ExpressionBuilder elementsAbsolute(String... elements) {
-    if (treePathAdders.isEmpty() && hasRoot) {
-      treePathAdders.add(new TreeRootElementAdder(elements[0], false));
-      elements = Arrays.copyOfRange(elements, 1, elements.length);
-    }
-    treePathAdders.add(new TreeElementAdder(elements, false));
-    return this;
-  }
-
   public ExpressionBuilder predicate(Predicate predicate) {
-    if (treePathAdders.isEmpty()) {
-      if (rootReference.getLastPredicate() != null) {
-        throw new IllegalArgumentException("Two predicate finder may not be adjacent");
-      }
-    } else if (treePathAdders.get(treePathAdders.size() - 1) instanceof TreePredicateAdder) {
-      throw new IllegalArgumentException("Two predicate finder may not be adjacent");
-    }
-    treePathAdders.add(new TreePredicateAdder(predicate));
+    ElementFinder elementFinder = ExpressionHelper.addNextPredicate(treeEdgeReference).setPredicate(predicate);
+    this.treeEdgeReference = new TreeEdgeReference(elementFinder, predicate, false);
     return this;
   }
 
-  public ExpressionBuilder path(String path) {
-    if (treePathAdders.isEmpty() && hasRoot) {
-      treePathAdders.addAll(parseXpath(path, true));
-    } else {
-      treePathAdders.addAll(parseXpath(path, false));
-    }
+  public ExpressionBuilder elementPath(String elementPath) {
+    treeEdgeReference = ExpressionHelper.parseElementPath(elementPath, treeEdgeReference, hasRoot);
+    hasRoot = false;
     return this;
   }
 
@@ -85,53 +62,91 @@ public class ExpressionBuilder {
     return this;
   }
 
-  public ObservableTreeFragment recursion(ObservableTreeFragment observableTreeFragment) {
-    this.treePathAdders.add(new TreeRecursionAdder(observableTreeFragment.getTreeEdgeReference()));
+  public ExpressionBuilder textFilter(Predicate textFilter) {
+    this.textFilter = textFilter;
+    return this;
+  }
+
+  public ObservableTreeFragment recursion(ObservableTreeFragment observableTreeFragmentRecursive) {
+    return addReference(observableTreeFragmentRecursive);
+  }
+
+    public ObservableTreeFragment addReference(ObservableTreeFragment observableTreeFragmentToAdd) {
+    TreeEdgeReference referenceToAdd = observableTreeFragmentToAdd.getTreeEdgeReference();
+    ExpressionHelper.addElmentFinderCopy(treeEdgeReference, referenceToAdd)
+            .mergeElementFinder(referenceToAdd.getElementFinder());
     return toFragment();
   }
 
   public ObservableTreeFragment handle(EventHandler eventHandler) {
+    SearchLocationBuilder searchLocationBuilder = ExpressionHelper.getSearchLocationBuilder(treeEdgeReference);
     if (filter != null) {
-      treePathAdders.add(new TreeElementFilterAdder(filter));
+      searchLocationBuilder.filter(filter);
     }
-    treePathAdders.add(new TreeOnStartHandlerAdder(eventHandler));
-    treePathAdders.add(new TreeOnEndHandlerAdder(eventHandler));
-    treePathAdders.add(new TreeOnTextHandlerAdder(eventHandler));
+    searchLocationBuilder
+            .onStartHandler(eventHandler)
+            .onTextHandler(eventHandler)
+            .onEndHandler(eventHandler);
+    return toFragment();
+  }
+
+  public ObservableTreeFragment on(OnStartHandler onStartHandler, OnTextHandler onTextHandler, OnEndHandler onEndHandler) {
+    SearchLocationBuilder searchLocationBuilder = ExpressionHelper.getSearchLocationBuilder(treeEdgeReference);
+    if (filter != null) {
+      searchLocationBuilder.filter(filter);
+    }
+    if (onStartHandler != null) {
+        searchLocationBuilder.onStartHandler(onStartHandler);
+    }
+    if (onTextHandler != null) {
+      searchLocationBuilder.onTextHandler(onTextHandler);
+    }
+    if (onEndHandler != null) {
+      searchLocationBuilder.onEndHandler(onEndHandler);
+    }
     return toFragment();
   }
 
   public ObservableTreeFragment onStart(OnStartHandler onStartHandler) {
+    SearchLocationBuilder searchLocationBuilder = ExpressionHelper.getSearchLocationBuilder(treeEdgeReference);
     if (filter != null) {
-      treePathAdders.add(new TreeElementFilterAdder(filter));
+      searchLocationBuilder.filter(filter);
     }
-    treePathAdders.add(new TreeOnStartHandlerAdder(onStartHandler));
+    searchLocationBuilder.onStartHandler(onStartHandler);
     return toFragment();
   }
 
   public ObservableTreeFragment onText(OnTextHandler onTextHandler) {
+    SearchLocationBuilder searchLocationBuilder = ExpressionHelper.getSearchLocationBuilder(treeEdgeReference);
     if (filter != null) {
-      treePathAdders.add(new TreeElementTextFilterAdder(filter));
+      searchLocationBuilder.filter(filter);
     }
-    treePathAdders.add(new TreeOnTextHandlerAdder(onTextHandler));
+    if (textFilter != null) {
+      searchLocationBuilder.textFilter(textFilter);
+    }
+    searchLocationBuilder.onTextHandler(onTextHandler);
     return toFragment();
   }
 
   public ObservableTreeFragment onEnd(OnEndHandler onEndHandler) {
+    SearchLocationBuilder searchLocationBuilder = ExpressionHelper.getSearchLocationBuilder(treeEdgeReference);
     if (filter != null) {
-      treePathAdders.add(new TreeElementFilterAdder(filter));
+      searchLocationBuilder.filter(filter);
     }
-    treePathAdders.add(new TreeOnEndHandlerAdder(onEndHandler));
+    searchLocationBuilder.onEndHandler(onEndHandler);
+    return toFragment();
+  }
+
+  public ObservableTreeFragment onRawText(OnTextHandler onTextHandler) {
+    SearchLocationBuilder searchLocationBuilder = ExpressionHelper.getSearchLocationBuilder(treeEdgeReference);
+    if (textFilter != null) {
+      searchLocationBuilder.textFilter(textFilter);
+    }
+    searchLocationBuilder.textIsRaw().onTextHandler(onTextHandler);
     return toFragment();
   }
 
   public ObservableTreeFragment toFragment() {
-    if (treePathAdders.isEmpty()) {
-      throw new IllegalArgumentException("Missing path and predicates for expression");
-    }
-    TreeEdgeReference reference = rootReference;
-    for (int i = 0; i < treePathAdders.size(); i++) {
-      reference = treePathAdders.get(i).addTreePath(reference, i == 0 && hasRoot);
-    }
-    return new ObservableTreeFragment(reference);
+    return new ObservableTreeFragment(treeEdgeReference);
   }
 }

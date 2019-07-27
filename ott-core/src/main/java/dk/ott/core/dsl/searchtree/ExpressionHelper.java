@@ -23,71 +23,99 @@
 package dk.ott.core.dsl.searchtree;
 
 import dk.ott.core.dsl.TreeEdgeReference;
+import dk.ott.core.dsl.expression.Element;
+import dk.ott.core.dsl.expression.ElementPathParser;
 import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.finder.SearchLocationBuilder;
+
+import java.util.List;
+
+import static dk.ott.core.dsl.expression.ElementPathParser.parseElementPath;
 
 public class ExpressionHelper {
 
     public static ElementFinder addNextElementFinder(TreeEdgeReference parentReference) {
-        if (parentReference.getLastPredicate() != null) {
-            return parentReference.getElementFinder()
-                    .buildSearchLocation(parentReference.getLastPredicate())
-                    .addSearchElementFinder();
-        } else {
-            return parentReference.getElementFinder()
-                    .buildSearchLocation(parentReference.getLastSearchElement(), parentReference.isRelative())
-                    .addSearchElementFinder();
-        }
+        return parentReference.getSearchLocationBuilder().addSearchElementFinder();
+//        if (parentReference.getLastPredicate() != null) {
+//            return parentReference.getElementFinder()
+//                    .buildSearchLocation(parentReference.getLastPredicate())
+//                    .addSearchElementFinder();
+//        } else {
+//            return parentReference.getElementFinder()
+//                    .buildSearchLocation(parentReference.getLastSearchElement(), parentReference.isRelative())
+//                    .addSearchElementFinder();
+//        }
     }
 
     public static ElementFinder addNextAllFinder(TreeEdgeReference parentReference) {
-        if (parentReference.getLastPredicate() != null) {
-            return parentReference.getElementFinder()
-                    .buildSearchLocation(parentReference.getLastPredicate())
-                    .addAllElementFinder();
-        } else {
-            return parentReference.getElementFinder()
-                    .buildSearchLocation(parentReference.getLastSearchElement(), parentReference.isRelative())
-                    .addAllElementFinder();
-        }
+        return parentReference.getSearchLocationBuilder().addAllElementFinder();
+//        if (parentReference.getLastPredicate() != null) {
+//            return parentReference.getElementFinder()
+//                    .buildSearchLocation(parentReference.getLastPredicate())
+//                    .addAllElementFinder();
+//        } else {
+//            return parentReference.getElementFinder()
+//                    .buildSearchLocation(parentReference.getLastSearchElement(), parentReference.isRelative())
+//                    .addAllElementFinder();
+//        }
     }
 
     public static ElementFinder addNextPredicate(TreeEdgeReference parentReference) {
-        if (parentReference.getLastSearchElement() != null) {
-            return parentReference.getElementFinder()
-                    .buildSearchLocation(parentReference.getLastSearchElement(), parentReference.isRelative())
-                    .addPredicateElementFinder();
-        }
-        throw new UnsupportedOperationException();
+        return parentReference.getSearchLocationBuilder().addPredicateElementFinder();
+//        if (parentReference.getLastPredicate() == null) {
+//            return parentReference.getElementFinder()
+//                    .buildSearchLocation(parentReference.getLastSearchElement(), parentReference.isRelative())
+//                    .addPredicateElementFinder();
+//        }
+//        throw new IllegalStateException("Two predicate finder may not be adjacent");
     }
 
     public static ElementFinder addElmentFinderCopy(TreeEdgeReference parentReference, TreeEdgeReference reference) {
-        if (parentReference.getLastPredicate() != null) {
-            if (reference.getElementFinder().isPredicate()) {
-                throw new RuntimeException("Two predicate finders may not be adjacent!");
-            } else {
-                return parentReference.getElementFinder()
-                        .buildSearchLocation(parentReference.getLastPredicate())
-                        .addSearchElementFinder();
-            }
-        } else {
-            if (reference.getElementFinder().isPredicate()) {
-                throw new RuntimeException("Last predicate cannot be empty when isPredicate is true");
-            } else {
-                return parentReference.getElementFinder()
-                        .buildSearchLocation(parentReference.getLastSearchElement(), parentReference.isRelative())
-                        .addSearchElementFinder();
-            }
-        }
+        return parentReference.getSearchLocationBuilder().addSearchElementFinder();
+//        if (parentReference.getLastPredicate() != null) {
+//            if (reference.getElementFinder().isPredicate()) {
+//                throw new RuntimeException("Two predicate finders may not be adjacent!");
+//            } else {
+//                return parentReference.getElementFinder()
+//                        .buildSearchLocation(parentReference.getLastPredicate())
+//                        .addSearchElementFinder();
+//            }
+//        } else {
+//            if (reference.getElementFinder().isPredicate()) {
+//                throw new RuntimeException("Last predicate cannot be empty when isPredicate is true");
+//            } else {
+//                return parentReference.getElementFinder()
+//                        .buildSearchLocation(parentReference.getLastSearchElement(), parentReference.isRelative())
+//                        .addSearchElementFinder();
+//            }
+//        }
     }
 
     public static SearchLocationBuilder getSearchLocationBuilder(TreeEdgeReference parentReference) {
-        if (parentReference.getLastPredicate() != null) {
-            return parentReference.getElementFinder()
-                    .buildSearchLocation(parentReference.getLastPredicate());
-        } else {
-            return parentReference.getElementFinder()
-                    .buildSearchLocation(parentReference.getLastSearchElement(), parentReference.isRelative());
+        return parentReference.getSearchLocationBuilder();
+//        if (parentReference.getLastPredicate() != null) {
+//            return parentReference.getElementFinder()
+//                    .buildSearchLocation(parentReference.getLastPredicate());
+//        } else {
+//            return parentReference.getElementFinder()
+//                    .buildSearchLocation(parentReference.getLastSearchElement(), parentReference.isRelative());
+//        }
+    }
+
+    public static TreeEdgeReference parseElementPath(String elementPath, TreeEdgeReference treeEdgeReference, boolean firstIsRoot) {
+        List<Element> elementList = ElementPathParser.parseElementPath(elementPath);
+        int index = 0;
+        if (firstIsRoot) {
+            Element element = elementList.get(0);
+            treeEdgeReference = new TreeEdgeReference(treeEdgeReference.getElementFinder().setSearchElement(element.getElement(), element.isRelative()), element.getElement(), element.isRelative());
+            index++;
         }
+        for (;index < elementList.size(); index++) {
+            Element element = elementList.get(index);
+          ElementFinder currentElementFinder = ExpressionHelper.addNextElementFinder(treeEdgeReference)
+                    .setSearchElement(element.getElement(), element.isRelative());
+          treeEdgeReference = new TreeEdgeReference(currentElementFinder, element.getElement(), element.isRelative());
+        }
+        return treeEdgeReference;
     }
 }

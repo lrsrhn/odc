@@ -46,6 +46,7 @@ public final class SingleElementFinder implements ElementFinder {
     if (this.searchElement == null) {
       this.searchElement = searchElement.intern();
       this.searchLocation.setRelative(isRelative);
+      return thisReference;
     } else if (this.searchElement.equals(searchElement) && searchLocation.isRelative() == isRelative) {
       return thisReference;
     }

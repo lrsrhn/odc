@@ -22,14 +22,11 @@
  */
 package dk.ott.core.dsl.searchtree;
 
-import dk.ott.core.dsl.adders.TreePathAdder;
 import dk.ott.core.dsl.TreeEdgeReference;
-import dk.ott.core.dsl.expression.XpathParser;
-import dk.ott.core.finder.SingleElementFinder;
 import dk.ott.core.finder.ElementFinderReference;
+import dk.ott.core.finder.SingleElementFinder;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class RootTreeBuilder {
@@ -41,16 +38,10 @@ public class RootTreeBuilder {
         this.referenceStore = new HashMap<String, TreeEdgeReference>();
     }
 
-    public ElementTreeBuilder<RootTreeBuilder> path(String path) {
-        List<TreePathAdder> adders = XpathParser.parseXpath(path, true);
-        if (adders.isEmpty()) {
-            throw new RuntimeException("The provided path seems to be empty: " + path);
-        }
-        TreeEdgeReference currentTreeEdgeReference = new TreeEdgeReference(elementFinderReference, false);
-        for (TreePathAdder treePathAdder : adders) {
-            currentTreeEdgeReference = treePathAdder.addTreePath(currentTreeEdgeReference, true);
-        }
-        return new ElementTreeBuilder<RootTreeBuilder>(this, referenceStore, currentTreeEdgeReference);
+    public ElementTreeBuilder<RootTreeBuilder> elementPath(String elementPath) {
+        TreeEdgeReference treeEdgeReference = new TreeEdgeReference(elementFinderReference, false);
+        treeEdgeReference = ExpressionHelper.parseElementPath(elementPath, treeEdgeReference, true);
+        return new ElementTreeBuilder<RootTreeBuilder>(this, referenceStore, treeEdgeReference);
     }
 
     public ElementTreeBuilder<RootTreeBuilder> element(String elementName) {

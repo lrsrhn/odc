@@ -48,15 +48,11 @@ public class ObservableTreeFragment {
     return new RootAllTreeBuilder(new HashMap<String, TreeEdgeReference>(), treeEdgeReference);
   }
 
-  public ExpressionBuilder addPath(String xpath) {
-    return expression().path(xpath);
+  public ExpressionBuilder elementPath(String elementPath) {
+    return expression().elementPath(elementPath);
   }
 
-  public ExpressionBuilder addElementsAbsolute(String...elements) {
-    return expression().elementsAbsolute(elements);
-  }
-
-  public ExpressionBuilder addPredicate(Predicate predicate) {
+  public ExpressionBuilder predicate(Predicate predicate) {
     return expression().predicate(predicate);
   }
 

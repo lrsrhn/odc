@@ -20,25 +20,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dk.ott.core.dsl.adders;
 
-import dk.ott.core.dsl.TreeEdgeReference;
-import dk.ott.core.dsl.searchtree.ExpressionHelper;
-import dk.ott.core.predicate.Predicate;
+import dk.ott.core.dsl.expression.ElementPathParser;
+import org.junit.Test;
 
-public class TreePredicateAdder implements TreePathAdder {
-    private Predicate predicate;
+public class ElementPathParserTest {
 
-    public TreePredicateAdder(Predicate predicate) {
-        this.predicate = predicate;
+    @Test
+    public void testing() {
+        ElementPathParser.parseElementPath("/one/two/three/four");
     }
 
-    @Override
-    public TreeEdgeReference addTreePath(TreeEdgeReference reference, boolean hasRoot) {
-        return new TreeEdgeReference(
-                ExpressionHelper.addNextPredicate(reference).setPredicate(predicate),
-                predicate,
-                reference.isRelative()
-        );
+    @Test
+    public void testingRelative() {
+        ElementPathParser.parseElementPath("//one//two//three//four");
+    }
+
+    @Test
+    public void testingMixed() {
+        ElementPathParser.parseElementPath("/one//two/three//four");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void unappyEnd() {
+        ElementPathParser.parseElementPath("/one//two/three//four/");
     }
 }

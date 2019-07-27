@@ -22,16 +22,13 @@
  */
 package dk.ott.core.dsl.searchtree;
 
-import dk.ott.core.dsl.adders.TreePathAdder;
 import dk.ott.core.dsl.ObservableTreeFragment;
 import dk.ott.core.dsl.TreeEdgeReference;
-import dk.ott.core.dsl.expression.XpathParser;
-import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.event.OnEndHandler;
 import dk.ott.core.event.OnStartHandler;
+import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.predicate.Predicate;
 
-import java.util.List;
 import java.util.Map;
 
 public class ElementTreeBuilder<T> {
@@ -60,15 +57,8 @@ public class ElementTreeBuilder<T> {
         return new OnlyEndTreeBuilder<T>(parentTreeBuilder, parentReference);
     }
 
-    public ElementTreeBuilder<ElementTreeBuilder<T>> path(String path) {
-        List<TreePathAdder> adders = XpathParser.parseXpath(path, false);
-        if (adders.isEmpty()) {
-            throw new RuntimeException("The provided path seems to be empty: " + path);
-        }
-        TreeEdgeReference currentTreeEdgeReference = parentReference;
-        for (TreePathAdder treePathAdder : adders) {
-            currentTreeEdgeReference = treePathAdder.addTreePath(currentTreeEdgeReference, false);
-        }
+    public ElementTreeBuilder<ElementTreeBuilder<T>> elementPath(String elementPath) {
+        TreeEdgeReference currentTreeEdgeReference = ExpressionHelper.parseElementPath(elementPath, parentReference, false);
         return new ElementTreeBuilder<ElementTreeBuilder<T>>(this, referenceStore, currentTreeEdgeReference);
     }
 

@@ -50,10 +50,10 @@ public class BigDomPathFinderBenchmark {
                 xmlContent = readFile();
                 domObservableTree = new DomObservableTree();
                 ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
-                domObservableTree.addXpath("/root/row/registered").onText(testHandler);
+                domObservableTree.elementPath("/root/row/registered").onText(testHandler);
 //                domObservableTree.addXpath("/root/row/greeting").onText(testHandler);
 //                domObservableTree.addXpath("/root/row/latitude").onText(testHandler);
-                domObservableTree.addXpath("/root/row/tags").onText(testHandler);
+                domObservableTree.elementPath("/root/row/tags").onText(testHandler);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
