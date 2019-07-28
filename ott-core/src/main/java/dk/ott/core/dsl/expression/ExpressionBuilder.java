@@ -32,6 +32,7 @@ import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.finder.SearchLocationBuilder;
 import dk.ott.core.predicate.Predicate;
+import dk.ott.core.predicate.Predicates;
 
 public class ExpressionBuilder {
   private boolean hasRoot;
@@ -48,6 +49,20 @@ public class ExpressionBuilder {
   public ExpressionBuilder predicate(Predicate predicate) {
     ElementFinder elementFinder = ExpressionHelper.addNextPredicate(treeEdgeReference).setPredicate(predicate);
     this.treeEdgeReference = new TreeEdgeReference(elementFinder, predicate, false);
+    return this;
+  }
+
+  public ExpressionBuilder namespace(String namespace) {
+    Predicate namespacePredicate = Predicates.namespace(namespace);
+    ElementFinder elementFinder = ExpressionHelper.addNextPredicate(treeEdgeReference).setPredicate(namespacePredicate);
+    this.treeEdgeReference = new TreeEdgeReference(elementFinder, namespacePredicate, false);
+    return this;
+  }
+
+    public ExpressionBuilder noNamespace() {
+    Predicate namespacePredicate = Predicates.noNamespace();
+    ElementFinder elementFinder = ExpressionHelper.addNextPredicate(treeEdgeReference).setPredicate(namespacePredicate);
+    this.treeEdgeReference = new TreeEdgeReference(elementFinder, namespacePredicate, false);
     return this;
   }
 
