@@ -403,7 +403,7 @@ public class TreeBuilderTest {
         observableTree.treeBuilder()
                 .element("$")
                     .element("one")
-                        .all(assertElementHandler, assertElementHandler)
+                        .all(assertElementHandler, null, assertElementHandler)
                     .end()
                 .end()
                 .build();

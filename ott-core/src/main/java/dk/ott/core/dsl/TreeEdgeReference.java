@@ -23,29 +23,18 @@
 package dk.ott.core.dsl;
 
 import dk.ott.core.finder.ElementFinder;
-import dk.ott.core.predicate.Predicate;
+import dk.ott.core.finder.SearchLocation;
+import dk.ott.core.finder.SearchLocationBuilder;
 
 public class TreeEdgeReference {
-  private String lastSearchElement;
-  private Predicate lastPredicate;
+  private boolean isPredicate;
+  private SearchLocation searchLocation;
   private ElementFinder elementFinderReference;
-  private boolean isRelative;
 
-  public TreeEdgeReference(ElementFinder elementFinder, String lastSearchElement, boolean isRelative) {
+  public TreeEdgeReference(ElementFinder elementFinder, SearchLocation searchLocation, boolean isPredicate) {
     this.elementFinderReference = elementFinder.getReference();
-    this.lastSearchElement = lastSearchElement;
-    this.isRelative = isRelative;
-  }
-
-  public TreeEdgeReference(ElementFinder elementFinder, Predicate lastPredicate, boolean isRelative) {
-    this.elementFinderReference = elementFinder.getReference();
-    this.lastPredicate = lastPredicate;
-    this.isRelative = isRelative;
-  }
-
-  public TreeEdgeReference(ElementFinder elementFinder, boolean isRelative) {
-    this.elementFinderReference = elementFinder.getReference();
-    this.isRelative = isRelative;
+    this.searchLocation = searchLocation;
+    this.isPredicate = isPredicate;
   }
 
   public ElementFinder getElementFinder() {
@@ -56,16 +45,24 @@ public class TreeEdgeReference {
     this.elementFinderReference = reference.getReference();
   }
 
-  public String getLastSearchElement() {
-    return lastSearchElement;
+  public boolean isPredicate() {
+    return isPredicate;
   }
 
-  public Predicate getLastPredicate() {
-    return lastPredicate;
+  public SearchLocation getSearchLocation() {
+    return searchLocation;
   }
 
-  public boolean isRelative() {
-    return isRelative;
+  public SearchLocationBuilder getSearchLocationBuilder() {
+    return new SearchLocationBuilder(elementFinderReference, searchLocation);
+  }
+
+  public void setPredicate(boolean predicate) {
+    isPredicate = predicate;
+  }
+
+  public void setSearchLocation(SearchLocation searchLocation) {
+    this.searchLocation = searchLocation;
   }
 
   public void dereferenceElementFinder() {

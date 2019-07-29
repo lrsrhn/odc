@@ -37,7 +37,7 @@ public abstract class ObservableTree {
   protected TreeEdgeReference rootElementFinder;
 
   public ObservableTree() {
-    this.rootElementFinder = new TreeEdgeReference(new SingleElementFinder().getReference(), false);
+    this.rootElementFinder = new TreeEdgeReference(new SingleElementFinder().getReference(), null, false);
   }
 
   ElementFinder getRootElementFinder() {

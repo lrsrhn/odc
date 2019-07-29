@@ -42,23 +42,6 @@ public class SinglePredicateMatchFinder implements ElementFinder {
   }
 
   @Override
-  public ElementFinder setSearchElement(String searchElement, boolean isRelative) {
-    throw new UnsupportedOperationException("This operation is not supported");
-  }
-
-  @Override
-  public ElementFinder setPredicate(Predicate predicate) {
-    if (this.predicate == null) {
-      this.predicate = predicate;
-    } else if (!this.predicate.equals(predicate)) {
-      MultiplePredicateMatchFinder multiplePredicateMatchFinder = new MultiplePredicateMatchFinder(thisReference, this.predicate, searchLocation);
-      thisReference.setElementFinder(multiplePredicateMatchFinder);
-      return multiplePredicateMatchFinder.setPredicate(predicate);
-    }
-    return thisReference;
-  }
-
-  @Override
   public SearchLocationBuilder buildSearchLocation(String searchElement, boolean isRelative) {
     throw new UnsupportedOperationException("This operation is not supported");
   }
@@ -68,9 +51,9 @@ public class SinglePredicateMatchFinder implements ElementFinder {
     if (this.predicate == null) {
       this.predicate = predicate;
       this.searchLocation.setRelative(false);
-      return new SearchLocationBuilder(this.searchLocation);
+      return new SearchLocationBuilder(thisReference, searchLocation);
     } else if (this.predicate.equals(predicate)) {
-      return new SearchLocationBuilder(this.searchLocation);
+      return new SearchLocationBuilder(thisReference, searchLocation);
     }
     MultiplePredicateMatchFinder multiplePredicateMatchFinder = new MultiplePredicateMatchFinder(thisReference, this.predicate, searchLocation);
     return multiplePredicateMatchFinder.buildSearchLocation(predicate);

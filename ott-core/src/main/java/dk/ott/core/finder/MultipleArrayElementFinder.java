@@ -48,21 +48,6 @@ public final class MultipleArrayElementFinder implements ElementFinder {
   }
 
   @Override
-  public ElementFinder setSearchElement(String searchElement, boolean isRelative) {
-    SearchLocation searchLocation = nextXmlElementFinders.lookupSearchLocation(searchElement, !isRelative);
-    if (searchLocation == null) {
-      nextXmlElementFinders.addSearchLocation(searchElement, new SearchLocation(null, null, null, isRelative));
-      hasRelatives |= isRelative;
-    }
-    return this;
-  }
-
-  @Override
-  public ElementFinder setPredicate(Predicate predicate) {
-    throw new UnsupportedOperationException("This operation is not supported");
-  }
-
-  @Override
   public SearchLocationBuilder buildSearchLocation(String searchElement, boolean isRelative) {
     SearchLocation searchLocation = nextXmlElementFinders.lookupSearchLocation(searchElement, !isRelative);
     if (searchLocation == null) {
@@ -70,7 +55,7 @@ public final class MultipleArrayElementFinder implements ElementFinder {
       nextXmlElementFinders.addSearchLocation(searchElement, searchLocation);
       hasRelatives |= isRelative;
     }
-    return new SearchLocationBuilder(searchLocation);
+    return new SearchLocationBuilder(this, searchLocation);
   }
 
   @Override

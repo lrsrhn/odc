@@ -22,6 +22,7 @@
  */
 package dk.ott.core.finder;
 
+import dk.ott.core.dsl.TreeEdgeReference;
 import dk.ott.core.event.OnEndHandler;
 import dk.ott.core.event.OnStartHandler;
 import dk.ott.core.predicate.Predicate;
@@ -49,28 +50,32 @@ public final class SearchLocation {
         return elementFinder;
     }
 
-    public void setElementFinder(ElementFinder elementFinder) {
+    public SearchLocation setElementFinder(ElementFinder elementFinder) {
         this.elementFinder = elementFinder;
+        return this;
     }
 
     public OnStartHandler getOnStartHandler() {
         return onStartHandler;
     }
 
-    public void setOnStartHandler(OnStartHandler onStartHandler) {
+    public SearchLocation setOnStartHandler(OnStartHandler onStartHandler) {
         this.onStartHandler = onStartHandler;
+        return this;
     }
 
     public OnEndHandler getOnEndHandler() {
         return onEndHandler;
     }
 
-    public void setOnEndHandler(OnEndHandler onEndHandler) {
+    public SearchLocation setOnEndHandler(OnEndHandler onEndHandler) {
         this.onEndHandler = onEndHandler;
+        return this;
     }
 
-    public void setFilter(Predicate filter) {
+    public SearchLocation setFilter(Predicate filter) {
         this.filter = filter;
+        return this;
     }
 
     public Predicate getFilter() {
@@ -92,12 +97,18 @@ public final class SearchLocation {
         return isRelative;
     }
 
-    public void setRelative(boolean relative) {
+    public SearchLocation setRelative(boolean relative) {
         isRelative = relative;
+        return this;
     }
 
-    public void setTextLocation(TextLocation textLocation) {
+    public SearchLocation setTextLocation(TextLocation textLocation) {
         this.textLocation = textLocation;
+        return this;
+    }
+
+    public TreeEdgeReference toTreeEdgeReference(ElementFinder elementFinder) {
+        return new TreeEdgeReference(elementFinder, this, elementFinder.isPredicate());
     }
 
     @Override

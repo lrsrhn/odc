@@ -39,19 +39,21 @@ public class RootTreeBuilder {
     }
 
     public ElementTreeBuilder<RootTreeBuilder> elementPath(String elementPath) {
-        TreeEdgeReference treeEdgeReference = new TreeEdgeReference(elementFinderReference, false);
+        TreeEdgeReference treeEdgeReference = new TreeEdgeReference(elementFinderReference, null, false);
         treeEdgeReference = ExpressionHelper.parseElementPath(elementPath, treeEdgeReference, true);
         return new ElementTreeBuilder<RootTreeBuilder>(this, referenceStore, treeEdgeReference);
     }
 
     public ElementTreeBuilder<RootTreeBuilder> element(String elementName) {
-        elementFinderReference.setSearchElement(elementName, false);
-        return new ElementTreeBuilder<RootTreeBuilder>(this, referenceStore, new TreeEdgeReference(elementFinderReference, elementName, false));
+        TreeEdgeReference treeEdgeReference = elementFinderReference.buildSearchLocation(elementName, false)
+                .toTreeEdgeReference();
+        return new ElementTreeBuilder<RootTreeBuilder>(this, referenceStore, treeEdgeReference);
     }
 
     public ElementTreeBuilder<RootTreeBuilder> relativeElement(String elementName) {
-        elementFinderReference.setSearchElement(elementName, true);
-        return new ElementTreeBuilder<RootTreeBuilder>(this, referenceStore, new TreeEdgeReference(elementFinderReference, elementName, true));
+                TreeEdgeReference treeEdgeReference = elementFinderReference.buildSearchLocation(elementName, true)
+                .toTreeEdgeReference();
+        return new ElementTreeBuilder<RootTreeBuilder>(this, referenceStore, treeEdgeReference);
     }
 
     // Present for handlerBuilder symmetry

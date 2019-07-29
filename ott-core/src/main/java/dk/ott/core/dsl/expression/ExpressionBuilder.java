@@ -29,7 +29,6 @@ import dk.ott.core.event.EventHandler;
 import dk.ott.core.event.OnEndHandler;
 import dk.ott.core.event.OnStartHandler;
 import dk.ott.core.event.OnTextHandler;
-import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.finder.SearchLocationBuilder;
 import dk.ott.core.predicate.Predicate;
 import dk.ott.core.predicate.Predicates;
@@ -47,22 +46,23 @@ public class ExpressionBuilder {
   }
 
   public ExpressionBuilder predicate(Predicate predicate) {
-    ElementFinder elementFinder = ExpressionHelper.addNextPredicate(treeEdgeReference).setPredicate(predicate);
-    this.treeEdgeReference = new TreeEdgeReference(elementFinder, predicate, false);
+    treeEdgeReference = treeEdgeReference.getSearchLocationBuilder()
+            .addPredicateElementFinder(predicate)
+            .toTreeEdgeReference();
     return this;
   }
 
   public ExpressionBuilder namespace(String namespace) {
-    Predicate namespacePredicate = Predicates.namespace(namespace);
-    ElementFinder elementFinder = ExpressionHelper.addNextPredicate(treeEdgeReference).setPredicate(namespacePredicate);
-    this.treeEdgeReference = new TreeEdgeReference(elementFinder, namespacePredicate, false);
+    treeEdgeReference = treeEdgeReference.getSearchLocationBuilder()
+            .addPredicateElementFinder(Predicates.namespace(namespace))
+            .toTreeEdgeReference();
     return this;
   }
 
-    public ExpressionBuilder noNamespace() {
-    Predicate namespacePredicate = Predicates.noNamespace();
-    ElementFinder elementFinder = ExpressionHelper.addNextPredicate(treeEdgeReference).setPredicate(namespacePredicate);
-    this.treeEdgeReference = new TreeEdgeReference(elementFinder, namespacePredicate, false);
+  public ExpressionBuilder noNamespace() {
+    treeEdgeReference = treeEdgeReference.getSearchLocationBuilder()
+            .addPredicateElementFinder(Predicates.noNamespace())
+            .toTreeEdgeReference();
     return this;
   }
 
@@ -88,13 +88,13 @@ public class ExpressionBuilder {
 
     public ObservableTreeFragment addReference(ObservableTreeFragment observableTreeFragmentToAdd) {
     TreeEdgeReference referenceToAdd = observableTreeFragmentToAdd.getTreeEdgeReference();
-    ExpressionHelper.addElmentFinderCopy(treeEdgeReference, referenceToAdd)
+    ExpressionHelper.addElementFinderSameAsReference(treeEdgeReference, referenceToAdd)
             .mergeElementFinder(referenceToAdd.getElementFinder());
     return toFragment();
   }
 
   public ObservableTreeFragment handle(EventHandler eventHandler) {
-    SearchLocationBuilder searchLocationBuilder = ExpressionHelper.getSearchLocationBuilder(treeEdgeReference);
+    SearchLocationBuilder searchLocationBuilder = treeEdgeReference.getSearchLocationBuilder();
     if (filter != null) {
       searchLocationBuilder.filter(filter);
     }
@@ -106,7 +106,7 @@ public class ExpressionBuilder {
   }
 
   public ObservableTreeFragment on(OnStartHandler onStartHandler, OnTextHandler onTextHandler, OnEndHandler onEndHandler) {
-    SearchLocationBuilder searchLocationBuilder = ExpressionHelper.getSearchLocationBuilder(treeEdgeReference);
+    SearchLocationBuilder searchLocationBuilder = treeEdgeReference.getSearchLocationBuilder();
     if (filter != null) {
       searchLocationBuilder.filter(filter);
     }
@@ -126,7 +126,7 @@ public class ExpressionBuilder {
   }
 
   public ObservableTreeFragment onStart(OnStartHandler onStartHandler) {
-    SearchLocationBuilder searchLocationBuilder = ExpressionHelper.getSearchLocationBuilder(treeEdgeReference);
+    SearchLocationBuilder searchLocationBuilder = treeEdgeReference.getSearchLocationBuilder();
     if (filter != null) {
       searchLocationBuilder.filter(filter);
     }
@@ -135,7 +135,7 @@ public class ExpressionBuilder {
   }
 
   public ObservableTreeFragment onText(OnTextHandler onTextHandler) {
-    SearchLocationBuilder searchLocationBuilder = ExpressionHelper.getSearchLocationBuilder(treeEdgeReference);
+    SearchLocationBuilder searchLocationBuilder = treeEdgeReference.getSearchLocationBuilder();
     if (filter != null) {
       searchLocationBuilder.filter(filter);
     }
@@ -147,7 +147,7 @@ public class ExpressionBuilder {
   }
 
   public ObservableTreeFragment onEnd(OnEndHandler onEndHandler) {
-    SearchLocationBuilder searchLocationBuilder = ExpressionHelper.getSearchLocationBuilder(treeEdgeReference);
+    SearchLocationBuilder searchLocationBuilder = treeEdgeReference.getSearchLocationBuilder();
     if (filter != null) {
       searchLocationBuilder.filter(filter);
     }
@@ -156,7 +156,7 @@ public class ExpressionBuilder {
   }
 
   public ObservableTreeFragment onRawText(OnTextHandler onTextHandler) {
-    SearchLocationBuilder searchLocationBuilder = ExpressionHelper.getSearchLocationBuilder(treeEdgeReference);
+    SearchLocationBuilder searchLocationBuilder = treeEdgeReference.getSearchLocationBuilder();
     if (textFilter != null) {
       searchLocationBuilder.textFilter(textFilter);
     }

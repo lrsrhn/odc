@@ -42,16 +42,6 @@ public class ElementFinderReference implements ElementFinder {
     }
 
     @Override
-    public ElementFinder setSearchElement(String searchElement, boolean isRelative) {
-        return elementFinder.setSearchElement(searchElement, isRelative);
-    }
-
-    @Override
-    public ElementFinder setPredicate(Predicate predicate) {
-        return elementFinder.setPredicate(predicate);
-    }
-
-    @Override
     public SearchLocationBuilder buildSearchLocation(String searchElement, boolean isRelative) {
         return elementFinder.buildSearchLocation(searchElement, isRelative);
     }

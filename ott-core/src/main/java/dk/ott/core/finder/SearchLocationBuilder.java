@@ -22,6 +22,7 @@
  */
 package dk.ott.core.finder;
 
+import dk.ott.core.dsl.TreeEdgeReference;
 import dk.ott.core.event.OnEndHandler;
 import dk.ott.core.event.OnStartHandler;
 import dk.ott.core.event.OnTextHandler;
@@ -29,12 +30,14 @@ import dk.ott.core.predicate.Predicate;
 
 public class SearchLocationBuilder {
     private SearchLocation searchLocation;
+    private ElementFinder elementFinder;
 
-    public SearchLocationBuilder(SearchLocation searchLocation) {
+    public SearchLocationBuilder(ElementFinder elementFinder, SearchLocation searchLocation) {
         if (searchLocation == null) {
             throw new RuntimeException("Passed searchLocation is null!");
         }
         this.searchLocation = searchLocation;
+        this.elementFinder = elementFinder;
     }
 
     public SearchLocationBuilder filter(Predicate filter) {
@@ -67,25 +70,43 @@ public class SearchLocationBuilder {
         return this;
     }
 
+    public SearchLocationBuilder addSearchElementFinder(String elementName, boolean isRelative) {
+        return addSearchElementFinder().buildSearchLocation(elementName, isRelative);
+    }
+
     public ElementFinder addSearchElementFinder() {
-        if (searchLocation.getElementFinder() == null) {
-            this.searchLocation.setElementFinder(new SingleElementFinder().getReference());
+        ElementFinder elementFinder = searchLocation.getElementFinder();
+        if (elementFinder == null) {
+            elementFinder = new SingleElementFinder().getReference();
+            this.searchLocation.setElementFinder(elementFinder);
         }
-        return searchLocation.getElementFinder();
+        return elementFinder;
+    }
+
+    public SearchLocationBuilder addPredicateElementFinder(Predicate predicate) {
+        return addPredicateElementFinder().buildSearchLocation(predicate);
     }
 
     public ElementFinder addPredicateElementFinder() {
-        if (searchLocation.getElementFinder() == null) {
-            this.searchLocation.setElementFinder(new SinglePredicateMatchFinder().getReference());
+        ElementFinder elementFinder = searchLocation.getElementFinder();
+        if (elementFinder == null) {
+            elementFinder = new SinglePredicateMatchFinder().getReference();
+            this.searchLocation.setElementFinder(elementFinder);
         }
-        return searchLocation.getElementFinder();
+        return elementFinder;
     }
 
-    public ElementFinder addAllElementFinder() {
-        if (searchLocation.getElementFinder() == null) {
-            this.searchLocation.setElementFinder(new AllElementFinder());
+    public SearchLocationBuilder addAllElementFinder() {
+        ElementFinder elementFinder = searchLocation.getElementFinder();
+        if (elementFinder == null) {
+            elementFinder = new AllElementFinder();
+            this.searchLocation.setElementFinder(elementFinder);
         }
-        return searchLocation.getElementFinder();
+        return elementFinder.buildSearchLocation(null);
+    }
+
+    public TreeEdgeReference toTreeEdgeReference() {
+        return new TreeEdgeReference(elementFinder, searchLocation, elementFinder.isPredicate());
     }
 
     public SearchLocation build() {

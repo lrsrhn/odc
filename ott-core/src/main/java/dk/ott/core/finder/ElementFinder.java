@@ -31,9 +31,6 @@ import java.util.List;
 import java.util.Set;
 
 public interface ElementFinder {
-  ElementFinder setSearchElement(String searchElement, boolean isRelative);
-
-  ElementFinder setPredicate(Predicate predicate);
 
   SearchLocationBuilder buildSearchLocation(String searchElement, boolean isRelative);
 

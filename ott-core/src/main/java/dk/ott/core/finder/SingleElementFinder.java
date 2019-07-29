@@ -42,31 +42,13 @@ public final class SingleElementFinder implements ElementFinder {
   }
 
   @Override
-  public ElementFinder setSearchElement(String searchElement, boolean isRelative) {
-    if (this.searchElement == null) {
-      this.searchElement = searchElement.intern();
-      this.searchLocation.setRelative(isRelative);
-      return thisReference;
-    } else if (this.searchElement.equals(searchElement) && searchLocation.isRelative() == isRelative) {
-      return thisReference;
-    }
-    MultipleArrayElementFinder multipleXmlElementFinder = new MultipleArrayElementFinder(thisReference, this.searchElement, searchLocation);
-    return multipleXmlElementFinder.setSearchElement(searchElement, isRelative);
-  }
-
-  @Override
-  public ElementFinder setPredicate(Predicate predicate) {
-    throw new UnsupportedOperationException("This operation is not supported");
-  }
-
-  @Override
   public SearchLocationBuilder buildSearchLocation(String searchElement, boolean isRelative) {
     if (this.searchElement == null) {
       this.searchElement = searchElement.intern();
       this.searchLocation.setRelative(isRelative);
-      return new SearchLocationBuilder(this.searchLocation);
+      return new SearchLocationBuilder(thisReference, searchLocation);
     } else if (this.searchElement.equals(searchElement) && searchLocation.isRelative() == isRelative) {
-      return new SearchLocationBuilder(this.searchLocation);
+      return new SearchLocationBuilder(thisReference, searchLocation);
     }
     MultipleArrayElementFinder multipleXmlElementFinder = new MultipleArrayElementFinder(thisReference, this.searchElement, searchLocation);
     return multipleXmlElementFinder.buildSearchLocation(searchElement, isRelative);

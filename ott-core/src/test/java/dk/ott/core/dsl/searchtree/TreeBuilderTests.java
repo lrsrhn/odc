@@ -551,7 +551,7 @@ public abstract class TreeBuilderTests {
                 .element("")
                 .end()
                 .element("one")
-                    .all(assertElementHandler, assertElementHandler)
+                    .all(assertElementHandler, null, assertElementHandler)
                 .end()
                 .build();
 

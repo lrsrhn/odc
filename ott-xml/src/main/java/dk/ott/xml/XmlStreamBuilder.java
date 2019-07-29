@@ -23,7 +23,7 @@ public interface XmlStreamBuilder<T extends XmlStreamBuilder> {
     T addDefaultPI() throws XMLStreamException;
 
     /**
-     * Replace the current outputsteam with another one.
+     * Replace the current outputstream with another one.
      * Flush is called on the XMLStreamWriter before the swap is performed.
      *
      * The return value is the old OutputStream

@@ -37,7 +37,7 @@ public class ObservableTreeFragment {
   }
 
   public ObservableTreeFragment() {
-    this.treeEdgeReference = new TreeEdgeReference(new SingleElementFinder(), false);
+    this.treeEdgeReference = new TreeEdgeReference(new SingleElementFinder(), null, false);
   }
 
   private ExpressionBuilder expression() {

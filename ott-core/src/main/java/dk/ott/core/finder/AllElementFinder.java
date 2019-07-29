@@ -40,23 +40,13 @@ public class AllElementFinder implements ElementFinder {
     }
 
     @Override
-    public ElementFinder setSearchElement(String searchElement, boolean isRelative) {
-        throw new UnsupportedOperationException("Not supported by All element finder");
-    }
-
-    @Override
-    public ElementFinder setPredicate(Predicate predicate) {
-        throw new UnsupportedOperationException("Not supported by All element finder");
-    }
-
-    @Override
     public SearchLocationBuilder buildSearchLocation(String searchElement, boolean isRelative) {
-        return new SearchLocationBuilder(searchLocation);
+        return new SearchLocationBuilder(this, searchLocation);
     }
 
     @Override
     public SearchLocationBuilder buildSearchLocation(Predicate predicate) {
-        return new SearchLocationBuilder(searchLocation);
+        return new SearchLocationBuilder(this, searchLocation);
     }
 
     @Override

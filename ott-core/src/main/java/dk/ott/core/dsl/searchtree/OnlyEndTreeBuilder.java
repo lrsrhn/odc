@@ -39,7 +39,7 @@ public class OnlyEndTreeBuilder<T> {
     }
 
     public T end(OnEndHandler onEndHandler) {
-        ExpressionHelper.getSearchLocationBuilder(parentReference)
+        parentReference.getSearchLocationBuilder()
                 .onEndHandler(onEndHandler)
                 .build();
         return parentTreeBuilder;
