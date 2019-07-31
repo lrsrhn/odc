@@ -26,6 +26,7 @@ import dk.ott.core.dsl.ObservableTreeFragment;
 import dk.ott.core.dsl.TreeEdgeReference;
 import dk.ott.core.event.OnEndHandler;
 import dk.ott.core.predicate.Predicate;
+import dk.ott.core.predicate.Predicates;
 
 import java.util.Map;
 
@@ -95,6 +96,20 @@ public class RootAllTreeBuilder {
     public OnlyElementTreeBuilder<RootAllTreeBuilder> predicate(Predicate predicate) {
         TreeEdgeReference treeEdgeReference = rootReference.getSearchLocationBuilder()
                 .addPredicateElementFinder(predicate)
+                .toTreeEdgeReference();
+        return new OnlyElementTreeBuilder<RootAllTreeBuilder>(this, referenceStore, treeEdgeReference);
+    }
+
+    public OnlyElementTreeBuilder<RootAllTreeBuilder> namespace(String namespace) {
+        TreeEdgeReference treeEdgeReference = rootReference.getSearchLocationBuilder()
+                .addPredicateElementFinder(Predicates.namespace(namespace))
+                .toTreeEdgeReference();
+        return new OnlyElementTreeBuilder<RootAllTreeBuilder>(this, referenceStore, treeEdgeReference);
+    }
+
+    public OnlyElementTreeBuilder<RootAllTreeBuilder> noNamespace() {
+        TreeEdgeReference treeEdgeReference = rootReference.getSearchLocationBuilder()
+                .addPredicateElementFinder(Predicates.noNamespace())
                 .toTreeEdgeReference();
         return new OnlyElementTreeBuilder<RootAllTreeBuilder>(this, referenceStore, treeEdgeReference);
     }

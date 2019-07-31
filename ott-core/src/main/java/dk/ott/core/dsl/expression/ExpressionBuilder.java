@@ -72,6 +72,13 @@ public class ExpressionBuilder {
     return this;
   }
 
+  public void all(OnStartHandler onStartHandler, OnTextHandler onTextHandler, OnEndHandler onEndHandler) {
+    treeEdgeReference = treeEdgeReference.getSearchLocationBuilder()
+        .addAllElementFinder()
+        .toTreeEdgeReference();
+    hasRoot = false;
+  }
+
   public ExpressionBuilder filter(Predicate filter) {
     this.filter = filter;
     return this;

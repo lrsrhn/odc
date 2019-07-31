@@ -28,6 +28,7 @@ import dk.ott.core.event.OnEndHandler;
 import dk.ott.core.event.OnStartHandler;
 import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.predicate.Predicate;
+import dk.ott.core.predicate.Predicates;
 
 import java.util.Map;
 
@@ -109,6 +110,20 @@ public class ElementTreeBuilder<T> {
     public OnlyElementTreeBuilder<ElementTreeBuilder<T>> predicate(Predicate predicate) {
         TreeEdgeReference treeEdgeReference = parentReference.getSearchLocationBuilder()
                 .addPredicateElementFinder(predicate)
+                .toTreeEdgeReference();
+        return new OnlyElementTreeBuilder<ElementTreeBuilder<T>>(this, referenceStore, treeEdgeReference);
+    }
+
+    public OnlyElementTreeBuilder<ElementTreeBuilder<T>> namespace(String namespace) {
+        TreeEdgeReference treeEdgeReference = parentReference.getSearchLocationBuilder()
+                .addPredicateElementFinder(Predicates.namespace(namespace))
+                .toTreeEdgeReference();
+        return new OnlyElementTreeBuilder<ElementTreeBuilder<T>>(this, referenceStore, treeEdgeReference);
+    }
+
+    public OnlyElementTreeBuilder<ElementTreeBuilder<T>> noNamespace() {
+        TreeEdgeReference treeEdgeReference = parentReference.getSearchLocationBuilder()
+                .addPredicateElementFinder(Predicates.noNamespace())
                 .toTreeEdgeReference();
         return new OnlyElementTreeBuilder<ElementTreeBuilder<T>>(this, referenceStore, treeEdgeReference);
     }
