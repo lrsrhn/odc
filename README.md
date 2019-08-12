@@ -9,6 +9,7 @@ v Inline namespace predicate into DSL's
 v Missing handle all from expression build
 v Test interchange expression builder reference to tree builder
 
+x Fix todos
 x Be able to set depth for the xml builder
 x Rename ElementFinder to Node and SearchLocation to Edge.
 
