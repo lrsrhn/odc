@@ -2,7 +2,7 @@ package dk.ott.core.dsl;
 
 import dk.ott.core.event.EventHandler;
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 import org.junit.Assert;
 
 import java.util.ArrayList;
@@ -43,18 +43,18 @@ public class AssertEventHandler implements EventHandler {
     }
 
     @Override
-    public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-        startElementsActual.add(structureElement.getElementName());
+    public void onStart(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
+        startElementsActual.add(elementCursor.getElementName());
     }
 
     @Override
-    public void onEnd(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-        endElementsActual.add(structureElement.getElementName());
+    public void onEnd(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
+        endElementsActual.add(elementCursor.getElementName());
     }
 
 
     @Override
-    public void onText(StructureElement structureElement, ObjectStore objectStore) {
-        this.textsActual.add(structureElement.getText());
+    public void onText(ElementCursor elementCursor, ObjectStore objectStore) {
+        this.textsActual.add(elementCursor.getText());
     }
 }

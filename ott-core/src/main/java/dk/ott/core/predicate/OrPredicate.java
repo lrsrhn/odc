@@ -23,7 +23,7 @@
 package dk.ott.core.predicate;
 
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 
 import java.util.Arrays;
 
@@ -35,9 +35,9 @@ public class OrPredicate implements Predicate {
   }
 
   @Override
-  public boolean evaluate(StructureElement structureElement, ObjectStore objectStore) {
+  public boolean evaluate(ElementCursor elementCursor, ObjectStore objectStore) {
     for (Predicate predicate : predicates) {
-      if (predicate.evaluate(structureElement, objectStore)) {
+      if (predicate.evaluate(elementCursor, objectStore)) {
         return true;
       }
     }

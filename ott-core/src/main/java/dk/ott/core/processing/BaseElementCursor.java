@@ -1,6 +1,6 @@
 package dk.ott.core.processing;
 
-public abstract class BaseStructureElement implements InternalStructureElement {
+public abstract class BaseElementCursor implements InternalElementCursor {
 
   protected String elementTextCache;
   protected String elementNameCache;

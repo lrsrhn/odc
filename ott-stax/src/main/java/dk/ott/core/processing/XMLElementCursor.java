@@ -22,51 +22,72 @@
  */
 package dk.ott.core.processing;
 
-import dk.ott.xml.TextExtractor;
-import org.xml.sax.Attributes;
+import org.codehaus.stax2.XMLStreamReader2;
+
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamReader;
 
 import static dk.ott.core.processing.TextTrimmer.trimToNull;
 
-public class SaxElement extends BaseStructureElement {
-  private Attributes attributes;
-  private TextExtractor textExtractor;
+public class XMLElementCursor extends BaseElementCursor {
+  private XMLStreamReader2 xmlStreamReader;
+  private int eventType;
 
-  SaxElement(TextExtractor textExtractor) {
-    this.textExtractor = textExtractor;
+  public XMLElementCursor(XMLStreamReader2 xmlStreamReader) {
+    this.xmlStreamReader = xmlStreamReader;
+  }
+
+  void setEventType(int eventType) {
+    this.eventType = eventType;
   }
 
   public String getElementName() {
+    if (elementNameCache == null) {
+      elementNameCache = xmlStreamReader.getLocalName();
+    }
     return elementNameCache;
   }
 
   public String getAttributeValue(String attributeName) {
-    return attributeName == null ? null : trimToNull(attributes.getValue("", attributeName));
+    if (eventType == XMLStreamReader.START_ELEMENT) {
+      return trimToNull(xmlStreamReader.getAttributeValue(null, attributeName));
+    }
+    return null;
   }
 
   public boolean hasAttribute(String attributeName) {
-    return attributes != null && attributes.getIndex("", attributeName) > -1;
+    if (attributeName != null && eventType == XMLStreamReader.START_ELEMENT) {
+      for (int i = 0; i < xmlStreamReader.getAttributeCount(); i++) {
+        if (attributeName.equals(xmlStreamReader.getAttributeLocalName(i))) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   public String getText() {
     if (elementTextCache != null) {
       return elementTextCache;
     }
-    elementTextCache = trimToNull(textExtractor.extract());
+    if (eventType == XMLStreamConstants.CHARACTERS || eventType == XMLStreamConstants.CDATA) {
+      try {
+        elementTextCache = trimToNull(xmlStreamReader.getText());
+      } catch (IllegalStateException e) {
+        // Element has children and does not have a value/text
+      }
+    }
     return elementTextCache;
   }
 
-  @Override
-  public void clearCache() {
-    this.elementTextCache = null;
+  void setText(String text) {
+    this.elementTextCache = text;
   }
 
   public String getElementNS() {
+    if (elementNamespaceCache == null) {
+      elementNamespaceCache = trimToNull(xmlStreamReader.getNamespaceURI());
+    }
     return elementNamespaceCache;
-  }
-
-  void setData(String namespace, String elementName, Attributes attributes) {
-    this.elementNamespaceCache = namespace;
-    this.elementNameCache = trimToNull(elementName);
-    this.attributes = attributes;
   }
 }

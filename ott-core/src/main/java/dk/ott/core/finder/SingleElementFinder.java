@@ -25,7 +25,7 @@ package dk.ott.core.finder;
 import dk.ott.core.dsl.expression.SearchLocationReference;
 import dk.ott.core.predicate.Predicate;
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 
 import java.util.Collections;
 import java.util.List;
@@ -82,13 +82,13 @@ public final class SingleElementFinder implements ElementFinder {
   }
 
   @Override
-  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean includeAbsolutes) {
-    return includeAbsolutes | searchLocation.isRelative() ? lookupSearchLocation(structureElement, objectStore) : null;
+  public SearchLocation lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes) {
+    return includeAbsolutes | searchLocation.isRelative() ? lookupSearchLocation(elementCursor, objectStore) : null;
   }
 
   @Override
-  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore) {
-      if (searchElement.equals(structureElement.getElementName())) {
+  public SearchLocation lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore) {
+      if (searchElement.equals(elementCursor.getElementName())) {
       return searchLocation;
     }
     return null;

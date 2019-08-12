@@ -22,7 +22,7 @@
  */
 package dk.ott.core.stub;
 
-import dk.ott.core.processing.ElementContext;
+import dk.ott.core.processing.ElementCursorContext;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
 import dk.ott.core.processing.StubElementProcessor;
@@ -41,7 +41,7 @@ public class StubObservableTree extends ObservableTree {
     public ObjectStore find(InputReader inputReader, ObjectStore objectStore) {
         try {
             inputReader.reset();
-            ElementContext elementContext = new ElementContext(objectStore);
+            ElementCursorContext elementContext = new ElementCursorContext(objectStore);
             StubElementProcessor stubElementProcessor = new StubElementProcessor(super.rootTreeEdgeReference.getElementFinder(), objectStore);
             return stubElementProcessor.search(inputReader, elementContext);
         } catch (Exception e) {

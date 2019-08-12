@@ -23,7 +23,7 @@
 package dk.ott.core.predicate;
 
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 
 public class AttributePredicate implements Predicate {
   private String attributeName;
@@ -40,11 +40,11 @@ public class AttributePredicate implements Predicate {
   }
 
   @Override
-  public boolean evaluate(StructureElement structureElement, ObjectStore objectStore) {
+  public boolean evaluate(ElementCursor elementCursor, ObjectStore objectStore) {
     if (attributeValue == null) {
-      return structureElement.hasAttribute(attributeName);
+      return elementCursor.hasAttribute(attributeName);
     }
-    return attributeValue.equals(structureElement.getAttributeValue(attributeName));
+    return attributeValue.equals(elementCursor.getAttributeValue(attributeName));
   }
 
   @Override

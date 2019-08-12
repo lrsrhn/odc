@@ -22,6 +22,18 @@
  */
 package dk.ott.core.processing;
 
-interface InternalStructureElement extends StructureElement {
-    void clearCache();
+public interface ElementCursor {
+    String getElementNS();
+
+    String getElementName();
+
+    String getAttributeValue(String attributeName);
+
+    boolean hasAttribute(String attributeName);
+
+    String getText();
+
+    void stopProcessing();
+
+    boolean mustStopProcessing();
 }

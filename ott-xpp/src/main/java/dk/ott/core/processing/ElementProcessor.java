@@ -23,18 +23,15 @@
 package dk.ott.core.processing;
 
 import dk.ott.core.finder.ElementFinder;
-import dk.ott.core.processing.BaseElementProcessor;
-import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.XPPElement;
 import org.xmlpull.v1.XmlPullParser;
 
-public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XPPElement> {
+public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XPPElementCursor> {
 
   public ElementProcessor(ElementFinder nextElementFinder, ObjectStore objectStore) {
     super(nextElementFinder, objectStore);
   }
 
-  public ObjectStore search(XmlPullParser streamReader, XPPElement xppElement) throws Exception {
+  public ObjectStore search(XmlPullParser streamReader, XPPElementCursor xppElement) throws Exception {
     int currentDepth = 0;
     boolean continueLoop = true;
     while (continueLoop && !xppElement.mustStopProcessing()) {

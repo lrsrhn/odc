@@ -29,7 +29,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class SaxHandler extends DefaultHandler {
-    private SaxElement saxElement;
+    private SaxElementCursor saxElement;
     private TextExtractor textExtractor;
     private ObservableTreeTraverser observableTreeTraverser;
     private XMLReader xmlReader;
@@ -40,7 +40,7 @@ public class SaxHandler extends DefaultHandler {
         this.observableTreeTraverser = observableTreeTraverser;
         this.textExtractor = new TextExtractor();
         saxElementSkippingHandler.setSaxHandler(this);
-        this.saxElement = new SaxElement(textExtractor);
+        this.saxElement = new SaxElementCursor(textExtractor);
         this.xmlReader = xmlReader;
         this.saxElementSkippingHandler = saxElementSkippingHandler;
         this.depth = 0;

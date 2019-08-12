@@ -22,77 +22,72 @@
  */
 package dk.ott.core.processing;
 
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
+import org.xmlpull.v1.XmlPullParser;
 
 import static dk.ott.core.processing.TextTrimmer.trimToNull;
 
-public class DomElement implements InternalStructureElement {
-  private Node node;
-  private boolean stopProcessing;
-  private String elementTextCache;
-  protected String elementNamespaceCache;
+public class XPPElementCursor extends BaseElementCursor {
+  private XmlPullParser xmlPullParser;
+  private int eventType;
 
-  void setNode(Node node) {
-    this.node = node;
+  public XPPElementCursor(XmlPullParser xmlStreamReader) {
+    this.xmlPullParser = xmlStreamReader;
+    this.elementNameCache = null;
+    this.eventType = -1;
   }
 
-  void setNodeText(Node nodeText) {
-    if (elementTextCache == null) {
-      if (nodeText == null) {
-        elementTextCache = null;
-        return;
-      }
-      this.elementTextCache = trimToNull(nodeText.getTextContent());
-    }
+  public void setEventType(int eventType) {
+    this.eventType = eventType;
   }
 
   public String getElementName() {
-    return node.getLocalName();
+    if (elementNameCache == null) {
+      elementNameCache = xmlPullParser.getName();
+    }
+    return elementNameCache;
   }
 
   public String getAttributeValue(String attributeName) {
-    NamedNodeMap attributes = node.getAttributes();
-    if (attributes == null) {
-      return null;
+    if (eventType == XmlPullParser.START_TAG) {
+      return trimToNull(xmlPullParser.getAttributeValue(null, attributeName));
     }
-    Node node = attributes.getNamedItem(attributeName);
-    if (node == null) {
-      return null;
-    }
-    return trimToNull(node.getNodeValue());
+    return null;
   }
 
   public boolean hasAttribute(String attributeName) {
-    NamedNodeMap attributes = node.getAttributes();
-    return attributes != null && attributes.getNamedItem(attributeName) != null;
+    if (attributeName != null) {
+      for (int i = 0; i < xmlPullParser.getAttributeCount(); i++) {
+        if (attributeName.equals(xmlPullParser.getAttributeName(i))) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   public String getText() {
-    return elementTextCache;
-  }
-
-  @Override
-  public void stopProcessing() {
-    this.stopProcessing = true;
-  }
-
-  @Override
-  public boolean mustStopProcessing() {
-    return stopProcessing;
-  }
-
-  @Override
-  public void clearCache() {
-    elementTextCache = null;
-    elementNamespaceCache = null;
+    if (elementTextCache != null) {
+      return elementTextCache;
+    }
+    try {
+      if (eventType == XmlPullParser.TEXT) {
+        elementTextCache = trimToNull(xmlPullParser.getText());
+      }
+      return elementTextCache;
+    } catch (Exception e) {
+      // Element has children and does not have a value/text
+      return null;
+    }
   }
 
   public String getElementNS() {
     if (elementNamespaceCache == null) {
-      elementNamespaceCache = trimToNull(node.getNamespaceURI());
-      return elementNamespaceCache;
+      elementNamespaceCache = trimToNull(xmlPullParser.getNamespace());
     }
     return elementNamespaceCache;
+  }
+
+  void setText(String text) {
+    this.elementTextCache = text;
   }
 }

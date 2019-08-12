@@ -24,7 +24,7 @@ package dk.ott.core.processing;
 
 import dk.ott.core.finder.ElementFinder;
 
-public abstract class BaseElementProcessor<E, T extends StructureElement> {
+public abstract class BaseElementProcessor<E, T extends ElementCursor> {
     protected ObservableTreeTraverser observableTreeTraverser;
     protected ObjectStore objectStore;
 

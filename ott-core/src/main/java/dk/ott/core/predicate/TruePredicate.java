@@ -23,13 +23,13 @@
 package dk.ott.core.predicate;
 
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 
 public class TruePredicate implements Predicate {
   public static final Predicate INSTANCE = new TruePredicate();
 
   @Override
-  public boolean evaluate(StructureElement structureElement, ObjectStore objectStore) {
+  public boolean evaluate(ElementCursor elementCursor, ObjectStore objectStore) {
     return true;
   }
 }

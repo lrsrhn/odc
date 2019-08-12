@@ -25,7 +25,7 @@ package dk.ott.core.finder;
 import dk.ott.core.dsl.expression.SearchLocationReference;
 import dk.ott.core.predicate.Predicate;
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 
 import java.util.List;
 import java.util.Set;
@@ -40,9 +40,9 @@ public interface ElementFinder {
 
   ElementFinder getDereference();
 
-  SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean includeAbsolutes);
+  SearchLocation lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes);
 
-  SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore);
+  SearchLocation lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore);
 
   List<SearchLocationReference> getSeachLocationReferences();
 

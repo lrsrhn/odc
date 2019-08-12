@@ -23,7 +23,7 @@
 package dk.ott.core.predicate;
 
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 
 public class NamespacePredicate implements Predicate {
     private String expectedNamespace;
@@ -37,11 +37,11 @@ public class NamespacePredicate implements Predicate {
     }
 
     @Override
-    public boolean evaluate(StructureElement structureElement, ObjectStore objectStore) {
+    public boolean evaluate(ElementCursor elementCursor, ObjectStore objectStore) {
         if (expectedNamespace == null) {
-            return structureElement.getElementNS() == null;
+            return elementCursor.getElementNS() == null;
         }
-        return expectedNamespace.equals(structureElement.getElementNS());
+        return expectedNamespace.equals(elementCursor.getElementNS());
     }
 
     @Override

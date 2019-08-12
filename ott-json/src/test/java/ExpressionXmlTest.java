@@ -26,7 +26,7 @@ import dk.ott.core.event.EventHandler;
 import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 import dk.ott.core.standardhandlers.EventForwarderBuilder;
 import dk.ott.json.JsonObservableTree;
 import org.junit.Assert;
@@ -306,13 +306,13 @@ public class ExpressionXmlTest {
         }
 
         @Override
-        public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-            startElementsActual.add(structureElement.getElementName());
+        public void onStart(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
+            startElementsActual.add(elementCursor.getElementName());
         }
 
         @Override
-        public void onEnd(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-            endElementsActual.add(structureElement.getElementName());
+        public void onEnd(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
+            endElementsActual.add(elementCursor.getElementName());
         }
 
         public void expectedValue(String key, String value) {
@@ -320,10 +320,10 @@ public class ExpressionXmlTest {
         }
 
         @Override
-        public void onText(StructureElement structureElement, ObjectStore objectStore) {
-            String expectedValue = elementsToRead.get(structureElement.getElementName());
+        public void onText(ElementCursor elementCursor, ObjectStore objectStore) {
+            String expectedValue = elementsToRead.get(elementCursor.getElementName());
             if (expectedValue != null) {
-                Assert.assertEquals(expectedValue, structureElement.getText());
+                Assert.assertEquals(expectedValue, elementCursor.getText());
             }
         }
     }

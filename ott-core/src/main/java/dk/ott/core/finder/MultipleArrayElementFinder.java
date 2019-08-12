@@ -25,7 +25,7 @@ package dk.ott.core.finder;
 import dk.ott.core.dsl.expression.SearchLocationReference;
 import dk.ott.core.predicate.Predicate;
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,13 +90,13 @@ public final class MultipleArrayElementFinder implements ElementFinder {
   }
 
   @Override
-  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean includeAbsolutes) {
-    return this.nextXmlElementFinders.lookupSearchLocation(structureElement.getElementName(), includeAbsolutes);
+  public SearchLocation lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes) {
+    return this.nextXmlElementFinders.lookupSearchLocation(elementCursor.getElementName(), includeAbsolutes);
   }
 
   @Override
-  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore) {
-    return this.nextXmlElementFinders.lookupSearchLocation(structureElement.getElementName(), true);
+  public SearchLocation lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore) {
+    return this.nextXmlElementFinders.lookupSearchLocation(elementCursor.getElementName(), true);
   }
 
   @Override

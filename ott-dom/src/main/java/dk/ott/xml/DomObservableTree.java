@@ -22,7 +22,7 @@
  */
 package dk.ott.xml;
 
-import dk.ott.core.processing.DomElement;
+import dk.ott.core.processing.DomElementCursor;
 import dk.ott.core.processing.DomNodeProcessor;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
@@ -60,7 +60,7 @@ public class DomObservableTree extends ObservableTree {
   public ObjectStore find(Document document, ObjectStore objectStore) {
     try {
       DomNodeProcessor domNodeProcessor = new DomNodeProcessor(rootTreeEdgeReference.getElementFinder(), objectStore);
-      DomElement domElement = new DomElement();
+      DomElementCursor domElement = new DomElementCursor();
       return domNodeProcessor.search(document, domElement);
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);

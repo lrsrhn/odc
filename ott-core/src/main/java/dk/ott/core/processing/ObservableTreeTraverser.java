@@ -28,7 +28,6 @@ import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.finder.SearchLocation;
 import dk.ott.core.finder.TextLocation;
 import dk.ott.core.predicate.Predicate;
-import jdk.nashorn.internal.objects.NativeString;
 
 public final class ObservableTreeTraverser {
     private ElementFinder currentElementFinder;
@@ -49,7 +48,7 @@ public final class ObservableTreeTraverser {
         this.childDepth = 0;
     }
 
-    public EventAction startElement(final InternalStructureElement structureElement, final int currentDepth) throws Exception {
+    public EventAction startElement(final InternalElementCursor structureElement, final int currentDepth) throws Exception {
         structureElement.clearCache();
         currentOnTextLocation = null;
         SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, objectStore, childDepth == currentDepth);
@@ -59,7 +58,7 @@ public final class ObservableTreeTraverser {
         return !currentElementFinder.hasRelative() ? EventAction.SKIP_ELEMENT : EventAction.NOTHING;
     }
 
-    private EventAction handleSearchLocation(final SearchLocation searchLocation, final InternalStructureElement structureElement, final int currentDepth) throws Exception {
+    private EventAction handleSearchLocation(final SearchLocation searchLocation, final InternalElementCursor structureElement, final int currentDepth) throws Exception {
         OnStartHandler onStartHandler = searchLocation.getOnStartHandler();
         Predicate filter = searchLocation.getFilter();
         currentOnTextLocation = searchLocation.getTextLocation();
@@ -101,7 +100,7 @@ public final class ObservableTreeTraverser {
         elementFinderStack.push(currentElementFinder, onEndHandler);
     }
 
-    private void handleNextElementFinder(final InternalStructureElement structureElement, final int currentDepth, final ElementFinder nextElementFinder) throws Exception {
+    private void handleNextElementFinder(final InternalElementCursor structureElement, final int currentDepth, final ElementFinder nextElementFinder) throws Exception {
         currentElementFinder = nextElementFinder;
         if (currentElementFinder.isPredicate()) {
             SearchLocation searchLocation = currentElementFinder.lookupSearchLocation(structureElement, objectStore);
@@ -111,7 +110,7 @@ public final class ObservableTreeTraverser {
         }
     }
 
-    public void text(final InternalStructureElement structureElement) throws Exception {
+    public void text(final InternalElementCursor structureElement) throws Exception {
         if (currentOnTextLocation != null && structureElement.getText() != null) {
             Predicate filter = currentOnTextLocation.getTextFilter();
             if (filter == null) {
@@ -122,7 +121,7 @@ public final class ObservableTreeTraverser {
         }
     }
 
-    public void endElement(final InternalStructureElement structureElement, final int currentDepth) throws Exception {
+    public void endElement(final InternalElementCursor structureElement, final int currentDepth) throws Exception {
         while (parentDepth == currentDepth) {
             childDepth = parentDepth;
             parentDepth = depthStack.popAndPeek();

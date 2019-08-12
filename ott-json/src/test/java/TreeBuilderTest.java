@@ -26,7 +26,7 @@ import dk.ott.core.eventhandling.TextValueCollector;
 import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 import dk.ott.json.JsonObservableTree;
 import org.junit.Assert;
 import org.junit.Before;
@@ -428,7 +428,7 @@ public class TreeBuilderTest {
 
         OnTextHandler valueTester = new OnTextHandler() {
             @Override
-            public void onText(StructureElement structureElement, ObjectStore objectStore) {
+            public void onText(ElementCursor structureElement, ObjectStore objectStore) {
                 String value = structureElement.getText();
                 if(value == null) {
                     assertEquals("isnull", structureElement.getElementName());
@@ -501,17 +501,17 @@ public class TreeBuilderTest {
         }
 
         @Override
-        public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-            startElementsActual.add(structureElement.getElementName());
+        public void onStart(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
+            startElementsActual.add(elementCursor.getElementName());
         }
 
         @Override
-        public void onEnd(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-            endElementsActual.add(structureElement.getElementName());
+        public void onEnd(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
+            endElementsActual.add(elementCursor.getElementName());
         }
 
         @Override
-        public void onText(StructureElement structureElement, ObjectStore objectStore) {
+        public void onText(ElementCursor elementCursor, ObjectStore objectStore) {
 
         }
     }

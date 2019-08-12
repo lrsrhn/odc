@@ -28,12 +28,12 @@ import com.ximpleware.VTDNav;
 
 import static dk.ott.core.processing.TextTrimmer.trimToNull;
 
-public class VtdElement extends BaseStructureElement {
+public class VtdElementCursor extends BaseElementCursor {
   private VTDNav vtdNav;
   private AutoPilot autoPilot;
   private int tokenIndex;
 
-  public VtdElement(VTDNav vtdNav, AutoPilot autoPilot) {
+  public VtdElementCursor(VTDNav vtdNav, AutoPilot autoPilot) {
     try {
       this.vtdNav = vtdNav;
       this.autoPilot = autoPilot;

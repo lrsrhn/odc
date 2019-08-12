@@ -27,7 +27,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public final class DomNodeProcessor extends BaseElementProcessor<Document, DomElement> {
+public final class DomNodeProcessor extends BaseElementProcessor<Document, DomElementCursor> {
     private boolean skipElement;
 
     public DomNodeProcessor(ElementFinder nextElementFinder, ObjectStore objectStore) {
@@ -35,7 +35,7 @@ public final class DomNodeProcessor extends BaseElementProcessor<Document, DomEl
         this.skipElement = false;
     }
 
-    public ObjectStore search(Document document, DomElement domElement) throws Exception {
+    public ObjectStore search(Document document, DomElementCursor domElement) throws Exception {
         int currentDepth = 0;
         NodeProgressStack nodeProgressStack = new NodeProgressStack(10);
         nodeProgressStack.push(0, document.getDocumentElement());

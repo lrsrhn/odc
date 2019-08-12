@@ -26,7 +26,7 @@ import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -120,8 +120,8 @@ public abstract class Example {
         }
 
         @Override
-        public void onText(StructureElement structureElement, ObjectStore objectStore) {
-            System.out.println(prefix + ": " + structureElement.getText());
+        public void onText(ElementCursor elementCursor, ObjectStore objectStore) {
+            System.out.println(prefix + ": " + elementCursor.getText());
         }
     }
 }

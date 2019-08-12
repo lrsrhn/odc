@@ -23,7 +23,7 @@
 
 import dk.ott.core.event.EventHandler;
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 import dk.ott.json.JsonObservableTree;
 import org.junit.Test;
 
@@ -104,14 +104,14 @@ public class JsonPathFinderTest {
         }
 
         @Override
-        public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-            objectStore.put("something", structureElement.getElementName());
+        public void onStart(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
+            objectStore.put("something", elementCursor.getElementName());
             objectStore.put("one", 123);
         }
 
         @Override
-        public void onEnd(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-            System.out.println("End: " + structureElement.getElementName());
+        public void onEnd(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
+            System.out.println("End: " + elementCursor.getElementName());
         }
 
         @Override
@@ -120,8 +120,8 @@ public class JsonPathFinderTest {
         }
 
         @Override
-        public void onText(StructureElement structureElement, ObjectStore objectStore) {
-            System.out.println(String.format("%s=%s", structureElement.getElementName(), structureElement.getText()));
+        public void onText(ElementCursor elementCursor, ObjectStore objectStore) {
+            System.out.println(String.format("%s=%s", elementCursor.getElementName(), elementCursor.getText()));
         }
     }
 }

@@ -26,7 +26,7 @@ import javax.json.stream.JsonParser;
 
 import static dk.ott.core.processing.TextTrimmer.trimToNull;
 
-public class JsonObject extends BaseStructureElement {
+public class JsonObject extends BaseElementCursor {
     private JsonParser.Event currentEvent;
     private JsonParser jsonParser;
 

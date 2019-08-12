@@ -29,7 +29,7 @@ import org.codehaus.stax2.XMLStreamReader2;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
-public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamReader2, XMLElement> {
+public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamReader2, XMLElementCursor> {
 
     private XmlRawTextReader2 xmlRawTextReader;
 
@@ -38,7 +38,7 @@ public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamRea
         this.xmlRawTextReader = xmlRawTextReader;
     }
 
-    public ObjectStore search(XMLStreamReader2 streamReader, XMLElement xmlElement) throws Exception {
+    public ObjectStore search(XMLStreamReader2 streamReader, XMLElementCursor xmlElement) throws Exception {
         int currentDepth = 0;
         while (streamReader.hasNext() && !xmlElement.mustStopProcessing()) {
             int eventType = streamReader.next();

@@ -23,8 +23,8 @@
 package dk.ott.core.predicate;
 
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 
 public interface Predicate {
-  boolean evaluate(StructureElement structureElement, ObjectStore objectStore);
+  boolean evaluate(ElementCursor elementCursor, ObjectStore objectStore);
 }

@@ -23,7 +23,7 @@
 package dk.ott.core.predicate;
 
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 
 public class TextPredicate implements Predicate {
   private String expectedText;
@@ -33,8 +33,8 @@ public class TextPredicate implements Predicate {
   }
 
   @Override
-  public boolean evaluate(StructureElement structureElement, ObjectStore objectStore) {
-    return expectedText.equals(structureElement.getText());
+  public boolean evaluate(ElementCursor elementCursor, ObjectStore objectStore) {
+    return expectedText.equals(elementCursor.getText());
   }
 
   @Override

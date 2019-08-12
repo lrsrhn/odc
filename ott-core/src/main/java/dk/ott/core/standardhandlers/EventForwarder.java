@@ -26,7 +26,7 @@ import dk.ott.core.event.EventHandler;
 import dk.ott.core.event.OnStartHandler;
 import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 // TODO: Remove EventHandler and use EventHandler instead
 public class EventForwarder implements OnStartHandler, OnTextHandler {
     private EventHandler[] eventHandlers;
@@ -36,16 +36,16 @@ public class EventForwarder implements OnStartHandler, OnTextHandler {
     }
 
     @Override
-    public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+    public void onStart(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
         for (EventHandler eventHandler : eventHandlers) {
-            eventHandler.onStart(structureElement, objectStore);
+            eventHandler.onStart(elementCursor, objectStore);
         }
     }
 
     @Override
-    public void onText(StructureElement structureElement, ObjectStore objectStore) throws Exception {
+    public void onText(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
         for (EventHandler eventHandler : eventHandlers) {
-            eventHandler.onText(structureElement, objectStore);
+            eventHandler.onText(elementCursor, objectStore);
         }
     }
 }

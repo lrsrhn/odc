@@ -26,14 +26,14 @@ import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.stub.Element;
 import dk.ott.core.stub.InputReader;
 
-public class StubElementProcessor extends BaseElementProcessor<InputReader, ElementContext> {
+public class StubElementProcessor extends BaseElementProcessor<InputReader, ElementCursorContext> {
 
     public StubElementProcessor(ElementFinder rootElementFinder, ObjectStore objectStore) {
         super(rootElementFinder, objectStore);
     }
 
     @Override
-    public ObjectStore search(InputReader parser, ElementContext structureElement) throws Exception {
+    public ObjectStore search(InputReader parser, ElementCursorContext structureElement) throws Exception {
         int currentDepth = 0;
         while(parser.hasNext() && !structureElement.mustStopProcessing()) {
             Element element = parser.next();

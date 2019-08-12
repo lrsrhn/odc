@@ -25,7 +25,7 @@ package dk.ott.core.finder;
 import dk.ott.core.dsl.expression.SearchLocationReference;
 import dk.ott.core.predicate.Predicate;
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,9 +90,9 @@ public class MultiplePredicateMatchFinder implements ElementFinder {
   }
 
   @Override
-  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore, boolean includeAbsolutes) {
+  public SearchLocation lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes) {
     for (int i = 0; i < searchLocationList.getSize(); i++) {
-      if (searchLocationList.predicates[i].evaluate(structureElement, objectStore)) {
+      if (searchLocationList.predicates[i].evaluate(elementCursor, objectStore)) {
         return searchLocationList.searchLocations[i];
       }
     }
@@ -100,8 +100,8 @@ public class MultiplePredicateMatchFinder implements ElementFinder {
   }
 
   @Override
-  public SearchLocation lookupSearchLocation(StructureElement structureElement, ObjectStore objectStore) {
-    return lookupSearchLocation(structureElement, objectStore, false);
+  public SearchLocation lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore) {
+    return lookupSearchLocation(elementCursor, objectStore, false);
   }
 
   @Override

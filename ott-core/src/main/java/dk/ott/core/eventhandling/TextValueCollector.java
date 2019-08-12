@@ -24,7 +24,7 @@ package dk.ott.core.eventhandling;
 
 import dk.ott.core.event.EventHandler;
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 
 public class TextValueCollector implements EventHandler {
 
@@ -34,22 +34,22 @@ public class TextValueCollector implements EventHandler {
     this.storeKey = storeKey;
   }
 
-  public void handle(StructureElement structureElement, ObjectStore objectStore) {
-    objectStore.put(storeKey,  structureElement.getText());
+  public void handle(ElementCursor elementCursor, ObjectStore objectStore) {
+    objectStore.put(storeKey,  elementCursor.getText());
   }
 
   @Override
-  public void onEnd(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-    handle(structureElement, objectStore);
+  public void onEnd(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
+    handle(elementCursor, objectStore);
   }
 
   @Override
-  public void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-    handle(structureElement, objectStore);
+  public void onStart(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
+    handle(elementCursor, objectStore);
   }
 
   @Override
-  public void onText(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-    handle(structureElement, objectStore);
+  public void onText(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
+    handle(elementCursor, objectStore);
   }
 }

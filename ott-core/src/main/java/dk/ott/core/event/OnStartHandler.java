@@ -24,8 +24,8 @@ package dk.ott.core.event;
 
 
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 
 public interface OnStartHandler {
-    void onStart(StructureElement structureElement, ObjectStore objectStore) throws Exception;
+    void onStart(ElementCursor elementCursor, ObjectStore objectStore) throws Exception;
 }

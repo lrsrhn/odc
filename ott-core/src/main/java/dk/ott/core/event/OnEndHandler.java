@@ -23,8 +23,8 @@
 package dk.ott.core.event;
 
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 
 public interface OnEndHandler {
-    void onEnd(StructureElement structureElement, ObjectStore objectStore) throws Exception;
+    void onEnd(ElementCursor elementCursor, ObjectStore objectStore) throws Exception;
 }

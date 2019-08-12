@@ -24,12 +24,12 @@ package dk.ott.core.processing;
 
 import dk.ott.core.stub.Element;
 
-public class ElementContext implements InternalStructureElement {
+public class ElementCursorContext implements InternalElementCursor {
     private ObjectStore objectStore;
     private Element currentElement;
     private boolean stopProcessing;
 
-    public ElementContext(ObjectStore objectStore) {
+    public ElementCursorContext(ObjectStore objectStore) {
         this.objectStore = objectStore == null ? new ObjectStore() : objectStore;
     }
 

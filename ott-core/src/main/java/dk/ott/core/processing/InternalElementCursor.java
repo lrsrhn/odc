@@ -22,18 +22,6 @@
  */
 package dk.ott.core.processing;
 
-public interface StructureElement {
-    String getElementNS();
-
-    String getElementName();
-
-    String getAttributeValue(String attributeName);
-
-    boolean hasAttribute(String attributeName);
-
-    String getText();
-
-    void stopProcessing();
-
-    boolean mustStopProcessing();
+interface InternalElementCursor extends ElementCursor {
+    void clearCache();
 }

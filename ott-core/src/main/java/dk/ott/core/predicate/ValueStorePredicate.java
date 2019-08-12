@@ -23,7 +23,7 @@
 package dk.ott.core.predicate;
 
 import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 
 public class ValueStorePredicate implements Predicate {
   private String storeKey;
@@ -35,7 +35,7 @@ public class ValueStorePredicate implements Predicate {
   }
 
   @Override
-  public boolean evaluate(StructureElement structureElement, ObjectStore objectStore) {
+  public boolean evaluate(ElementCursor elementCursor, ObjectStore objectStore) {
     return expectedValue.equals(objectStore.get(storeKey, String.class));
   }
 

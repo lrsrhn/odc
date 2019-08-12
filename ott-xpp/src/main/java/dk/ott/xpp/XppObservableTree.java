@@ -25,7 +25,7 @@ package dk.ott.xpp;
 import dk.ott.core.processing.ElementProcessor;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
-import dk.ott.core.processing.XPPElement;
+import dk.ott.core.processing.XPPElementCursor;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -62,7 +62,7 @@ public class XppObservableTree extends ObservableTree {
     try {
       streamReader = xmlPullParserFactory.newPullParser();
       streamReader.setInput(reader);
-      XPPElement XPPElement = new XPPElement(streamReader);
+      XPPElementCursor XPPElement = new XPPElementCursor(streamReader);
       ElementProcessor elementProcessor = new ElementProcessor(rootTreeEdgeReference.getElementFinder(), objectStore);
       return elementProcessor.search(streamReader, XPPElement);
     } catch (Exception ex) {

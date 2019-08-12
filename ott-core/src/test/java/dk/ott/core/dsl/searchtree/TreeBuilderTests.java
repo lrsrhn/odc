@@ -28,7 +28,7 @@ import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
 import dk.ott.core.processing.ObservableTree;
-import dk.ott.core.processing.StructureElement;
+import dk.ott.core.processing.ElementCursor;
 import dk.ott.xml.XmlStreamBuilder;
 import org.junit.Assert;
 import org.junit.Before;
@@ -623,9 +623,9 @@ public abstract class TreeBuilderTests {
                 .elementPath("/one/two")
                         .onText().asRaw().to(new OnTextHandler() {
             @Override
-            public void onText(StructureElement structureElement, ObjectStore objectStore) throws Exception {
-                Assert.assertEquals(longValue.length(), structureElement.getText().length());
-                Assert.assertEquals(longValue, structureElement.getText());
+            public void onText(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
+                Assert.assertEquals(longValue.length(), elementCursor.getText().length());
+                Assert.assertEquals(longValue, elementCursor.getText());
             }
         });
 
