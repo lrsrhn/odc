@@ -52,7 +52,7 @@ public class VtdXmlObservableTree extends ObservableTree {
       VTDNav vtdNav = vtdGen.getNav();
       AutoPilot autoPilot = new AutoPilot(vtdNav);
       VtdElement xmlElement = new VtdElement(vtdNav, autoPilot);
-      VtdIndexProcessor vtdIndexProcessor = new VtdIndexProcessor(rootElementFinder.getElementFinder(), objectStore);
+      VtdIndexProcessor vtdIndexProcessor = new VtdIndexProcessor(rootTreeEdgeReference.getElementFinder(), objectStore);
       return vtdIndexProcessor.search(vtdNav, xmlElement);
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);

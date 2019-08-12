@@ -22,8 +22,10 @@
  */
 package dk.ott.core.processing;
 
-import dk.ott.core.dsl.expression.ExpressionBuilder;
+import dk.ott.core.dsl.ObservableRootTreeFragment;
 import dk.ott.core.dsl.TreeEdgeReference;
+import dk.ott.core.dsl.expression.ExpressionBuilder;
+import dk.ott.core.dsl.expression.RootExpressionBuilder;
 import dk.ott.core.dsl.searchtree.RootTreeBuilder;
 import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.finder.SingleElementFinder;
@@ -34,30 +36,39 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class ObservableTree {
-  protected TreeEdgeReference rootElementFinder;
+  protected TreeEdgeReference rootTreeEdgeReference;
 
   public ObservableTree() {
-    this.rootElementFinder = new TreeEdgeReference(new SingleElementFinder().getReference(), null, false);
+    this.rootTreeEdgeReference = new TreeEdgeReference(new SingleElementFinder());
   }
 
-  ElementFinder getRootElementFinder() {
-    return rootElementFinder.getElementFinder();
+  ElementFinder getRootTreeEdgeReference() {
+    return rootTreeEdgeReference.getElementFinder();
   }
 
   public RootTreeBuilder treeBuilder() {
-    return new RootTreeBuilder(rootElementFinder.getElementFinder().getReference());
+    return new RootTreeBuilder(rootTreeEdgeReference.getElementFinder().getReference());
+  }
+
+  public static ObservableRootTreeFragment detachedTree() {
+    return new ObservableRootTreeFragment();
   }
 
   public ExpressionBuilder elementPath(String elementPath) {
-    return new ExpressionBuilder(rootElementFinder, true).elementPath(elementPath);
+    return new RootExpressionBuilder(rootTreeEdgeReference.getElementFinder()).elementPath(elementPath);
+  }
+
+  public ObservableTree addSubTree(TreeEdgeReference treeEdgeReference) {
+    rootTreeEdgeReference.getElementFinder().mergeElementFinder(treeEdgeReference.getElementFinder());
+    return this;
   }
 
   /**
    * When the search tree is complete use this method to dereference the search tree for a small performance improvement
    */
   public void dereferenceSearchTree() {
-    rootElementFinder.dereferenceElementFinder();
-    rootElementFinder.getElementFinder().unreferenceTree();
+    rootTreeEdgeReference.dereferenceElementFinder();
+    rootTreeEdgeReference.getElementFinder().unreferenceTree();
   }
 
   public ObjectStore find(String rawXml) {
@@ -73,7 +84,7 @@ public abstract class ObservableTree {
     try {
       StringBuilder tostring = new StringBuilder();
       Set<ElementFinder> visited = new HashSet<ElementFinder>();
-      rootElementFinder.getElementFinder().buildToString(new StringBuilder(), visited, tostring);
+      rootTreeEdgeReference.getElementFinder().buildToString(new StringBuilder(), visited, tostring);
       return tostring.toString();
     } catch (Exception ex) {
       throw new RuntimeException(ex);

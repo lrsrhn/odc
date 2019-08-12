@@ -27,14 +27,16 @@ import dk.ott.core.finder.SearchLocation;
 import dk.ott.core.finder.SearchLocationBuilder;
 
 public class TreeEdgeReference {
-  private boolean isPredicate;
   private SearchLocation searchLocation;
   private ElementFinder elementFinderReference;
 
-  public TreeEdgeReference(ElementFinder elementFinder, SearchLocation searchLocation, boolean isPredicate) {
+  public TreeEdgeReference(ElementFinder elementFinder, SearchLocation searchLocation) {
     this.elementFinderReference = elementFinder.getReference();
     this.searchLocation = searchLocation;
-    this.isPredicate = isPredicate;
+  }
+
+  public TreeEdgeReference(ElementFinder elementFinder) {
+    this(elementFinder, null);
   }
 
   public ElementFinder getElementFinder() {
@@ -46,7 +48,7 @@ public class TreeEdgeReference {
   }
 
   public boolean isPredicate() {
-    return isPredicate;
+    return elementFinderReference.isPredicate();
   }
 
   public SearchLocation getSearchLocation() {
@@ -55,10 +57,6 @@ public class TreeEdgeReference {
 
   public SearchLocationBuilder getSearchLocationBuilder() {
     return new SearchLocationBuilder(elementFinderReference, searchLocation);
-  }
-
-  public void setPredicate(boolean predicate) {
-    isPredicate = predicate;
   }
 
   public void setSearchLocation(SearchLocation searchLocation) {

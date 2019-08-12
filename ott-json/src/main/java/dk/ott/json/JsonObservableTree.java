@@ -50,7 +50,7 @@ public class JsonObservableTree extends ObservableTree {
     try {
       jsonParser = jsonParserFactory.createParser(reader);
       JsonObject jsonObject = new JsonObject(jsonParser);
-      ObjectProcessor objectProcessor = new ObjectProcessor(rootElementFinder.getElementFinder(), objectStore);
+      ObjectProcessor objectProcessor = new ObjectProcessor(rootTreeEdgeReference.getElementFinder(), objectStore);
       return objectProcessor.search(jsonParser, jsonObject);
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);

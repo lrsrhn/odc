@@ -112,11 +112,12 @@ public class SinglePredicateMatchFinder implements ElementFinder {
         throw new IllegalStateException("Cannot do search elements");
       }
       if (searchLocation != null) {
-        if (predicate.equals(searchLocationReference.getPredicate()) && searchLocation.isRelative() == searchLocationReference.isRelative()) {
-          return;
+        if (predicate == null || new SearchLocationReference(searchLocation, predicate).same(searchLocationReference)) {
+          searchLocation.merge(searchLocationReference.getSearchLocation());
+        } else {
+          MultiplePredicateMatchFinder multiplePredicateMatchFinder = new MultiplePredicateMatchFinder(thisReference, predicate, searchLocation);
+          multiplePredicateMatchFinder.mergeElementFinder(elementFinder);
         }
-        MultiplePredicateMatchFinder multiplePredicateMatchFinder = new MultiplePredicateMatchFinder(thisReference, predicate, searchLocation);
-        multiplePredicateMatchFinder.mergeElementFinder(elementFinder);
       } else {
        searchLocation = searchLocationReference.getSearchLocation();
        predicate = searchLocationReference.getPredicate();

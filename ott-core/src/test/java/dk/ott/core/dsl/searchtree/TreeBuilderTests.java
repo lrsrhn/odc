@@ -23,6 +23,7 @@
 package dk.ott.core.dsl.searchtree;
 
 import dk.ott.core.dsl.AssertEventHandler;
+import dk.ott.core.dsl.ObservableRootTreeFragment;
 import dk.ott.core.event.OnTextHandler;
 import dk.ott.core.predicate.Predicates;
 import dk.ott.core.processing.ObjectStore;
@@ -557,6 +558,48 @@ public abstract class TreeBuilderTests {
 
         observableTree.find(new StringReader(xml));
         assertElementHandler.verify();
+    }
+
+    @Test
+    public void mixingTreeBuilderWithExpressions() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
+            .element("one")
+                .element("two").attribute("att", "bla")
+                    .element("three")
+                    .elementEnd()
+                .elementEnd()
+                .element("two").attribute("att", "wee")
+                    .element("five")
+                    .elementEnd()
+                .elementEnd()
+            .elementEnd()
+        .toString();
+
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
+        assertElementHandler.exptectedStartElements("one", "two", "three", "two", "five");
+        assertElementHandler.exptectedEndElements("three", "two", "five", "two", "one");
+
+        observableTree.treeBuilder()
+                .element("one").onStart().to(assertElementHandler)
+                    .element("two").onStart().to(assertElementHandler)
+                        .addTreeFragment(predicateForThree(assertElementHandler))
+                        .predicate(Predicates.attribute("att", "wee"))
+                            .element("five")
+                                .onStart().to(assertElementHandler)
+                            .end(assertElementHandler)
+                        .end()
+                    .end(assertElementHandler)
+                .end(assertElementHandler)
+            .build();
+
+        observableTree.find(new StringReader(xml));
+        assertElementHandler.verify();
+    }
+
+    private ObservableRootTreeFragment predicateForThree(AssertEventHandler assertElementHandler) {
+        ObservableRootTreeFragment subTree = ObservableTree.detachedTree();
+        subTree.predicateExp(Predicates.attribute("att", "bla")).elementPath("/three").handle(assertElementHandler);
+        return subTree;
     }
 
     /**

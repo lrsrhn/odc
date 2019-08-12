@@ -108,7 +108,36 @@ public final class SearchLocation {
     }
 
     public TreeEdgeReference toTreeEdgeReference(ElementFinder elementFinder) {
-        return new TreeEdgeReference(elementFinder, this, elementFinder.isPredicate());
+        return new TreeEdgeReference(elementFinder, this);
+    }
+
+    public SearchLocation merge(SearchLocation mergee) {
+        if (elementFinder == null) {
+            elementFinder = mergee.elementFinder;
+        } else if (mergee.elementFinder != null && elementFinder != mergee.elementFinder) {
+            elementFinder.mergeElementFinder(mergee.elementFinder);
+        }
+        if (onStartHandler == null) {
+            onStartHandler = mergee.onStartHandler;
+        } else if (mergee.onStartHandler != null && !onStartHandler.equals(mergee.onStartHandler)) {
+            throw new IllegalStateException("SearchLocation cannot point to different on start handlers when merging");
+        }
+        if (textLocation == null) {
+            textLocation = mergee.textLocation;
+        } else if (mergee.textLocation != null && !textLocation.equals(mergee.textLocation)) {
+            throw new IllegalStateException("SearchLocation cannot point to different text locations when merging");
+        }
+        if (onEndHandler == null) {
+            onEndHandler = mergee.onEndHandler;
+        } else if (mergee.onEndHandler != null && !onEndHandler.equals(mergee.onEndHandler)) {
+            throw new IllegalStateException("SearchLocation cannot point to different on end handlers when merging");
+        }
+        if (filter == null) {
+            filter = mergee.filter;
+        } else if (mergee.filter != null && !filter.equals(mergee.filter)) {
+            throw new IllegalStateException("SearchLocation cannot point to different filters when merging");
+        }
+        return this;
     }
 
     @Override

@@ -120,10 +120,17 @@ public class MultiplePredicateMatchFinder implements ElementFinder {
       if (searchLocationReference.getSearchElement() != null) {
         throw new RuntimeException("Unable to add reference using a searchElement!");
       }
-      if (searchLocationList.findIndexByPredicate(searchLocationReference.getPredicate()) != -1) {
-        throw new RuntimeException("A searchElement already exists: " + searchLocationReference.getSearchElement());
+      int predicateIndex = searchLocationList.findIndexByPredicate(searchLocationReference.getPredicate());
+      if (predicateIndex != -1) {
+        SearchLocation searchLocation = searchLocationList.searchLocations[predicateIndex];
+        if (searchLocation.isRelative() == searchLocationReference.isRelative()) {
+          searchLocation.merge(searchLocationReference.getSearchLocation());
+        } else {
+          searchLocationList.addSearchLocation(searchLocationReference.getSearchLocation(), searchLocationReference.getPredicate());
+        }
+      } else {
+        searchLocationList.addSearchLocation(searchLocationReference.getSearchLocation(), searchLocationReference.getPredicate());
       }
-      searchLocationList.addSearchLocation(searchLocationReference.getSearchLocation(), searchLocationReference.getPredicate());
     }
   }
 

@@ -63,7 +63,7 @@ public class XppObservableTree extends ObservableTree {
       streamReader = xmlPullParserFactory.newPullParser();
       streamReader.setInput(reader);
       XPPElement XPPElement = new XPPElement(streamReader);
-      ElementProcessor elementProcessor = new ElementProcessor(rootElementFinder.getElementFinder(), objectStore);
+      ElementProcessor elementProcessor = new ElementProcessor(rootTreeEdgeReference.getElementFinder(), objectStore);
       return elementProcessor.search(streamReader, XPPElement);
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);

@@ -22,9 +22,8 @@
  */
 package dk.ott.core.dsl.searchtree;
 
-import dk.ott.core.dsl.ObservableTreeFragment;
+import dk.ott.core.dsl.ObservableRootTreeFragment;
 import dk.ott.core.dsl.TreeEdgeReference;
-import dk.ott.core.finder.ElementFinder;
 import dk.ott.core.event.OnEndHandler;
 
 import java.util.Map;
@@ -74,7 +73,7 @@ public class OnlyElementTreeBuilder<T> {
         return this;
     }
 
-    public OnlyElementTreeBuilder<T> addPathFragment(ObservableTreeFragment observableTreeFragment) {
+    public OnlyElementTreeBuilder<T> addTreeFragment(ObservableRootTreeFragment observableTreeFragment) {
         TreeEdgeReference reference = observableTreeFragment.getTreeEdgeReference();
         ExpressionHelper.addElementFinderSameAsReference(parentReference, reference)
                 .mergeElementFinder(reference.getElementFinder());

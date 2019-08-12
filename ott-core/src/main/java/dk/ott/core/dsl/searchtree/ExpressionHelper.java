@@ -31,13 +31,6 @@ import java.util.List;
 
 public class ExpressionHelper {
 
-    public static ElementFinder addNextPredicate(TreeEdgeReference parentReference) {
-        if (parentReference.isPredicate()) {
-            throw new IllegalStateException("Two predicate finder may not be adjacent");
-        }
-        return parentReference.getSearchLocationBuilder().addPredicateElementFinder();
-    }
-
     public static ElementFinder addElementFinderSameAsReference(TreeEdgeReference parentReference, TreeEdgeReference reference) {
         if (parentReference.isPredicate()) {
             if (reference.isPredicate()) {
@@ -57,19 +50,20 @@ public class ExpressionHelper {
     public static TreeEdgeReference parseElementPath(String elementPath, TreeEdgeReference treeEdgeReference, boolean firstIsRoot) {
         List<Element> elementList = ElementPathParser.parseElementPath(elementPath);
         int index = 0;
+        TreeEdgeReference currentTreeEdgeReference = treeEdgeReference;
         if (firstIsRoot) {
             Element element = elementList.get(0);
-            treeEdgeReference = treeEdgeReference.getElementFinder()
+            currentTreeEdgeReference = currentTreeEdgeReference.getElementFinder()
                     .buildSearchLocation(element.getElement(), element.isRelative())
                     .toTreeEdgeReference();
             index++;
         }
         for (;index < elementList.size(); index++) {
             Element element = elementList.get(index);
-            treeEdgeReference = treeEdgeReference.getSearchLocationBuilder()
-                  .addSearchElementFinder(element.getElement(), element.isRelative())
-                  .toTreeEdgeReference();
+            currentTreeEdgeReference = currentTreeEdgeReference.getSearchLocationBuilder()
+                .addSearchElementFinder(element.getElement(), element.isRelative())
+                .toTreeEdgeReference();
         }
-        return treeEdgeReference;
+        return currentTreeEdgeReference;
     }
 }

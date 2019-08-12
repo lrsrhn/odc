@@ -92,7 +92,7 @@ public class StaxObservableTree extends ObservableTree {
         streamReader.validateAgainst(xmlValidationSchema);
       }
       XMLElement xmlElement = new XMLElement(streamReader);
-      XmlElementProcessor xmlElementProcessor = new XmlElementProcessor(rootElementFinder.getElementFinder(), objectStore, xmlRawTextReader);
+      XmlElementProcessor xmlElementProcessor = new XmlElementProcessor(rootTreeEdgeReference.getElementFinder(), objectStore, xmlRawTextReader);
       return xmlElementProcessor.search(streamReader, xmlElement);
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);

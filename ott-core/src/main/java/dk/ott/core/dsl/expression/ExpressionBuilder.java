@@ -34,15 +34,13 @@ import dk.ott.core.predicate.Predicate;
 import dk.ott.core.predicate.Predicates;
 
 public class ExpressionBuilder {
-  private boolean hasRoot;
   private TreeEdgeReference treeEdgeReference;
   private Predicate filter;
   private Predicate textFilter;
 
-  public ExpressionBuilder(TreeEdgeReference treeEdgeReference, boolean hasRoot) {
+  public ExpressionBuilder(TreeEdgeReference treeEdgeReference) {
     this.treeEdgeReference = treeEdgeReference;
     this.filter = null;
-    this.hasRoot = hasRoot;
   }
 
   public ExpressionBuilder predicate(Predicate predicate) {
@@ -67,16 +65,15 @@ public class ExpressionBuilder {
   }
 
   public ExpressionBuilder elementPath(String elementPath) {
-    treeEdgeReference = ExpressionHelper.parseElementPath(elementPath, treeEdgeReference, hasRoot);
-    hasRoot = false;
+    treeEdgeReference = ExpressionHelper.parseElementPath(elementPath, treeEdgeReference, false);
     return this;
   }
 
   public void all(OnStartHandler onStartHandler, OnTextHandler onTextHandler, OnEndHandler onEndHandler) {
+    // TODO: not finished
     treeEdgeReference = treeEdgeReference.getSearchLocationBuilder()
         .addAllElementFinder()
         .toTreeEdgeReference();
-    hasRoot = false;
   }
 
   public ExpressionBuilder filter(Predicate filter) {

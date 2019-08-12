@@ -309,6 +309,47 @@ public abstract class ExpressionXmlTests {
     }
 
     @Test
+    public void mixingExpressionsWithTreebuilder() throws Exception {
+        String xml = createXmlStreamBuilderToString(true)
+            .element("one")
+                .element("two").attribute("att", "bla")
+                    .element("three")
+                    .elementEnd()
+                .elementEnd()
+                .element("two").attribute("att", "wee")
+                    .element("five")
+                    .elementEnd()
+                .elementEnd()
+            .elementEnd()
+        .toString();
+
+        AssertEventHandler assertElementHandler = new AssertEventHandler();
+        assertElementHandler.exptectedStartElements("one", "two", "three", "two", "five");
+        assertElementHandler.exptectedEndElements("three", "two", "five", "two", "one");
+
+        observableTree.elementPath("/one").handle(assertElementHandler);
+        observableTree.elementPath("/one/two").handle(assertElementHandler);
+        observableTree.addSubTree(
+            ObservableTree.detachedTree()
+                .element("one")
+                    .element("two")
+                        .predicate(Predicates.attribute("att", "bla"))
+                            .element("three")
+                                .onStart().to(assertElementHandler)
+                                .onText().to(assertElementHandler)
+                            .end(assertElementHandler)
+                        .end()
+                    .end()
+                .end()
+            .end()
+        );
+        observableTree.elementPath("/one/two").predicate(Predicates.attribute("att", "wee")).elementPath("/five").handle(assertElementHandler);
+
+        observableTree.find(new StringReader(xml));
+        assertElementHandler.verify();
+    }
+
+    @Test
     public void testRecursion() throws Exception {
         String xml = createXmlStreamBuilderToString(true)
             .element("one")

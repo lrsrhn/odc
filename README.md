@@ -8,8 +8,8 @@ v Go through and note stuff that needs refactoring
 v Inline namespace predicate into DSL's 
 v Missing handle all from expression build
 
+? Remove addReferencefeature in DSL
 x Test interchange expression builder reference to tree builder
-x Be able to call ott with ObservableTreeFragment or similar
 x Be able to set depth for the xml builder
 
 x Rename ElementFinder to Node and SearchLocation to Edge.

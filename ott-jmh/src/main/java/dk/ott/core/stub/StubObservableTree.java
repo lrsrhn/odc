@@ -42,7 +42,7 @@ public class StubObservableTree extends ObservableTree {
         try {
             inputReader.reset();
             ElementContext elementContext = new ElementContext(objectStore);
-            StubElementProcessor stubElementProcessor = new StubElementProcessor(super.rootElementFinder.getElementFinder(), objectStore);
+            StubElementProcessor stubElementProcessor = new StubElementProcessor(super.rootTreeEdgeReference.getElementFinder(), objectStore);
             return stubElementProcessor.search(inputReader, elementContext);
         } catch (Exception e) {
             throw new RuntimeException(e);

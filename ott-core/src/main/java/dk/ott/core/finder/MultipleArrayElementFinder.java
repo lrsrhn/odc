@@ -115,11 +115,13 @@ public final class MultipleArrayElementFinder implements ElementFinder {
       if (searchLocationReference.getPredicate() != null) {
         throw new RuntimeException("Unable to add reference using a predicate!");
       }
-      if (nextXmlElementFinders.lookupSearchLocation(searchLocationReference.getSearchElement(), !searchLocationReference.isRelative()) != null) {
-        throw new RuntimeException("A searchElement already exists: " + searchLocationReference.getSearchElement());
+      SearchLocation searchLocation = nextXmlElementFinders.lookupSearchLocation(searchLocationReference.getSearchElement(), !searchLocationReference.isRelative());
+      if (searchLocation != null && searchLocation.isRelative() == searchLocationReference.isRelative()) {
+        searchLocation.merge(searchLocationReference.getSearchLocation());
+      } else {
+        nextXmlElementFinders.addSearchLocation(searchLocationReference.getSearchElement(), searchLocationReference.getSearchLocation());
+        hasRelatives |= searchLocationReference.isRelative();
       }
-      nextXmlElementFinders.addSearchLocation(searchLocationReference.getSearchElement(), searchLocationReference.getSearchLocation());
-      hasRelatives |= searchLocationReference.isRelative();
     }
   }
 

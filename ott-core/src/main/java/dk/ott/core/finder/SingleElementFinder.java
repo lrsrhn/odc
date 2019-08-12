@@ -114,11 +114,12 @@ public final class SingleElementFinder implements ElementFinder {
         throw new IllegalStateException("Cannot do predicate");
       }
       if (searchLocation != null) {
-        if (searchElement.equals(searchLocationReference.getSearchElement()) && searchLocation.isRelative() == searchLocationReference.isRelative()) {
-          return;
+        if (searchElement == null || new SearchLocationReference(searchLocation, searchElement).same(searchLocationReference)) {
+          searchLocation.merge(searchLocationReference.getSearchLocation());
+        } else {
+          MultipleArrayElementFinder multipleArrayElementFinder = new MultipleArrayElementFinder(thisReference, searchElement, searchLocation);
+          multipleArrayElementFinder.mergeElementFinder(elementFinder);
         }
-        MultipleArrayElementFinder multipleArrayElementFinder = new MultipleArrayElementFinder(thisReference, searchElement, searchLocation);
-        multipleArrayElementFinder.mergeElementFinder(elementFinder);
       } else {
        searchLocation = searchLocationReference.getSearchLocation();
        searchElement = searchLocationReference.getSearchElement();

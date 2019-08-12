@@ -23,46 +23,49 @@
 package dk.ott.core.dsl;
 
 import dk.ott.core.dsl.expression.ExpressionBuilder;
+import dk.ott.core.dsl.expression.RootExpressionBuilder;
 import dk.ott.core.dsl.searchtree.ElementTreeBuilder;
 import dk.ott.core.dsl.searchtree.OnlyElementTreeBuilder;
-import dk.ott.core.dsl.searchtree.SubTreeBuilder;
+import dk.ott.core.dsl.searchtree.RootSubTreeBuilder;
+import dk.ott.core.finder.ElementFinder;
+import dk.ott.core.finder.SingleElementFinder;
+import dk.ott.core.finder.SinglePredicateMatchFinder;
 import dk.ott.core.predicate.Predicate;
 
-import java.util.HashMap;
+public class ObservableRootTreeFragment {
+  private ElementFinder elementFinder;
 
-public class ObservableTreeFragment {
-  private TreeEdgeReference treeEdgeReference;
-
-  public ObservableTreeFragment(TreeEdgeReference treeEdgeReference) {
-    this.treeEdgeReference = treeEdgeReference;
+  private RootExpressionBuilder expression(ElementFinder newElementFinder) {
+    if (this.elementFinder == null) {
+      this.elementFinder = newElementFinder;
+    }
+    return new RootExpressionBuilder(this.elementFinder);
   }
 
-  private ExpressionBuilder expression() {
-    return new ExpressionBuilder(treeEdgeReference);
+  private RootSubTreeBuilder treeBuilder(ElementFinder newElementFinder) {
+    if (elementFinder == null) {
+      this.elementFinder = newElementFinder;
+    }
+    return new RootSubTreeBuilder(elementFinder);
   }
 
-  public SubTreeBuilder treeBuilder() {
-    return new SubTreeBuilder(new HashMap<String, TreeEdgeReference>(), treeEdgeReference);
+  public ElementTreeBuilder<RootSubTreeBuilder> element(String elementName) {
+    return treeBuilder(new SingleElementFinder().getReference()).element(elementName);
   }
 
-  public ElementTreeBuilder<SubTreeBuilder> element(String elementName) {
-    return treeBuilder().element(elementName);
-  }
-
-  public OnlyElementTreeBuilder<SubTreeBuilder> predicate(Predicate predicate) {
-    return treeBuilder().predicate(predicate);
+  public OnlyElementTreeBuilder<RootSubTreeBuilder> predicate(Predicate predicate) {
+    return treeBuilder(new SinglePredicateMatchFinder().getReference()).predicate(predicate);
   }
 
   public ExpressionBuilder elementPath(String elementPath) {
-    return expression().elementPath(elementPath);
+    return expression(new SingleElementFinder().getReference()).elementPath(elementPath);
   }
 
   public ExpressionBuilder predicateExp(Predicate predicate) {
-    return expression().predicate(predicate);
+    return expression(new SinglePredicateMatchFinder().getReference()).predicate(predicate);
   }
 
   public TreeEdgeReference getTreeEdgeReference() {
-    return treeEdgeReference;
+    return new TreeEdgeReference(elementFinder);
   }
-
 }

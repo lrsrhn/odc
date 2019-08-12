@@ -67,4 +67,36 @@ public class SearchLocationReference {
     public boolean isRelative() {
         return searchLocation.isRelative();
     }
+
+    /**
+     * Compares two searchLocationReferences by searchLocation.isRelative and (searchElement or predicate)
+     */
+    public boolean same(SearchLocationReference searchLocationReference) {
+        if (searchElement != null ? !searchElement.equals(searchLocationReference.searchElement) : searchLocationReference.searchElement != null)
+            return false;
+        if (predicate != null ? !predicate.equals(searchLocationReference.predicate) : searchLocationReference.predicate != null)
+            return false;
+        return searchLocation.isRelative() == searchLocationReference.searchLocation.isRelative();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SearchLocationReference that = (SearchLocationReference) o;
+
+        if (searchElement != null ? !searchElement.equals(that.searchElement) : that.searchElement != null)
+            return false;
+        if (predicate != null ? !predicate.equals(that.predicate) : that.predicate != null) return false;
+        return searchLocation != null ? searchLocation.equals(that.searchLocation) : that.searchLocation == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = searchElement != null ? searchElement.hashCode() : 0;
+        result = 31 * result + (predicate != null ? predicate.hashCode() : 0);
+        result = 31 * result + (searchLocation != null ? searchLocation.hashCode() : 0);
+        return result;
+    }
 }

@@ -59,7 +59,7 @@ public class DomObservableTree extends ObservableTree {
 
   public ObjectStore find(Document document, ObjectStore objectStore) {
     try {
-      DomNodeProcessor domNodeProcessor = new DomNodeProcessor(rootElementFinder.getElementFinder(), objectStore);
+      DomNodeProcessor domNodeProcessor = new DomNodeProcessor(rootTreeEdgeReference.getElementFinder(), objectStore);
       DomElement domElement = new DomElement();
       return domNodeProcessor.search(document, domElement);
     } catch (Exception ex) {

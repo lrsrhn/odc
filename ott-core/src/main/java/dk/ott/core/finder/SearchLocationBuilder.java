@@ -106,7 +106,7 @@ public class SearchLocationBuilder {
     }
 
     public TreeEdgeReference toTreeEdgeReference() {
-        return new TreeEdgeReference(elementFinder, searchLocation, elementFinder.isPredicate());
+        return new TreeEdgeReference(elementFinder, searchLocation);
     }
 
     public SearchLocation build() {

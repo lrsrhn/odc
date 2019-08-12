@@ -122,10 +122,11 @@ public class MultipleElementFinder implements ElementFinder {
       }
       SearchLocation searchLocation = nextXmlElementFinders.get(searchLocationReference.getSearchElement());
       if (searchLocation != null && searchLocation.isRelative() == isRelative) {
-        throw new RuntimeException("A searchElement already exists: " + searchLocationReference.getSearchElement());
+        searchLocation.merge(searchLocationReference.getSearchLocation());
+      } else {
+        nextXmlElementFinders.put(searchLocationReference.getSearchElement(), searchLocationReference.getSearchLocation());
       }
       hasRelatives |= isRelative;
-      nextXmlElementFinders.put(searchLocationReference.getSearchElement(), searchLocationReference.getSearchLocation());
     }
   }
 
