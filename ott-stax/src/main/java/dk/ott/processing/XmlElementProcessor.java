@@ -23,7 +23,6 @@
 package dk.ott.processing;
 
 import dk.ott.core.Node;
-import dk.ott.xml.XmlRawTextReader2;
 import org.codehaus.stax2.XMLStreamReader2;
 
 import javax.xml.stream.XMLStreamConstants;

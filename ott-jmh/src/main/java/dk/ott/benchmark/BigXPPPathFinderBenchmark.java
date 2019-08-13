@@ -23,7 +23,7 @@
 package dk.ott.benchmark;
 
 import dk.ott.processing.ObservableTree;
-import dk.ott.xpp.XppObservableTree;
+import dk.ott.processing.XppObservableTree;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 

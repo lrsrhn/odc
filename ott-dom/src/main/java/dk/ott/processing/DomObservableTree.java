@@ -22,10 +22,6 @@
  */
 package dk.ott.processing;
 
-import dk.ott.processing.DomElementCursor;
-import dk.ott.processing.DomNodeProcessor;
-import dk.ott.processing.ObjectStore;
-import dk.ott.processing.ObservableTree;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -38,10 +34,10 @@ public class DomObservableTree extends ObservableTree {
 
   public DomObservableTree() {
     documentBuilderFactory = DocumentBuilderFactory.newInstance();
-      documentBuilderFactory.setNamespaceAware(true);
-      documentBuilderFactory.setCoalescing(true);
-      documentBuilderFactory.setIgnoringElementContentWhitespace(true);
-      documentBuilderFactory.setIgnoringComments(true);
+    documentBuilderFactory.setNamespaceAware(true);
+    documentBuilderFactory.setCoalescing(true);
+    documentBuilderFactory.setIgnoringElementContentWhitespace(true);
+    documentBuilderFactory.setIgnoringComments(true);
   }
 
   @Override

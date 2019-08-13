@@ -27,58 +27,38 @@ import org.w3c.dom.Node;
 import java.util.Arrays;
 
 public class NodeProgressStack {
-    private NodeProgress[] nodeProgresses;
+    private NodeProgressItem[] nodeProgressItems;
     private int nextChildIndex;
 
     public NodeProgressStack(int size) {
-        this.nodeProgresses = new NodeProgress[size];
+        this.nodeProgressItems = new NodeProgressItem[size];
         prefill(0);
         this.nextChildIndex = -1;
     }
 
     private void prefill(int startIndex) {
-        for (int i = startIndex; i < nodeProgresses.length; i++) {
-            nodeProgresses[i] = new NodeProgress();
+        for (int i = startIndex; i < nodeProgressItems.length; i++) {
+            nodeProgressItems[i] = new NodeProgressItem();
         }
     }
 
     public void push(int nextChildIndex, Node node) {
-        if (this.nextChildIndex == nodeProgresses.length - 1) {
-            int previousSize = nodeProgresses.length;
-            nodeProgresses = Arrays.copyOf(nodeProgresses, nodeProgresses.length * 2);
+        if (this.nextChildIndex == nodeProgressItems.length - 1) {
+            int previousSize = nodeProgressItems.length;
+            nodeProgressItems = Arrays.copyOf(nodeProgressItems, nodeProgressItems.length * 2);
             prefill(previousSize);
         }
-        nodeProgresses[++this.nextChildIndex].setValues(nextChildIndex, node);
+        nodeProgressItems[++this.nextChildIndex].setValues(nextChildIndex, node);
     }
 
-    public NodeProgress pop() {
+    public NodeProgressItem pop() {
         if (isEmpty()) {
             return null;
         }
-        return nodeProgresses[nextChildIndex--];
+        return nodeProgressItems[nextChildIndex--];
     }
 
     public boolean isEmpty() {
         return nextChildIndex == -1;
-    }
-
-    public static class NodeProgress {
-        private int nextChildIndex;
-        private Node nodeElement;
-
-        NodeProgress() { }
-
-        void setValues(int nextChildIndex, Node nodeElement) {
-            this.nextChildIndex = nextChildIndex;
-            this.nodeElement = nodeElement;
-        }
-
-        public int getNextChildIndex() {
-            return nextChildIndex;
-        }
-
-        public Node getNodeElement() {
-            return nodeElement;
-        }
     }
 }

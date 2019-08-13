@@ -22,7 +22,7 @@
  */
 package dk.ott.benchmark;
 
-import dk.ott.xml.StaxObservableTree;
+import dk.ott.processing.StaxObservableTree;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 

@@ -93,7 +93,6 @@ public class ElementProcessor extends BaseElementProcessor<XmlPullParser, XPPEle
       throw new RuntimeException(xse);
     }
   }
-
     private String readRaw(XmlPullParser xmlPullParser) {
     try {
       StringBuilder builder = new StringBuilder(128);

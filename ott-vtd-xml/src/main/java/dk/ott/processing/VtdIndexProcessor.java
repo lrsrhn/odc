@@ -24,6 +24,8 @@ package dk.ott.processing;
 
 import com.ximpleware.VTDNav;
 import dk.ott.core.Node;
+import dk.ott.processing.structures.IndexProgressStack;
+import dk.ott.processing.structures.IndexItem;
 
 public final class VtdIndexProcessor extends BaseElementProcessor<VTDNav, VtdElementCursor> {
 
@@ -67,7 +69,7 @@ public final class VtdIndexProcessor extends BaseElementProcessor<VTDNav, VtdEle
     }
 
     private int endElement(VtdElementCursor xmlElement, int currentDepth, IndexProgressStack indexProgressStack) throws Exception {
-        IndexProgressStack.Element element = indexProgressStack.pop();
+        IndexItem element = indexProgressStack.pop();
         xmlElement.setElementName(element.getElementName());
         xmlElement.setTokenIndex(element.getElementIndex());
         observableTreeTraverser.endElement(xmlElement, --currentDepth);

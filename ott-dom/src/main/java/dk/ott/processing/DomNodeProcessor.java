@@ -23,6 +23,7 @@
 package dk.ott.processing;
 
 import dk.ott.core.Node;
+import dk.ott.processing.structures.NodeProgressItem;
 import dk.ott.processing.structures.NodeProgressStack;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -40,9 +41,9 @@ public final class DomNodeProcessor extends BaseElementProcessor<Document, DomEl
         NodeProgressStack nodeProgressStack = new NodeProgressStack(10);
         nodeProgressStack.push(0, document.getDocumentElement());
 
-        for (NodeProgressStack.NodeProgress currentNodeProgress = nodeProgressStack.pop(); currentNodeProgress != null && !domElement.mustStopProcessing(); currentNodeProgress = nodeProgressStack.pop()) {
-            org.w3c.dom.Node currentNode = currentNodeProgress.getNodeElement();
-            int nextChildIndex = currentNodeProgress.getNextChildIndex();
+        for (NodeProgressItem currentNodeProgressItem = nodeProgressStack.pop(); currentNodeProgressItem != null && !domElement.mustStopProcessing(); currentNodeProgressItem = nodeProgressStack.pop()) {
+            org.w3c.dom.Node currentNode = currentNodeProgressItem.getNodeElement();
+            int nextChildIndex = currentNodeProgressItem.getNextChildIndex();
             domElement.setNode(currentNode);
             if (nextChildIndex == 0) {
                 skipElement = observableTreeTraverser.startElement(domElement, currentDepth++) == EventAction.SKIP_ELEMENT;

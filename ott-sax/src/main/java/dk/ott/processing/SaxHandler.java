@@ -22,7 +22,6 @@
  */
 package dk.ott.processing;
 
-import dk.ott.xml.TextExtractor;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
