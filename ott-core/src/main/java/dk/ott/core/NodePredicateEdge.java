@@ -43,12 +43,12 @@ public class NodePredicateEdge implements Node {
   }
 
   @Override
-  public EdgeBuilder buildSearchLocation(String searchElement, boolean isRelative) {
+  public EdgeBuilder buildEdge(String searchElement, boolean isRelative) {
     throw new UnsupportedOperationException("This operation is not supported");
   }
 
   @Override
-  public EdgeBuilder buildSearchLocation(Predicate predicate) {
+  public EdgeBuilder buildEdge(Predicate predicate) {
     if (this.predicate == null) {
       this.predicate = predicate;
       this.edge.setRelative(false);
@@ -57,7 +57,7 @@ public class NodePredicateEdge implements Node {
       return new EdgeBuilder(thisReference, edge);
     }
     NodeMultiplePredicateEdges nodeMultiplePredicateEdges = new NodeMultiplePredicateEdges(thisReference, this.predicate, edge);
-    return nodeMultiplePredicateEdges.buildSearchLocation(predicate);
+    return nodeMultiplePredicateEdges.buildEdge(predicate);
   }
 
   @Override
@@ -81,12 +81,12 @@ public class NodePredicateEdge implements Node {
   }
 
   @Override
-  public Edge lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes) {
-    return lookupSearchLocation(elementCursor, objectStore);
+  public Edge lookupEdge(ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes) {
+    return lookupEdge(elementCursor, objectStore);
   }
 
   @Override
-  public Edge lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore) {
+  public Edge lookupEdge(ElementCursor elementCursor, ObjectStore objectStore) {
     if (predicate.evaluate(elementCursor, objectStore)) {
       return edge;
     }
@@ -102,11 +102,11 @@ public class NodePredicateEdge implements Node {
   }
 
   @Override
-  public void mergeElementFinder(Node nodeToMerge) {
+  public void mergeNode(Node nodeToMerge) {
     List<SearchLocationReference> searchLocationReferences = nodeToMerge.getSeachLocationReferences();
     if (searchLocationReferences.size() > 1) {
       NodeMultiplePredicateEdges nodeMultiplePredicateEdges = new NodeMultiplePredicateEdges(thisReference, predicate, edge);
-      nodeMultiplePredicateEdges.mergeElementFinder(nodeToMerge);
+      nodeMultiplePredicateEdges.mergeNode(nodeToMerge);
     } else if (searchLocationReferences.size() ==  1) {
       SearchLocationReference searchLocationReference = searchLocationReferences.get(0);
       if (searchLocationReference.getSearchElement() != null) {
@@ -117,7 +117,7 @@ public class NodePredicateEdge implements Node {
           edge.merge(searchLocationReference.getEdge());
         } else {
           NodeMultiplePredicateEdges nodeMultiplePredicateEdges = new NodeMultiplePredicateEdges(thisReference, predicate, edge);
-          nodeMultiplePredicateEdges.mergeElementFinder(nodeToMerge);
+          nodeMultiplePredicateEdges.mergeNode(nodeToMerge);
         }
       } else {
        edge = searchLocationReference.getEdge();
@@ -126,7 +126,7 @@ public class NodePredicateEdge implements Node {
     }
 
     NodeMultiplePredicateEdges nodeMultiplePredicateEdges = new NodeMultiplePredicateEdges(getReference(), predicate, edge);
-    nodeMultiplePredicateEdges.mergeElementFinder(nodeToMerge);
+    nodeMultiplePredicateEdges.mergeNode(nodeToMerge);
   }
 
   @Override

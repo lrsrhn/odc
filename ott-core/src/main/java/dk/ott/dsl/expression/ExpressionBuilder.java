@@ -70,9 +70,11 @@ public class ExpressionBuilder {
   }
 
   public void all(OnStartHandler onStartHandler, OnTextHandler onTextHandler, OnEndHandler onEndHandler) {
-    // TODO: not finished
     edgeReference = edgeReference.getSearchLocationBuilder()
         .addAllElementFinder()
+        .onStartHandler(onStartHandler)
+        .onTextHandler(onTextHandler)
+        .onEndHandler(onEndHandler)
         .toTreeEdgeReference();
   }
 
@@ -93,7 +95,7 @@ public class ExpressionBuilder {
     public ObservableTreeFragment addReference(ObservableTreeFragment observableTreeFragmentToAdd) {
     EdgeReference referenceToAdd = observableTreeFragmentToAdd.getEdgeReference();
     ExpressionHelper.addElementFinderSameAsReference(edgeReference, referenceToAdd)
-            .mergeElementFinder(referenceToAdd.getElementFinder());
+            .mergeNode(referenceToAdd.getElementFinder());
     return toFragment();
   }
 

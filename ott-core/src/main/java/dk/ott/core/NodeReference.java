@@ -42,13 +42,13 @@ public class NodeReference implements Node {
     }
 
     @Override
-    public EdgeBuilder buildSearchLocation(String searchElement, boolean isRelative) {
-        return node.buildSearchLocation(searchElement, isRelative);
+    public EdgeBuilder buildEdge(String searchElement, boolean isRelative) {
+        return node.buildEdge(searchElement, isRelative);
     }
 
     @Override
-    public EdgeBuilder buildSearchLocation(Predicate predicate) {
-        return node.buildSearchLocation(predicate);
+    public EdgeBuilder buildEdge(Predicate predicate) {
+        return node.buildEdge(predicate);
     }
 
     @Override
@@ -67,13 +67,13 @@ public class NodeReference implements Node {
     }
 
     @Override
-    public Edge lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes) {
-        return node.lookupSearchLocation(elementCursor, objectStore, includeAbsolutes);
+    public Edge lookupEdge(ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes) {
+        return node.lookupEdge(elementCursor, objectStore, includeAbsolutes);
     }
 
     @Override
-    public Edge lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore) {
-        return node.lookupSearchLocation(elementCursor, objectStore);
+    public Edge lookupEdge(ElementCursor elementCursor, ObjectStore objectStore) {
+        return node.lookupEdge(elementCursor, objectStore);
     }
 
     @Override
@@ -82,8 +82,8 @@ public class NodeReference implements Node {
     }
 
     @Override
-    public void mergeElementFinder(Node nodeToMerge) {
-        this.node.mergeElementFinder(nodeToMerge);
+    public void mergeNode(Node nodeToMerge) {
+        this.node.mergeNode(nodeToMerge);
     }
 
     @Override

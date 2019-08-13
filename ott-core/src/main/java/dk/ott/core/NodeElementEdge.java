@@ -43,7 +43,7 @@ public final class NodeElementEdge implements Node {
   }
 
   @Override
-  public EdgeBuilder buildSearchLocation(String searchElement, boolean isRelative) {
+  public EdgeBuilder buildEdge(String searchElement, boolean isRelative) {
     if (this.searchElement == null) {
       this.searchElement = searchElement.intern();
       this.edge.setRelative(isRelative);
@@ -52,11 +52,11 @@ public final class NodeElementEdge implements Node {
       return new EdgeBuilder(thisReference, edge);
     }
     NodeMultipleElementEdgesArray multipleXmlElementFinder = new NodeMultipleElementEdgesArray(thisReference, this.searchElement, edge);
-    return multipleXmlElementFinder.buildSearchLocation(searchElement, isRelative);
+    return multipleXmlElementFinder.buildEdge(searchElement, isRelative);
   }
 
   @Override
-  public EdgeBuilder buildSearchLocation(Predicate predicate) {
+  public EdgeBuilder buildEdge(Predicate predicate) {
     throw new UnsupportedOperationException("This operation is not supported");
   }
 
@@ -83,12 +83,12 @@ public final class NodeElementEdge implements Node {
   }
 
   @Override
-  public Edge lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes) {
-    return includeAbsolutes | edge.isRelative() ? lookupSearchLocation(elementCursor, objectStore) : null;
+  public Edge lookupEdge(ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes) {
+    return includeAbsolutes | edge.isRelative() ? lookupEdge(elementCursor, objectStore) : null;
   }
 
   @Override
-  public Edge lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore) {
+  public Edge lookupEdge(ElementCursor elementCursor, ObjectStore objectStore) {
       if (searchElement.equals(elementCursor.getElementName())) {
       return edge;
     }
@@ -104,11 +104,11 @@ public final class NodeElementEdge implements Node {
   }
 
   @Override
-  public void mergeElementFinder(Node nodeToMerge) {
+  public void mergeNode(Node nodeToMerge) {
     List<SearchLocationReference> searchLocationReferences = nodeToMerge.getSeachLocationReferences();
     if (searchLocationReferences.size() > 1) {
       NodeMultipleElementEdgesArray nodeMultipleElementEdgesArray = new NodeMultipleElementEdgesArray(thisReference, searchElement, edge);
-      nodeMultipleElementEdgesArray.mergeElementFinder(nodeToMerge);
+      nodeMultipleElementEdgesArray.mergeNode(nodeToMerge);
     } else if (searchLocationReferences.size() ==  1) {
       SearchLocationReference searchLocationReference = searchLocationReferences.get(0);
       if (searchLocationReference.getPredicate() != null) {
@@ -119,7 +119,7 @@ public final class NodeElementEdge implements Node {
           edge.merge(searchLocationReference.getEdge());
         } else {
           NodeMultipleElementEdgesArray nodeMultipleElementEdgesArray = new NodeMultipleElementEdgesArray(thisReference, searchElement, edge);
-          nodeMultipleElementEdgesArray.mergeElementFinder(nodeToMerge);
+          nodeMultipleElementEdgesArray.mergeNode(nodeToMerge);
         }
       } else {
        edge = searchLocationReference.getEdge();

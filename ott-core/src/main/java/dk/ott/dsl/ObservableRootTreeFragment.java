@@ -22,6 +22,7 @@
  */
 package dk.ott.dsl;
 
+import dk.ott.core.NodeStar;
 import dk.ott.dsl.expression.ExpressionBuilder;
 import dk.ott.dsl.expression.RootExpressionBuilder;
 import dk.ott.dsl.searchtree.ElementTreeBuilder;
@@ -30,6 +31,9 @@ import dk.ott.dsl.searchtree.RootSubTreeBuilder;
 import dk.ott.core.Node;
 import dk.ott.core.NodeElementEdge;
 import dk.ott.core.NodePredicateEdge;
+import dk.ott.event.OnEndHandler;
+import dk.ott.event.OnStartHandler;
+import dk.ott.event.OnTextHandler;
 import dk.ott.predicate.Predicate;
 
 public class ObservableRootTreeFragment {
@@ -63,6 +67,17 @@ public class ObservableRootTreeFragment {
 
   public ExpressionBuilder predicateExp(Predicate predicate) {
     return expression(new NodePredicateEdge().getReference()).predicate(predicate);
+  }
+
+  public void all(OnStartHandler onStartHandler, OnTextHandler onTextHandler, OnEndHandler onEndHandler) {
+    if (node != null) {
+      this.node = new NodeStar();
+      node.buildEdge(null)
+              .onStartHandler(onStartHandler)
+              .onTextHandler(onTextHandler)
+              .onEndHandler(onEndHandler)
+              .build();
+    }
   }
 
   public EdgeReference getTreeEdgeReference() {

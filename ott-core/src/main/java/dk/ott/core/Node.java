@@ -32,21 +32,21 @@ import java.util.Set;
 
 public interface Node {
 
-  EdgeBuilder buildSearchLocation(String searchElement, boolean isRelative);
+  EdgeBuilder buildEdge(String searchElement, boolean isRelative);
 
-  EdgeBuilder buildSearchLocation(Predicate predicate);
+  EdgeBuilder buildEdge(Predicate predicate);
 
   NodeReference getReference();
 
   Node getDereference();
 
-  Edge lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes);
+  Edge lookupEdge(ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes);
 
-  Edge lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore);
+  Edge lookupEdge(ElementCursor elementCursor, ObjectStore objectStore);
 
   List<SearchLocationReference> getSeachLocationReferences();
 
-  void mergeElementFinder(Node nodeToMerge);
+  void mergeNode(Node nodeToMerge);
 
   void buildToString(StringBuilder previousNodesStringBuilder, Set<Node> visited, StringBuilder toStringBuilder);
 

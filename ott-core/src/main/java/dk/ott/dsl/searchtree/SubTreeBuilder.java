@@ -81,14 +81,14 @@ public class SubTreeBuilder {
     }
 
     SubTreeBuilder addReference(EdgeReference edgeReference) {
-        rootReference.getElementFinder().mergeElementFinder(edgeReference.getElementFinder());
+        rootReference.getElementFinder().mergeNode(edgeReference.getElementFinder());
         return this;
     }
 
     public SubTreeBuilder addSubTree(ObservableRootTreeFragment observableRootTreeFragment) {
         EdgeReference reference = observableRootTreeFragment.getTreeEdgeReference();
         ExpressionHelper.addElementFinderSameAsReference(rootReference, reference)
-                .mergeElementFinder(reference.getElementFinder());
+                .mergeNode(reference.getElementFinder());
         return this;
     }
 

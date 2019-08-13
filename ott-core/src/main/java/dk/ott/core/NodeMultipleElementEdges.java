@@ -44,7 +44,7 @@ public class NodeMultipleElementEdges implements Node {
   }
 
   @Override
-  public EdgeBuilder buildSearchLocation(String searchElement, boolean isRelative) {
+  public EdgeBuilder buildEdge(String searchElement, boolean isRelative) {
     Edge edge = nextXmlElementFinders.get(searchElement);
     if (edge == null || edge.isRelative() != isRelative) {
       edge = new Edge(isRelative);
@@ -55,7 +55,7 @@ public class NodeMultipleElementEdges implements Node {
   }
 
   @Override
-  public EdgeBuilder buildSearchLocation(Predicate predicate) {
+  public EdgeBuilder buildEdge(Predicate predicate) {
     throw new UnsupportedOperationException("This operation is not supported");
   }
 
@@ -86,7 +86,7 @@ public class NodeMultipleElementEdges implements Node {
   }
 
   @Override
-  public Edge lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes) {
+  public Edge lookupEdge(ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes) {
     String targetElementName = elementCursor.getElementName();
     Edge edge = this.nextXmlElementFinders.get(targetElementName);
     if (edge != null && edge.isRelative() | includeAbsolutes) {
@@ -96,8 +96,8 @@ public class NodeMultipleElementEdges implements Node {
   }
 
   @Override
-  public Edge lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore) {
-    return lookupSearchLocation(elementCursor, objectStore, true);
+  public Edge lookupEdge(ElementCursor elementCursor, ObjectStore objectStore) {
+    return lookupEdge(elementCursor, objectStore, true);
   }
 
   @Override
@@ -110,7 +110,7 @@ public class NodeMultipleElementEdges implements Node {
   }
 
   @Override
-  public void mergeElementFinder(Node nodeToMerge) {
+  public void mergeNode(Node nodeToMerge) {
     mergeElementFinder(nodeToMerge, false);
     mergeElementFinder(nodeToMerge, true);
   }

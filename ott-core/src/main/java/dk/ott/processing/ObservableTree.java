@@ -59,7 +59,7 @@ public abstract class ObservableTree {
   }
 
   public ObservableTree addSubTree(EdgeReference edgeReference) {
-    rootEdgeReference.getElementFinder().mergeElementFinder(edgeReference.getElementFinder());
+    rootEdgeReference.getElementFinder().mergeNode(edgeReference.getElementFinder());
     return this;
   }
 

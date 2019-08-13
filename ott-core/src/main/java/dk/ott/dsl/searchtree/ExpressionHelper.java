@@ -54,7 +54,7 @@ public class ExpressionHelper {
         if (firstIsRoot) {
             Element element = elementList.get(0);
             currentEdgeReference = currentEdgeReference.getElementFinder()
-                    .buildSearchLocation(element.getElement(), element.isRelative())
+                    .buildEdge(element.getElement(), element.isRelative())
                     .toTreeEdgeReference();
             index++;
         }

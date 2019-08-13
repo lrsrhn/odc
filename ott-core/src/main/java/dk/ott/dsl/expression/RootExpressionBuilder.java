@@ -24,8 +24,8 @@ package dk.ott.dsl.expression;
 
 import dk.ott.core.Node;
 import dk.ott.core.NodeReference;
-import dk.ott.dsl.ObservableTreeFragment;
 import dk.ott.dsl.EdgeReference;
+import dk.ott.dsl.ObservableTreeFragment;
 import dk.ott.dsl.searchtree.ExpressionHelper;
 import dk.ott.event.OnEndHandler;
 import dk.ott.event.OnStartHandler;
@@ -36,14 +36,14 @@ import dk.ott.predicate.Predicates;
 public class RootExpressionBuilder {
   private NodeReference rootNodeReference;
 
-  public RootExpressionBuilder(Node rooNode) {
-    this.rootNodeReference = rooNode.getReference();
+  public RootExpressionBuilder(Node rootNode) {
+    this.rootNodeReference = rootNode.getReference();
   }
 
   public ExpressionBuilder predicate(Predicate predicate) {
     return new ExpressionBuilder(
             rootNodeReference
-            .buildSearchLocation(predicate)
+            .buildEdge(predicate)
             .toTreeEdgeReference()
     );
   }
@@ -51,7 +51,7 @@ public class RootExpressionBuilder {
   public ExpressionBuilder namespace(String namespace) {
     return new ExpressionBuilder(
             rootNodeReference
-            .buildSearchLocation(Predicates.namespace(namespace))
+            .buildEdge(Predicates.namespace(namespace))
             .toTreeEdgeReference()
     );
   }
@@ -59,7 +59,7 @@ public class RootExpressionBuilder {
   public ExpressionBuilder noNamespace() {
     return new ExpressionBuilder(
             rootNodeReference
-            .buildSearchLocation(Predicates.noNamespace())
+            .buildEdge(Predicates.noNamespace())
             .toTreeEdgeReference()
     );
   }
@@ -69,8 +69,13 @@ public class RootExpressionBuilder {
             ExpressionHelper.parseElementPath(elementPath, new EdgeReference(rootNodeReference), true));
   }
 
-  // TODO: not finished
   public void all(OnStartHandler onStartHandler, OnTextHandler onTextHandler, OnEndHandler onEndHandler) {
+//    rootNodeReference = rootNodeReference.
+//        .addAllElementFinder()
+//        .onStartHandler(onStartHandler)
+//        .onTextHandler(onTextHandler)
+//        .onEndHandler(onEndHandler)
+//      .toTreeEdgeReference();
   }
 
   public ObservableTreeFragment recursion(ObservableTreeFragment observableTreeFragmentRecursive) {
@@ -78,7 +83,7 @@ public class RootExpressionBuilder {
   }
 
     public ObservableTreeFragment addReference(ObservableTreeFragment observableTreeFragmentToAdd) {
-      rootNodeReference.mergeElementFinder(observableTreeFragmentToAdd.getEdgeReference().getElementFinder());
+      rootNodeReference.mergeNode(observableTreeFragmentToAdd.getEdgeReference().getElementFinder());
       return toFragment();
   }
 

@@ -44,7 +44,7 @@ public class RootSubTreeBuilder {
     }
 
     public ElementTreeBuilder<RootSubTreeBuilder> element(String elementName) {
-        EdgeReference edgeReference = rootNode.buildSearchLocation(elementName, false)
+        EdgeReference edgeReference = rootNode.buildEdge(elementName, false)
                 .toTreeEdgeReference();
         return new ElementTreeBuilder<RootSubTreeBuilder>(this, referenceStore, edgeReference);
     }
@@ -56,33 +56,33 @@ public class RootSubTreeBuilder {
 
     public ElementTreeBuilder<RootSubTreeBuilder> relativeElement(String elementName) {
         EdgeReference edgeReference = rootNode
-                .buildSearchLocation(elementName, true)
+                .buildEdge(elementName, true)
                 .toTreeEdgeReference();
         return new ElementTreeBuilder<RootSubTreeBuilder>(this, referenceStore, edgeReference);
     }
 
     RootSubTreeBuilder addReference(EdgeReference edgeReference) {
-        rootNode.mergeElementFinder(edgeReference.getElementFinder());
+        rootNode.mergeNode(edgeReference.getElementFinder());
         return this;
     }
 
     public OnlyElementTreeBuilder<RootSubTreeBuilder> predicate(Predicate predicate) {
         EdgeReference edgeReference = rootNode
-                .buildSearchLocation(predicate)
+                .buildEdge(predicate)
                 .toTreeEdgeReference();
         return new OnlyElementTreeBuilder<RootSubTreeBuilder>(this, referenceStore, edgeReference);
     }
 
     public OnlyElementTreeBuilder<RootSubTreeBuilder> namespace(String namespace) {
         EdgeReference edgeReference = rootNode
-                .buildSearchLocation(Predicates.namespace(namespace))
+                .buildEdge(Predicates.namespace(namespace))
                 .toTreeEdgeReference();
         return new OnlyElementTreeBuilder<RootSubTreeBuilder>(this, referenceStore, edgeReference);
     }
 
     public OnlyElementTreeBuilder<RootSubTreeBuilder> noNamespace() {
         EdgeReference edgeReference = rootNode
-                .buildSearchLocation(Predicates.noNamespace())
+                .buildEdge(Predicates.noNamespace())
                 .toTreeEdgeReference();
         return new OnlyElementTreeBuilder<RootSubTreeBuilder>(this, referenceStore, edgeReference);
     }

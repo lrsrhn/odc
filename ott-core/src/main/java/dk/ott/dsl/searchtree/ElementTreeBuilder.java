@@ -96,14 +96,14 @@ public class ElementTreeBuilder<T> {
 
     private ElementTreeBuilder<T> addReference(EdgeReference reference) {
         ExpressionHelper.addElementFinderSameAsReference(parentReference, reference)
-                .mergeElementFinder(reference.getElementFinder());
+                .mergeNode(reference.getElementFinder());
         return this;
     }
 
     public ElementTreeBuilder<T> addTreeFragment(ObservableRootTreeFragment observableRootTreeFragment) {
         EdgeReference reference = observableRootTreeFragment.getTreeEdgeReference();
         ExpressionHelper.addElementFinderSameAsReference(parentReference, reference)
-                .mergeElementFinder(reference.getElementFinder());
+                .mergeNode(reference.getElementFinder());
         return this;
     }
 

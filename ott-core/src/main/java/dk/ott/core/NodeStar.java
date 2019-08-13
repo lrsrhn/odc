@@ -46,12 +46,12 @@ public class NodeStar implements Node {
     }
 
     @Override
-    public EdgeBuilder buildSearchLocation(String searchElement, boolean isRelative) {
+    public EdgeBuilder buildEdge(String searchElement, boolean isRelative) {
         return new EdgeBuilder(this, edge);
     }
 
     @Override
-    public EdgeBuilder buildSearchLocation(Predicate predicate) {
+    public EdgeBuilder buildEdge(Predicate predicate) {
         return new EdgeBuilder(this, edge);
     }
 
@@ -66,12 +66,12 @@ public class NodeStar implements Node {
     }
 
     @Override
-    public Edge lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes) {
+    public Edge lookupEdge(ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes) {
         return edge;
     }
 
     @Override
-    public Edge lookupSearchLocation(ElementCursor elementCursor, ObjectStore objectStore) {
+    public Edge lookupEdge(ElementCursor elementCursor, ObjectStore objectStore) {
         return edge;
     }
 
@@ -81,7 +81,7 @@ public class NodeStar implements Node {
     }
 
     @Override
-    public void mergeElementFinder(Node nodeToMerge) {
+    public void mergeNode(Node nodeToMerge) {
         throw new UnsupportedOperationException("Not supported by All element finder");
     }
 

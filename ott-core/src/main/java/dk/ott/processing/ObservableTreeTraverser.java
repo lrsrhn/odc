@@ -54,7 +54,7 @@ public final class ObservableTreeTraverser {
     public EventAction startElement(final InternalElementCursor elementCursor, final int currentDepth) throws Exception {
         elementCursor.clearCache();
         currentOnTextLocation = null;
-        Edge edge = currentNode.lookupSearchLocation(elementCursor, objectStore, childDepth == currentDepth);
+        Edge edge = currentNode.lookupEdge(elementCursor, objectStore, childDepth == currentDepth);
         if (edge != null) {
             return handleSearchLocation(edge, elementCursor, currentDepth);
         }
@@ -106,7 +106,7 @@ public final class ObservableTreeTraverser {
     private void handleNextElementFinder(final InternalElementCursor elementCursor, final int currentDepth, final Node nextNode) throws Exception {
         currentNode = nextNode;
         if (currentNode.isPredicate()) {
-            Edge edge = currentNode.lookupSearchLocation(elementCursor, objectStore);
+            Edge edge = currentNode.lookupEdge(elementCursor, objectStore);
             if (edge != null) {
                 handleSearchLocation(edge, elementCursor, currentDepth);
             }

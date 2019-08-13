@@ -71,7 +71,7 @@ public class EdgeBuilder {
     }
 
     public EdgeBuilder addSearchElementFinder(String elementName, boolean isRelative) {
-        return addSearchElementFinder().buildSearchLocation(elementName, isRelative);
+        return addSearchElementFinder().buildEdge(elementName, isRelative);
     }
 
     public Node addSearchElementFinder() {
@@ -84,7 +84,7 @@ public class EdgeBuilder {
     }
 
     public EdgeBuilder addPredicateElementFinder(Predicate predicate) {
-        return addPredicateElementFinder().buildSearchLocation(predicate);
+        return addPredicateElementFinder().buildEdge(predicate);
     }
 
     public Node addPredicateElementFinder() {
@@ -102,7 +102,7 @@ public class EdgeBuilder {
             node = new NodeStar();
             this.edge.setChildNode(node);
         }
-        return node.buildSearchLocation(null);
+        return node.buildEdge(null);
     }
 
     public EdgeReference toTreeEdgeReference() {

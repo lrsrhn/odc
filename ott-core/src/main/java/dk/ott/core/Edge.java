@@ -115,7 +115,7 @@ public final class Edge {
         if (childNode == null) {
             childNode = mergee.childNode;
         } else if (mergee.childNode != null && childNode != mergee.childNode) {
-            childNode.mergeElementFinder(mergee.childNode);
+            childNode.mergeNode(mergee.childNode);
         }
         if (onStartHandler == null) {
             onStartHandler = mergee.onStartHandler;
