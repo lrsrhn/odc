@@ -22,9 +22,9 @@
  */
 package dk.ott.benchmark;
 
-import dk.ott.core.event.OnTextHandler;
-import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.ElementCursor;
+import dk.ott.event.OnTextHandler;
+import dk.ott.processing.ObjectStore;
+import dk.ott.processing.ElementCursor;
 
 public class ToStringBuilderHandler implements OnTextHandler {
     private StringBuilder stringBuilder;

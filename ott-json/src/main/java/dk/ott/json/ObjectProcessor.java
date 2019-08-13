@@ -22,11 +22,11 @@
  */
 package dk.ott.json;
 
-import dk.ott.core.finder.ElementFinder;
-import dk.ott.core.processing.BaseElementProcessor;
-import dk.ott.core.processing.EventAction;
-import dk.ott.core.processing.JsonObject;
-import dk.ott.core.processing.ObjectStore;
+import dk.ott.core.Node;
+import dk.ott.processing.BaseElementProcessor;
+import dk.ott.processing.EventAction;
+import dk.ott.processing.JsonObject;
+import dk.ott.processing.ObjectStore;
 
 import javax.json.stream.JsonParser;
 
@@ -35,8 +35,8 @@ class ObjectProcessor extends BaseElementProcessor<JsonParser, JsonObject> {
     private StringStack stringStack;
     private JsonEventStack jsonEventStack;
 
-    public ObjectProcessor(ElementFinder nextElementFinder, ObjectStore objectStore) {
-        super(nextElementFinder, objectStore);
+    public ObjectProcessor(Node nextNode, ObjectStore objectStore) {
+        super(nextNode, objectStore);
         this.stringStack = new StringStack(10);
         this.jsonEventStack = new JsonEventStack(10);
     }

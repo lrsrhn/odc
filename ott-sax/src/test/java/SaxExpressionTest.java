@@ -21,7 +21,7 @@
  * THE SOFTWARE.
  */
 
-import dk.ott.core.dsl.expression.ExpressionXmlTests;
+import dk.ott.dsl.expression.ExpressionXmlTests;
 import dk.ott.xml.SaxObservableTree;
 import org.junit.Ignore;
 

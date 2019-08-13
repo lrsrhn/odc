@@ -22,7 +22,7 @@
  */
 package dk.ott.xml;
 
-import dk.ott.core.processing.*;
+import dk.ott.processing.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
@@ -57,7 +57,7 @@ public class SaxObservableTree extends ObservableTree {
       SAXParser saxParser = saxParserFactory.newSAXParser();
       XMLReader xmlReader = saxParser.getXMLReader();
       SaxElementSkippingHandler saxElementSkippingHandler = new SaxElementSkippingHandler(xmlReader);
-      SaxHandler saxHandler = new SaxHandler(xmlReader, new ObservableTreeTraverser(rootTreeEdgeReference.getElementFinder(), objectStore), saxElementSkippingHandler);
+      SaxHandler saxHandler = new SaxHandler(xmlReader, new ObservableTreeTraverser(rootEdgeReference.getElementFinder(), objectStore), saxElementSkippingHandler);
       xmlReader.setContentHandler(saxHandler);
       xmlReader.parse(new InputSource(reader));
       return objectStore;

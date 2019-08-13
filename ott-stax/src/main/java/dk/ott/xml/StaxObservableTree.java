@@ -23,10 +23,10 @@
 package dk.ott.xml;
 
 import com.ctc.wstx.stax.WstxInputFactory;
-import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.ObservableTree;
-import dk.ott.core.processing.XMLElementCursor;
-import dk.ott.core.processing.XmlElementProcessor;
+import dk.ott.processing.ObjectStore;
+import dk.ott.processing.ObservableTree;
+import dk.ott.processing.XMLElementCursor;
+import dk.ott.processing.XmlElementProcessor;
 import org.codehaus.stax2.XMLStreamReader2;
 import org.codehaus.stax2.validation.XMLValidationSchema;
 
@@ -92,7 +92,7 @@ public class StaxObservableTree extends ObservableTree {
         streamReader.validateAgainst(xmlValidationSchema);
       }
       XMLElementCursor xmlElement = new XMLElementCursor(streamReader);
-      XmlElementProcessor xmlElementProcessor = new XmlElementProcessor(rootTreeEdgeReference.getElementFinder(), objectStore, xmlRawTextReader);
+      XmlElementProcessor xmlElementProcessor = new XmlElementProcessor(rootEdgeReference.getElementFinder(), objectStore, xmlRawTextReader);
       return xmlElementProcessor.search(streamReader, xmlElement);
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);

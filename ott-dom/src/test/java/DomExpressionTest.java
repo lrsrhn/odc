@@ -21,8 +21,8 @@
  * THE SOFTWARE.
  */
 
-import dk.ott.core.dsl.expression.ExpressionXmlTests;
-import dk.ott.xml.DomObservableTree;
+import dk.ott.dsl.expression.ExpressionXmlTests;
+import dk.ott.processing.DomObservableTree;
 import org.junit.Ignore;
 
 public class DomExpressionTest extends ExpressionXmlTests {

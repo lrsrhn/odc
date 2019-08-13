@@ -22,10 +22,10 @@
  */
 package dk.ott.core.stub;
 
-import dk.ott.core.processing.ElementCursorContext;
-import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.ObservableTree;
-import dk.ott.core.processing.StubElementProcessor;
+import dk.ott.processing.ElementCursorContext;
+import dk.ott.processing.ObjectStore;
+import dk.ott.processing.ObservableTree;
+import dk.ott.processing.StubElementProcessor;
 
 import java.io.Reader;
 
@@ -42,7 +42,7 @@ public class StubObservableTree extends ObservableTree {
         try {
             inputReader.reset();
             ElementCursorContext elementContext = new ElementCursorContext(objectStore);
-            StubElementProcessor stubElementProcessor = new StubElementProcessor(super.rootTreeEdgeReference.getElementFinder(), objectStore);
+            StubElementProcessor stubElementProcessor = new StubElementProcessor(super.rootEdgeReference.getElementFinder(), objectStore);
             return stubElementProcessor.search(inputReader, elementContext);
         } catch (Exception e) {
             throw new RuntimeException(e);

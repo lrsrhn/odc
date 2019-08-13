@@ -22,9 +22,9 @@
  */
 package dk.ott.json;
 
-import dk.ott.core.processing.JsonObject;
-import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.ObservableTree;
+import dk.ott.processing.JsonObject;
+import dk.ott.processing.ObjectStore;
+import dk.ott.processing.ObservableTree;
 
 import javax.json.Json;
 import javax.json.stream.JsonParser;
@@ -50,7 +50,7 @@ public class JsonObservableTree extends ObservableTree {
     try {
       jsonParser = jsonParserFactory.createParser(reader);
       JsonObject jsonObject = new JsonObject(jsonParser);
-      ObjectProcessor objectProcessor = new ObjectProcessor(rootTreeEdgeReference.getElementFinder(), objectStore);
+      ObjectProcessor objectProcessor = new ObjectProcessor(rootEdgeReference.getElementFinder(), objectStore);
       return objectProcessor.search(jsonParser, jsonObject);
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);

@@ -21,7 +21,7 @@
  * THE SOFTWARE.
  */
 
-import dk.ott.core.dsl.searchtree.TreeBuilderTests;
+import dk.ott.dsl.searchtree.TreeBuilderTests;
 import dk.ott.xpp.XppObservableTree;
 
 public class XppTreeBuilderTest extends TreeBuilderTests {

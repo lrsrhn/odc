@@ -21,8 +21,8 @@
  * THE SOFTWARE.
  */
 
-import dk.ott.core.dsl.searchtree.TreeBuilderTests;
-import dk.ott.xml.DomObservableTree;
+import dk.ott.dsl.searchtree.TreeBuilderTests;
+import dk.ott.processing.DomObservableTree;
 import org.junit.Ignore;
 
 public class DomTreeBuilderTest extends TreeBuilderTests {

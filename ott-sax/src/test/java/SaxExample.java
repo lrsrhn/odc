@@ -21,7 +21,7 @@
  * THE SOFTWARE.
  */
 
-import dk.ott.core.dsl.Example;
+import dk.ott.dsl.Example;
 import dk.ott.xml.SaxObservableTree;
 
 public class SaxExample extends Example {

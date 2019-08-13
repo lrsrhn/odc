@@ -21,7 +21,7 @@
  * THE SOFTWARE.
  */
 
-import dk.ott.core.dsl.expression.ElementPathParser;
+import dk.ott.dsl.parser.ElementPathParser;
 import org.junit.Test;
 
 public class ElementPathParserTest {

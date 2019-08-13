@@ -21,12 +21,12 @@
  * THE SOFTWARE.
  */
 
-import dk.ott.core.event.EventHandler;
-import dk.ott.core.eventhandling.TextValueCollector;
-import dk.ott.core.event.OnTextHandler;
-import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.ObservableTree;
-import dk.ott.core.processing.ElementCursor;
+import dk.ott.event.EventHandler;
+import dk.ott.eventhandling.TextValueCollector;
+import dk.ott.event.OnTextHandler;
+import dk.ott.processing.ObjectStore;
+import dk.ott.processing.ObservableTree;
+import dk.ott.processing.ElementCursor;
 import dk.ott.json.JsonObservableTree;
 import org.junit.Assert;
 import org.junit.Before;
@@ -43,8 +43,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static dk.ott.core.predicate.Predicates.alwaysTrue;
-import static dk.ott.core.predicate.Predicates.storedValue;
+import static dk.ott.predicate.Predicates.alwaysTrue;
+import static dk.ott.predicate.Predicates.storedValue;
 import static org.junit.Assert.assertEquals;
 
 public class TreeBuilderTest {

@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import dk.ott.core.dsl.expression.ExpressionXmlTests;
+import dk.ott.dsl.expression.ExpressionXmlTests;
 import dk.ott.xml.VtdXmlObservableTree;
 import org.junit.Ignore;
 

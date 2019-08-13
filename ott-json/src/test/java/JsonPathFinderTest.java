@@ -21,9 +21,9 @@
  * THE SOFTWARE.
  */
 
-import dk.ott.core.event.EventHandler;
-import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.ElementCursor;
+import dk.ott.event.EventHandler;
+import dk.ott.processing.ObjectStore;
+import dk.ott.processing.ElementCursor;
 import dk.ott.json.JsonObservableTree;
 import org.junit.Test;
 

@@ -21,13 +21,13 @@
  * THE SOFTWARE.
  */
 
-import dk.ott.core.dsl.ObservableTreeFragment;
-import dk.ott.core.event.EventHandler;
-import dk.ott.core.predicate.Predicates;
-import dk.ott.core.processing.ObjectStore;
-import dk.ott.core.processing.ObservableTree;
-import dk.ott.core.processing.ElementCursor;
-import dk.ott.core.standardhandlers.EventForwarderBuilder;
+import dk.ott.dsl.ObservableTreeFragment;
+import dk.ott.event.EventHandler;
+import dk.ott.predicate.Predicates;
+import dk.ott.processing.ObjectStore;
+import dk.ott.processing.ObservableTree;
+import dk.ott.processing.ElementCursor;
+import dk.ott.standardhandlers.EventForwarderBuilder;
 import dk.ott.json.JsonObservableTree;
 import org.junit.Assert;
 import org.junit.Before;

@@ -21,8 +21,8 @@
  * THE SOFTWARE.
  */
 
-import dk.ott.core.dsl.Example;
-import dk.ott.xml.DomObservableTree;
+import dk.ott.dsl.Example;
+import dk.ott.processing.DomObservableTree;
 
 public class DomExample extends Example {
     @Override
