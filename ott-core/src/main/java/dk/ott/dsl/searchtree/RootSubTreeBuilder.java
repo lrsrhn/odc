@@ -45,7 +45,7 @@ public class RootSubTreeBuilder {
 
     public ElementTreeBuilder<RootSubTreeBuilder> element(String elementName) {
         EdgeReference edgeReference = rootNode.buildEdge(elementName, false)
-                .toTreeEdgeReference();
+                .toEdgeReference();
         return new ElementTreeBuilder<RootSubTreeBuilder>(this, referenceStore, edgeReference);
     }
 
@@ -57,33 +57,33 @@ public class RootSubTreeBuilder {
     public ElementTreeBuilder<RootSubTreeBuilder> relativeElement(String elementName) {
         EdgeReference edgeReference = rootNode
                 .buildEdge(elementName, true)
-                .toTreeEdgeReference();
+                .toEdgeReference();
         return new ElementTreeBuilder<RootSubTreeBuilder>(this, referenceStore, edgeReference);
     }
 
     RootSubTreeBuilder addReference(EdgeReference edgeReference) {
-        rootNode.mergeNode(edgeReference.getElementFinder());
+        rootNode.mergeNode(edgeReference.getNode());
         return this;
     }
 
     public OnlyElementTreeBuilder<RootSubTreeBuilder> predicate(Predicate predicate) {
         EdgeReference edgeReference = rootNode
                 .buildEdge(predicate)
-                .toTreeEdgeReference();
+                .toEdgeReference();
         return new OnlyElementTreeBuilder<RootSubTreeBuilder>(this, referenceStore, edgeReference);
     }
 
     public OnlyElementTreeBuilder<RootSubTreeBuilder> namespace(String namespace) {
         EdgeReference edgeReference = rootNode
                 .buildEdge(Predicates.namespace(namespace))
-                .toTreeEdgeReference();
+                .toEdgeReference();
         return new OnlyElementTreeBuilder<RootSubTreeBuilder>(this, referenceStore, edgeReference);
     }
 
     public OnlyElementTreeBuilder<RootSubTreeBuilder> noNamespace() {
         EdgeReference edgeReference = rootNode
                 .buildEdge(Predicates.noNamespace())
-                .toTreeEdgeReference();
+                .toEdgeReference();
         return new OnlyElementTreeBuilder<RootSubTreeBuilder>(this, referenceStore, edgeReference);
     }
 

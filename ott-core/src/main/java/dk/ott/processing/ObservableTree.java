@@ -43,11 +43,11 @@ public abstract class ObservableTree {
   }
 
   Node getRootEdgeReference() {
-    return rootEdgeReference.getElementFinder();
+    return rootEdgeReference.getNode();
   }
 
   public RootTreeBuilder treeBuilder() {
-    return new RootTreeBuilder(rootEdgeReference.getElementFinder().getReference());
+    return new RootTreeBuilder(rootEdgeReference.getNode().getReference());
   }
 
   public static ObservableRootTreeFragment detachedTree() {
@@ -55,11 +55,11 @@ public abstract class ObservableTree {
   }
 
   public ExpressionBuilder elementPath(String elementPath) {
-    return new RootExpressionBuilder(rootEdgeReference.getElementFinder()).elementPath(elementPath);
+    return new RootExpressionBuilder(rootEdgeReference.getNode()).elementPath(elementPath);
   }
 
   public ObservableTree addSubTree(EdgeReference edgeReference) {
-    rootEdgeReference.getElementFinder().mergeNode(edgeReference.getElementFinder());
+    rootEdgeReference.getNode().mergeNode(edgeReference.getNode());
     return this;
   }
 
@@ -68,7 +68,7 @@ public abstract class ObservableTree {
    */
   public void dereferenceSearchTree() {
     rootEdgeReference.dereferenceElementFinder();
-    rootEdgeReference.getElementFinder().unreferenceTree();
+    rootEdgeReference.getNode().unreferenceTree();
   }
 
   public ObjectStore find(String rawXml) {
@@ -84,7 +84,7 @@ public abstract class ObservableTree {
     try {
       StringBuilder tostring = new StringBuilder();
       Set<Node> visited = new HashSet<Node>();
-      rootEdgeReference.getElementFinder().buildToString(new StringBuilder(), visited, tostring);
+      rootEdgeReference.getNode().buildToString(new StringBuilder(), visited, tostring);
       return tostring.toString();
     } catch (Exception ex) {
       throw new RuntimeException(ex);

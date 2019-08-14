@@ -55,7 +55,7 @@ public class DomObservableTree extends ObservableTree {
 
   public ObjectStore find(Document document, ObjectStore objectStore) {
     try {
-      DomNodeProcessor domNodeProcessor = new DomNodeProcessor(rootEdgeReference.getElementFinder(), objectStore);
+      DomNodeProcessor domNodeProcessor = new DomNodeProcessor(rootEdgeReference.getNode(), objectStore);
       DomElementCursor domElement = new DomElementCursor();
       return domNodeProcessor.search(document, domElement);
     } catch (Exception ex) {

@@ -70,7 +70,7 @@ public class ObservableRootTreeFragment {
   }
 
   public void all(OnStartHandler onStartHandler, OnTextHandler onTextHandler, OnEndHandler onEndHandler) {
-    if (node != null) {
+    if (node == null) {
       this.node = new NodeStar();
       node.buildEdge(null)
               .onStartHandler(onStartHandler)

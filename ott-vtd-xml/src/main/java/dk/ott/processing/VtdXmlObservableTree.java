@@ -25,10 +25,6 @@ package dk.ott.processing;
 import com.ximpleware.AutoPilot;
 import com.ximpleware.VTDGen;
 import com.ximpleware.VTDNav;
-import dk.ott.processing.ObjectStore;
-import dk.ott.processing.ObservableTree;
-import dk.ott.processing.VtdElementCursor;
-import dk.ott.processing.VtdIndexProcessor;
 
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -52,7 +48,7 @@ public class VtdXmlObservableTree extends ObservableTree {
       VTDNav vtdNav = vtdGen.getNav();
       AutoPilot autoPilot = new AutoPilot(vtdNav);
       VtdElementCursor xmlElement = new VtdElementCursor(vtdNav, autoPilot);
-      VtdIndexProcessor vtdIndexProcessor = new VtdIndexProcessor(rootEdgeReference.getElementFinder(), objectStore);
+      VtdIndexProcessor vtdIndexProcessor = new VtdIndexProcessor(rootEdgeReference.getNode(), objectStore);
       return vtdIndexProcessor.search(vtdNav, xmlElement);
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);

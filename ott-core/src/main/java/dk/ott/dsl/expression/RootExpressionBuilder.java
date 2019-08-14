@@ -27,9 +27,6 @@ import dk.ott.core.NodeReference;
 import dk.ott.dsl.EdgeReference;
 import dk.ott.dsl.ObservableTreeFragment;
 import dk.ott.dsl.searchtree.ExpressionHelper;
-import dk.ott.event.OnEndHandler;
-import dk.ott.event.OnStartHandler;
-import dk.ott.event.OnTextHandler;
 import dk.ott.predicate.Predicate;
 import dk.ott.predicate.Predicates;
 
@@ -44,7 +41,7 @@ public class RootExpressionBuilder {
     return new ExpressionBuilder(
             rootNodeReference
             .buildEdge(predicate)
-            .toTreeEdgeReference()
+            .toEdgeReference()
     );
   }
 
@@ -52,7 +49,7 @@ public class RootExpressionBuilder {
     return new ExpressionBuilder(
             rootNodeReference
             .buildEdge(Predicates.namespace(namespace))
-            .toTreeEdgeReference()
+            .toEdgeReference()
     );
   }
 
@@ -60,7 +57,7 @@ public class RootExpressionBuilder {
     return new ExpressionBuilder(
             rootNodeReference
             .buildEdge(Predicates.noNamespace())
-            .toTreeEdgeReference()
+            .toEdgeReference()
     );
   }
 
@@ -69,21 +66,12 @@ public class RootExpressionBuilder {
             ExpressionHelper.parseElementPath(elementPath, new EdgeReference(rootNodeReference), true));
   }
 
-  public void all(OnStartHandler onStartHandler, OnTextHandler onTextHandler, OnEndHandler onEndHandler) {
-//    rootNodeReference = rootNodeReference.
-//        .addAllElementFinder()
-//        .onStartHandler(onStartHandler)
-//        .onTextHandler(onTextHandler)
-//        .onEndHandler(onEndHandler)
-//      .toTreeEdgeReference();
-  }
-
   public ObservableTreeFragment recursion(ObservableTreeFragment observableTreeFragmentRecursive) {
     return addReference(observableTreeFragmentRecursive);
   }
 
     public ObservableTreeFragment addReference(ObservableTreeFragment observableTreeFragmentToAdd) {
-      rootNodeReference.mergeNode(observableTreeFragmentToAdd.getEdgeReference().getElementFinder());
+      rootNodeReference.mergeNode(observableTreeFragmentToAdd.getEdgeReference().getNode());
       return toFragment();
   }
 

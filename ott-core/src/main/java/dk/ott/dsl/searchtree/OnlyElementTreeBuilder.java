@@ -40,16 +40,16 @@ public class OnlyElementTreeBuilder<T> {
     }
 
     public ElementTreeBuilder<OnlyElementTreeBuilder<T>> element(String elementName) {
-        EdgeReference edgeReference = parentReference.getSearchLocationBuilder()
-                .addSearchElementFinder(elementName, false)
-                .toTreeEdgeReference();
+        EdgeReference edgeReference = parentReference.getEdgeBuilder()
+                .addElementChildNode(elementName, false)
+                .toEdgeReference();
         return new ElementTreeBuilder<OnlyElementTreeBuilder<T>>(this, referenceStore, edgeReference);
     }
 
     public ElementTreeBuilder<OnlyElementTreeBuilder<T>> relativeElement(String elementName) {
-        EdgeReference edgeReference = parentReference.getSearchLocationBuilder()
-                .addSearchElementFinder(elementName, true)
-                .toTreeEdgeReference();
+        EdgeReference edgeReference = parentReference.getEdgeBuilder()
+                .addElementChildNode(elementName, true)
+                .toEdgeReference();
         return new ElementTreeBuilder<OnlyElementTreeBuilder<T>>(this, referenceStore, edgeReference);
     }
 
@@ -68,24 +68,24 @@ public class OnlyElementTreeBuilder<T> {
     }
 
     private OnlyElementTreeBuilder<T> addReference(EdgeReference reference) {
-        ExpressionHelper.addElementFinderSameAsReference(parentReference, reference)
-                .mergeNode(reference.getElementFinder());
+        ExpressionHelper.addChildNodeFromReference(parentReference, reference)
+                .mergeNode(reference.getNode());
         return this;
     }
 
     public OnlyElementTreeBuilder<T> addTreeFragment(ObservableRootTreeFragment observableTreeFragment) {
         EdgeReference reference = observableTreeFragment.getTreeEdgeReference();
-        ExpressionHelper.addElementFinderSameAsReference(parentReference, reference)
-                .mergeNode(reference.getElementFinder());
+        ExpressionHelper.addChildNodeFromReference(parentReference, reference)
+                .mergeNode(reference.getNode());
         return this;
     }
 
     public PartialSearchTextLocationBuilder<OnlyElementTreeBuilder<T>> onText() {
-        return new PartialSearchTextLocationBuilder<OnlyElementTreeBuilder<T>>(this, parentReference.getSearchLocationBuilder());
+        return new PartialSearchTextLocationBuilder<OnlyElementTreeBuilder<T>>(this, parentReference.getEdgeBuilder());
     }
 
     public PartialSearchLocationBuilder<OnlyElementTreeBuilder<T>> onStart() {
-        return new PartialSearchLocationBuilder<OnlyElementTreeBuilder<T>>(this, parentReference.getSearchLocationBuilder());
+        return new PartialSearchLocationBuilder<OnlyElementTreeBuilder<T>>(this, parentReference.getEdgeBuilder());
     }
 
     public T end() {
@@ -93,7 +93,7 @@ public class OnlyElementTreeBuilder<T> {
     }
 
     public T end(OnEndHandler onEndHandler) {
-        parentReference.getSearchLocationBuilder()
+        parentReference.getEdgeBuilder()
                 .onEndHandler(onEndHandler)
                 .build();
         return parentTreeBuilder;

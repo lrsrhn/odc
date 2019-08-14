@@ -44,15 +44,15 @@ public class ElementTreeBuilder<T> {
     }
 
     public ElementTreeBuilder<ElementTreeBuilder<T>> element(String elementName) {
-        EdgeReference edgeReference = parentReference.getSearchLocationBuilder()
-                .addSearchElementFinder(elementName, false)
-                .toTreeEdgeReference();
+        EdgeReference edgeReference = parentReference.getEdgeBuilder()
+                .addElementChildNode(elementName, false)
+                .toEdgeReference();
         return new ElementTreeBuilder<ElementTreeBuilder<T>>(this, referenceStore, edgeReference);
     }
 
     public OnlyEndTreeBuilder<T> all(OnStartHandler onStartHandler, OnTextHandler onTextHandler, OnEndHandler onEndHandler) {
-        parentReference.getSearchLocationBuilder()
-                .addAllElementFinder()
+        parentReference.getEdgeBuilder()
+                .addStarChildNode()
                     .onStartHandler(onStartHandler)
                     .onTextHandler(onTextHandler)
                     .onEndHandler(onEndHandler)
@@ -66,18 +66,18 @@ public class ElementTreeBuilder<T> {
     }
 
     public ElementTreeBuilder<ElementTreeBuilder<T>> relativeElement(String elementName) {
-        EdgeReference edgeReference = parentReference.getSearchLocationBuilder()
-                .addSearchElementFinder(elementName, true)
-                .toTreeEdgeReference();
+        EdgeReference edgeReference = parentReference.getEdgeBuilder()
+                .addElementChildNode(elementName, true)
+                .toEdgeReference();
         return new ElementTreeBuilder<ElementTreeBuilder<T>>(this, referenceStore, edgeReference);
     }
 
     public PartialSearchLocationBuilder<ElementTreeBuilder<T>> onStart() {
-        return new PartialSearchLocationBuilder<ElementTreeBuilder<T>>(this, parentReference.getSearchLocationBuilder());
+        return new PartialSearchLocationBuilder<ElementTreeBuilder<T>>(this, parentReference.getEdgeBuilder());
     }
 
     public PartialSearchTextLocationBuilder<ElementTreeBuilder<T>> onText() {
-        return new PartialSearchTextLocationBuilder<ElementTreeBuilder<T>>(this, parentReference.getSearchLocationBuilder());
+        return new PartialSearchTextLocationBuilder<ElementTreeBuilder<T>>(this, parentReference.getEdgeBuilder());
     }
 
     public ElementTreeBuilder<T> storeReference(String referenceName) {
@@ -95,36 +95,36 @@ public class ElementTreeBuilder<T> {
     }
 
     private ElementTreeBuilder<T> addReference(EdgeReference reference) {
-        ExpressionHelper.addElementFinderSameAsReference(parentReference, reference)
-                .mergeNode(reference.getElementFinder());
+        ExpressionHelper.addChildNodeFromReference(parentReference, reference)
+                .mergeNode(reference.getNode());
         return this;
     }
 
     public ElementTreeBuilder<T> addTreeFragment(ObservableRootTreeFragment observableRootTreeFragment) {
         EdgeReference reference = observableRootTreeFragment.getTreeEdgeReference();
-        ExpressionHelper.addElementFinderSameAsReference(parentReference, reference)
-                .mergeNode(reference.getElementFinder());
+        ExpressionHelper.addChildNodeFromReference(parentReference, reference)
+                .mergeNode(reference.getNode());
         return this;
     }
 
     public OnlyElementTreeBuilder<ElementTreeBuilder<T>> predicate(Predicate predicate) {
-        EdgeReference edgeReference = parentReference.getSearchLocationBuilder()
-                .addPredicateElementFinder(predicate)
-                .toTreeEdgeReference();
+        EdgeReference edgeReference = parentReference.getEdgeBuilder()
+                .addPredicateChildNode(predicate)
+                .toEdgeReference();
         return new OnlyElementTreeBuilder<ElementTreeBuilder<T>>(this, referenceStore, edgeReference);
     }
 
     public OnlyElementTreeBuilder<ElementTreeBuilder<T>> namespace(String namespace) {
-        EdgeReference edgeReference = parentReference.getSearchLocationBuilder()
-                .addPredicateElementFinder(Predicates.namespace(namespace))
-                .toTreeEdgeReference();
+        EdgeReference edgeReference = parentReference.getEdgeBuilder()
+                .addPredicateChildNode(Predicates.namespace(namespace))
+                .toEdgeReference();
         return new OnlyElementTreeBuilder<ElementTreeBuilder<T>>(this, referenceStore, edgeReference);
     }
 
     public OnlyElementTreeBuilder<ElementTreeBuilder<T>> noNamespace() {
-        EdgeReference edgeReference = parentReference.getSearchLocationBuilder()
-                .addPredicateElementFinder(Predicates.noNamespace())
-                .toTreeEdgeReference();
+        EdgeReference edgeReference = parentReference.getEdgeBuilder()
+                .addPredicateChildNode(Predicates.noNamespace())
+                .toEdgeReference();
         return new OnlyElementTreeBuilder<ElementTreeBuilder<T>>(this, referenceStore, edgeReference);
     }
 
@@ -133,7 +133,7 @@ public class ElementTreeBuilder<T> {
     }
 
     public T end(OnEndHandler onEndHandler) {
-        parentReference.getSearchLocationBuilder()
+        parentReference.getEdgeBuilder()
                     .onEndHandler(onEndHandler)
                     .build();
         return parentTreeBuilder;

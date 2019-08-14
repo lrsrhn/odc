@@ -45,13 +45,13 @@ public class RootTreeBuilder {
 
     public ElementTreeBuilder<RootTreeBuilder> element(String elementName) {
         EdgeReference edgeReference = nodeReference.buildEdge(elementName, false)
-                .toTreeEdgeReference();
+                .toEdgeReference();
         return new ElementTreeBuilder<RootTreeBuilder>(this, referenceStore, edgeReference);
     }
 
     public ElementTreeBuilder<RootTreeBuilder> relativeElement(String elementName) {
         EdgeReference edgeReference = nodeReference.buildEdge(elementName, true)
-            .toTreeEdgeReference();
+            .toEdgeReference();
         return new ElementTreeBuilder<RootTreeBuilder>(this, referenceStore, edgeReference);
     }
 

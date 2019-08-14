@@ -31,18 +31,18 @@ import java.util.List;
 
 public class ExpressionHelper {
 
-    public static Node addElementFinderSameAsReference(EdgeReference parentReference, EdgeReference reference) {
+    public static Node addChildNodeFromReference(EdgeReference parentReference, EdgeReference reference) {
         if (parentReference.isPredicate()) {
             if (reference.isPredicate()) {
                 throw new RuntimeException("Two predicate finders may not be adjacent!");
             } else {
-                return parentReference.getSearchLocationBuilder().addSearchElementFinder();
+                return parentReference.getEdgeBuilder().addElementChildNode();
             }
         } else {
-            if (reference.getElementFinder().isPredicate()) {
-                return parentReference.getSearchLocationBuilder().addPredicateElementFinder();
+            if (reference.getNode().isPredicate()) {
+                return parentReference.getEdgeBuilder().addPredicateChildNode();
             } else {
-                return parentReference.getSearchLocationBuilder().addSearchElementFinder();
+                return parentReference.getEdgeBuilder().addElementChildNode();
             }
         }
     }
@@ -53,16 +53,16 @@ public class ExpressionHelper {
         EdgeReference currentEdgeReference = edgeReference;
         if (firstIsRoot) {
             Element element = elementList.get(0);
-            currentEdgeReference = currentEdgeReference.getElementFinder()
+            currentEdgeReference = currentEdgeReference.getNode()
                     .buildEdge(element.getElement(), element.isRelative())
-                    .toTreeEdgeReference();
+                    .toEdgeReference();
             index++;
         }
         for (;index < elementList.size(); index++) {
             Element element = elementList.get(index);
-            currentEdgeReference = currentEdgeReference.getSearchLocationBuilder()
-                .addSearchElementFinder(element.getElement(), element.isRelative())
-                .toTreeEdgeReference();
+            currentEdgeReference = currentEdgeReference.getEdgeBuilder()
+                .addElementChildNode(element.getElement(), element.isRelative())
+                .toEdgeReference();
         }
         return currentEdgeReference;
     }

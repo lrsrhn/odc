@@ -39,7 +39,7 @@ public class EdgeReference {
     this(parentNode, null);
   }
 
-  public Node getElementFinder() {
+  public Node getNode() {
     return parentNodeReference;
   }
 
@@ -55,7 +55,7 @@ public class EdgeReference {
     return edge;
   }
 
-  public EdgeBuilder getSearchLocationBuilder() {
+  public EdgeBuilder getEdgeBuilder() {
     return new EdgeBuilder(parentNodeReference, edge);
   }
 

@@ -44,23 +44,23 @@ public class ExpressionBuilder {
   }
 
   public ExpressionBuilder predicate(Predicate predicate) {
-    edgeReference = edgeReference.getSearchLocationBuilder()
-            .addPredicateElementFinder(predicate)
-            .toTreeEdgeReference();
+    edgeReference = edgeReference.getEdgeBuilder()
+            .addPredicateChildNode(predicate)
+            .toEdgeReference();
     return this;
   }
 
   public ExpressionBuilder namespace(String namespace) {
-    edgeReference = edgeReference.getSearchLocationBuilder()
-            .addPredicateElementFinder(Predicates.namespace(namespace))
-            .toTreeEdgeReference();
+    edgeReference = edgeReference.getEdgeBuilder()
+            .addPredicateChildNode(Predicates.namespace(namespace))
+            .toEdgeReference();
     return this;
   }
 
   public ExpressionBuilder noNamespace() {
-    edgeReference = edgeReference.getSearchLocationBuilder()
-            .addPredicateElementFinder(Predicates.noNamespace())
-            .toTreeEdgeReference();
+    edgeReference = edgeReference.getEdgeBuilder()
+            .addPredicateChildNode(Predicates.noNamespace())
+            .toEdgeReference();
     return this;
   }
 
@@ -70,12 +70,12 @@ public class ExpressionBuilder {
   }
 
   public void all(OnStartHandler onStartHandler, OnTextHandler onTextHandler, OnEndHandler onEndHandler) {
-    edgeReference = edgeReference.getSearchLocationBuilder()
-        .addAllElementFinder()
+    edgeReference = edgeReference.getEdgeBuilder()
+        .addStarChildNode()
         .onStartHandler(onStartHandler)
         .onTextHandler(onTextHandler)
         .onEndHandler(onEndHandler)
-        .toTreeEdgeReference();
+        .toEdgeReference();
   }
 
   public ExpressionBuilder filter(Predicate filter) {
@@ -94,13 +94,13 @@ public class ExpressionBuilder {
 
     public ObservableTreeFragment addReference(ObservableTreeFragment observableTreeFragmentToAdd) {
     EdgeReference referenceToAdd = observableTreeFragmentToAdd.getEdgeReference();
-    ExpressionHelper.addElementFinderSameAsReference(edgeReference, referenceToAdd)
-            .mergeNode(referenceToAdd.getElementFinder());
+    ExpressionHelper.addChildNodeFromReference(edgeReference, referenceToAdd)
+            .mergeNode(referenceToAdd.getNode());
     return toFragment();
   }
 
   public ObservableTreeFragment handle(EventHandler eventHandler) {
-    EdgeBuilder edgeBuilder = edgeReference.getSearchLocationBuilder();
+    EdgeBuilder edgeBuilder = edgeReference.getEdgeBuilder();
     if (filter != null) {
       edgeBuilder.filter(filter);
     }
@@ -112,7 +112,7 @@ public class ExpressionBuilder {
   }
 
   public ObservableTreeFragment on(OnStartHandler onStartHandler, OnTextHandler onTextHandler, OnEndHandler onEndHandler) {
-    EdgeBuilder edgeBuilder = edgeReference.getSearchLocationBuilder();
+    EdgeBuilder edgeBuilder = edgeReference.getEdgeBuilder();
     if (filter != null) {
       edgeBuilder.filter(filter);
     }
@@ -132,7 +132,7 @@ public class ExpressionBuilder {
   }
 
   public ObservableTreeFragment onStart(OnStartHandler onStartHandler) {
-    EdgeBuilder edgeBuilder = edgeReference.getSearchLocationBuilder();
+    EdgeBuilder edgeBuilder = edgeReference.getEdgeBuilder();
     if (filter != null) {
       edgeBuilder.filter(filter);
     }
@@ -141,7 +141,7 @@ public class ExpressionBuilder {
   }
 
   public ObservableTreeFragment onText(OnTextHandler onTextHandler) {
-    EdgeBuilder edgeBuilder = edgeReference.getSearchLocationBuilder();
+    EdgeBuilder edgeBuilder = edgeReference.getEdgeBuilder();
     if (filter != null) {
       edgeBuilder.filter(filter);
     }
@@ -153,7 +153,7 @@ public class ExpressionBuilder {
   }
 
   public ObservableTreeFragment onEnd(OnEndHandler onEndHandler) {
-    EdgeBuilder edgeBuilder = edgeReference.getSearchLocationBuilder();
+    EdgeBuilder edgeBuilder = edgeReference.getEdgeBuilder();
     if (filter != null) {
       edgeBuilder.filter(filter);
     }
@@ -162,7 +162,7 @@ public class ExpressionBuilder {
   }
 
   public ObservableTreeFragment onRawText(OnTextHandler onTextHandler) {
-    EdgeBuilder edgeBuilder = edgeReference.getSearchLocationBuilder();
+    EdgeBuilder edgeBuilder = edgeReference.getEdgeBuilder();
     if (textFilter != null) {
       edgeBuilder.textFilter(textFilter);
     }

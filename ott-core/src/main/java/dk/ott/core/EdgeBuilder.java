@@ -70,11 +70,11 @@ public class EdgeBuilder {
         return this;
     }
 
-    public EdgeBuilder addSearchElementFinder(String elementName, boolean isRelative) {
-        return addSearchElementFinder().buildEdge(elementName, isRelative);
+    public EdgeBuilder addElementChildNode(String elementName, boolean isRelative) {
+        return addElementChildNode().buildEdge(elementName, isRelative);
     }
 
-    public Node addSearchElementFinder() {
+    public Node addElementChildNode() {
         Node node = edge.getChildNode();
         if (node == null) {
             node = new NodeElementEdge().getReference();
@@ -83,29 +83,29 @@ public class EdgeBuilder {
         return node;
     }
 
-    public EdgeBuilder addPredicateElementFinder(Predicate predicate) {
-        return addPredicateElementFinder().buildEdge(predicate);
+    public EdgeBuilder addPredicateChildNode(Predicate predicate) {
+        return addPredicateChildNode().buildEdge(predicate);
     }
 
-    public Node addPredicateElementFinder() {
-        Node node = edge.getChildNode();
-        if (node == null) {
-            node = new NodePredicateEdge().getReference();
-            this.edge.setChildNode(node);
+    public Node addPredicateChildNode() {
+        Node childNode = edge.getChildNode();
+        if (childNode == null) {
+            childNode = new NodePredicateEdge().getReference();
+            this.edge.setChildNode(childNode);
         }
-        return node;
+        return childNode;
     }
 
-    public EdgeBuilder addAllElementFinder() {
-        Node node = edge.getChildNode();
-        if (node == null) {
-            node = new NodeStar();
-            this.edge.setChildNode(node);
+    public EdgeBuilder addStarChildNode() {
+        Node childNode = edge.getChildNode();
+        if (childNode == null) {
+            childNode = new NodeStar();
+            this.edge.setChildNode(childNode);
         }
-        return node.buildEdge(null);
+        return childNode.buildEdge(null);
     }
 
-    public EdgeReference toTreeEdgeReference() {
+    public EdgeReference toEdgeReference() {
         return new EdgeReference(parentNode, edge);
     }
 

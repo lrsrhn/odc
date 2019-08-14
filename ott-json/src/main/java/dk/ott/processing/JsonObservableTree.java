@@ -46,7 +46,7 @@ public class JsonObservableTree extends ObservableTree {
     try {
       jsonParser = jsonParserFactory.createParser(reader);
       JsonObject jsonObject = new JsonObject(jsonParser);
-      ObjectProcessor objectProcessor = new ObjectProcessor(rootEdgeReference.getElementFinder(), objectStore);
+      ObjectProcessor objectProcessor = new ObjectProcessor(rootEdgeReference.getNode(), objectStore);
       return objectProcessor.search(jsonParser, jsonObject);
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);
