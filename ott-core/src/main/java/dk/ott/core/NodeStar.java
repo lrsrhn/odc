@@ -36,13 +36,12 @@ import java.util.Set;
  *
  * All elements in the subtree are sent to the event handlers in the edge.
  */
-public class NodeStar implements Node {
-    private NodeReference nodeReference;
+public class NodeStar extends NodeBase {
     private Edge edge;
 
     public NodeStar() {
+        super();
         this.edge = new Edge(true);
-        this.nodeReference = new NodeReference(this);
     }
 
     @Override
@@ -53,16 +52,6 @@ public class NodeStar implements Node {
     @Override
     public EdgeBuilder buildEdge(Predicate predicate) {
         return new EdgeBuilder(this, edge);
-    }
-
-    @Override
-    public NodeReference getReference() {
-        return nodeReference;
-    }
-
-    @Override
-    public Node getDereference() {
-        return this;
     }
 
     @Override

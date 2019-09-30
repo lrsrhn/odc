@@ -97,6 +97,16 @@ public class NodeReference implements Node {
     }
 
     @Override
+    public Edge getOtherwise() {
+        return node.getOtherwise();
+    }
+
+    @Override
+    public void setOtherwise(Edge otherwise) {
+        node.setOtherwise(otherwise);
+    }
+
+    @Override
     public void unreferenceTree() {
         node.unreferenceTree();
     }
