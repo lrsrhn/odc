@@ -23,23 +23,21 @@
 package dk.ott.core;
 
 import dk.ott.dsl.expression.SearchLocationReference;
-import dk.ott.predicate.Predicate;
-import dk.ott.processing.ObjectStore;
 import dk.ott.processing.ElementCursor;
+import dk.ott.processing.ObjectStore;
 import dk.ott.util.TreePrettyPrintHelper;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public final class NodeElementEdge implements Node {
+public final class NodeElementEdge extends NodeBase {
   private String searchElement;
   private Edge edge;
-  private NodeReference thisReference;
 
   public NodeElementEdge() {
+    super();
     this.edge = new Edge(false);
-    this.thisReference = new NodeReference(this);
   }
 
   @Override
@@ -51,23 +49,8 @@ public final class NodeElementEdge implements Node {
     } else if (this.searchElement.equals(searchElement) && edge.isRelative() == isRelative) {
       return new EdgeBuilder(thisReference, edge);
     }
-    NodeMultipleElementEdgesArray multipleXmlElementFinder = new NodeMultipleElementEdgesArray(thisReference, this.searchElement, edge);
+    NodeMultipleElementEdgesArray multipleXmlElementFinder = new NodeMultipleElementEdgesArray(thisReference, this.searchElement, edge, otherwise);
     return multipleXmlElementFinder.buildEdge(searchElement, isRelative);
-  }
-
-  @Override
-  public EdgeBuilder buildEdge(Predicate predicate) {
-    throw new UnsupportedOperationException("This operation is not supported");
-  }
-
-  @Override
-  public NodeReference getReference() {
-    return thisReference;
-  }
-
-  @Override
-  public Node getDereference() {
-    return this;
   }
 
   @Override
@@ -107,7 +90,7 @@ public final class NodeElementEdge implements Node {
   public void mergeNode(Node nodeToMerge) {
     List<SearchLocationReference> searchLocationReferences = nodeToMerge.getSeachLocationReferences();
     if (searchLocationReferences.size() > 1) {
-      NodeMultipleElementEdgesArray nodeMultipleElementEdgesArray = new NodeMultipleElementEdgesArray(thisReference, searchElement, edge);
+      NodeMultipleElementEdgesArray nodeMultipleElementEdgesArray = new NodeMultipleElementEdgesArray(thisReference, searchElement, edge, otherwise);
       nodeMultipleElementEdgesArray.mergeNode(nodeToMerge);
     } else if (searchLocationReferences.size() ==  1) {
       SearchLocationReference searchLocationReference = searchLocationReferences.get(0);
@@ -118,7 +101,7 @@ public final class NodeElementEdge implements Node {
         if (searchElement == null || new SearchLocationReference(edge, searchElement).same(searchLocationReference)) {
           edge.merge(searchLocationReference.getEdge());
         } else {
-          NodeMultipleElementEdgesArray nodeMultipleElementEdgesArray = new NodeMultipleElementEdgesArray(thisReference, searchElement, edge);
+          NodeMultipleElementEdgesArray nodeMultipleElementEdgesArray = new NodeMultipleElementEdgesArray(thisReference, searchElement, edge, otherwise);
           nodeMultipleElementEdgesArray.mergeNode(nodeToMerge);
         }
       } else {

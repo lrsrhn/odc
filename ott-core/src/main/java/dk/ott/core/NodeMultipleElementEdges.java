@@ -23,21 +23,18 @@
 package dk.ott.core;
 
 import dk.ott.dsl.expression.SearchLocationReference;
-import dk.ott.predicate.Predicate;
-import dk.ott.processing.ObjectStore;
 import dk.ott.processing.ElementCursor;
+import dk.ott.processing.ObjectStore;
 import dk.ott.util.TreePrettyPrintHelper;
 
 import java.util.*;
 
-public class NodeMultipleElementEdges implements Node {
+public class NodeMultipleElementEdges extends NodeBase {
   private HashMap<String, Edge> nextXmlElementFinders;
-  private NodeReference thisReference;
   private boolean hasRelatives;
 
-  NodeMultipleElementEdges(NodeReference thisReference, String searchElement, Edge edge) {
-    this.thisReference = thisReference;
-    thisReference.setNode(this);
+  NodeMultipleElementEdges(NodeReference thisReference, String searchElement, Edge edge, Edge otherwise) {
+    super(thisReference, otherwise);
     this.nextXmlElementFinders = new HashMap<String, Edge>(4);
     hasRelatives = edge.isRelative();
     this.nextXmlElementFinders.put(searchElement.intern(), edge);
@@ -52,21 +49,6 @@ public class NodeMultipleElementEdges implements Node {
       hasRelatives |= isRelative;
     }
     return new EdgeBuilder(this, edge);
-  }
-
-  @Override
-  public EdgeBuilder buildEdge(Predicate predicate) {
-    throw new UnsupportedOperationException("This operation is not supported");
-  }
-
-  @Override
-  public NodeReference getReference() {
-    return thisReference;
-  }
-
-  @Override
-  public Node getDereference() {
-    return this;
   }
 
   @Override

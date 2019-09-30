@@ -46,6 +46,12 @@ public class OnlyElementTreeBuilder<T> {
         return new ElementTreeBuilder<OnlyElementTreeBuilder<T>>(this, referenceStore, edgeReference);
     }
 
+    public ElementTreeBuilder<OnlyElementTreeBuilder<T>> otherwise() {
+        EdgeReference edgeReference = parentReference.getOtherwiseBuilder()
+                .toEdgeReference();
+        return new ElementTreeBuilder<OnlyElementTreeBuilder<T>>(this, referenceStore, edgeReference);
+    }
+
     public ElementTreeBuilder<OnlyElementTreeBuilder<T>> relativeElement(String elementName) {
         EdgeReference edgeReference = parentReference.getEdgeBuilder()
                 .addElementChildNode(elementName, true)

@@ -22,11 +22,11 @@
  */
 package dk.ott.processing;
 
-import dk.ott.event.OnEndHandler;
-import dk.ott.event.OnStartHandler;
 import dk.ott.core.Edge;
 import dk.ott.core.Node;
 import dk.ott.core.TextLocation;
+import dk.ott.event.OnEndHandler;
+import dk.ott.event.OnStartHandler;
 import dk.ott.predicate.Predicate;
 import dk.ott.processing.structures.IntStack;
 import dk.ott.processing.structures.NodeStack;
@@ -56,12 +56,16 @@ public final class ObservableTreeTraverser {
         currentOnTextLocation = null;
         Edge edge = currentNode.lookupEdge(elementCursor, objectStore, childDepth == currentDepth);
         if (edge != null) {
-            return handleSearchLocation(edge, elementCursor, currentDepth);
+            return handleEdge(edge, elementCursor, currentDepth);
         }
-        return !currentNode.hasRelative() ? EventAction.SKIP_ELEMENT : EventAction.NOTHING;
+        Edge otherwise = currentNode.getOtherwise();
+        if (otherwise != null) {
+            return handleEdge(otherwise, elementCursor, currentDepth);
+        }
+        return !currentNode.hasRelative() ? EventAction.SKIP_ELEMENT : EventAction.CONTINUE;
     }
 
-    private EventAction handleSearchLocation(final Edge edge, final InternalElementCursor elementCursor, final int currentDepth) throws Exception {
+    private EventAction handleEdge(final Edge edge, final InternalElementCursor elementCursor, final int currentDepth) throws Exception {
         OnStartHandler onStartHandler = edge.getOnStartHandler();
         Predicate filter = edge.getFilter();
         currentOnTextLocation = edge.getTextLocation();
@@ -83,7 +87,7 @@ public final class ObservableTreeTraverser {
             }
             else if (currentOnTextLocation != null) {
                 handleStacks(currentDepth, null);
-                return currentOnTextLocation.isRaw() ? EventAction.READ_RAW_TEXT : EventAction.NOTHING;
+                return currentOnTextLocation.isRaw() ? EventAction.READ_RAW_TEXT : EventAction.CONTINUE;
             } else {
                 return EventAction.SKIP_ELEMENT;
             }
@@ -93,7 +97,7 @@ public final class ObservableTreeTraverser {
                 handleNextElementFinder(elementCursor, currentDepth, nextNode);
             }
         }
-        return EventAction.NOTHING;
+        return EventAction.CONTINUE;
     }
 
     private void handleStacks(final int currentDepth, final OnEndHandler onEndHandler) {
@@ -108,7 +112,7 @@ public final class ObservableTreeTraverser {
         if (currentNode.isPredicate()) {
             Edge edge = currentNode.lookupEdge(elementCursor, objectStore);
             if (edge != null) {
-                handleSearchLocation(edge, elementCursor, currentDepth);
+                handleEdge(edge, elementCursor, currentDepth);
             }
         }
     }

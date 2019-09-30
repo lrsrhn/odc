@@ -128,6 +128,12 @@ public class ElementTreeBuilder<T> {
         return new OnlyElementTreeBuilder<ElementTreeBuilder<T>>(this, referenceStore, edgeReference);
     }
 
+    public ElementTreeBuilder<ElementTreeBuilder<T>> otherwise() {
+        EdgeReference edgeReference = parentReference.getOtherwiseBuilder()
+                .toEdgeReference();
+        return new ElementTreeBuilder<ElementTreeBuilder<T>>(this, referenceStore, edgeReference);
+    }
+
     public T end() {
         return parentTreeBuilder;
     }

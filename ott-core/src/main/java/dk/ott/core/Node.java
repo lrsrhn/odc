@@ -54,5 +54,9 @@ public interface Node {
 
   boolean hasRelative();
 
+  Edge getOtherwise();
+
+  void setOtherwise(Edge otherwise);
+
   void unreferenceTree();
 }

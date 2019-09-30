@@ -59,6 +59,12 @@ public class EdgeReference {
     return new EdgeBuilder(parentNodeReference, edge);
   }
 
+  public EdgeBuilder getOtherwiseBuilder() {
+    Edge edge = new Edge(false);
+    parentNodeReference.setOtherwise(edge);
+    return new EdgeBuilder(parentNodeReference, edge);
+  }
+
   public void setEdge(Edge edge) {
     this.edge = edge;
   }

@@ -64,6 +64,11 @@ public class ExpressionBuilder {
     return this;
   }
 
+  public ExpressionBuilder otherwise() {
+    edgeReference = edgeReference.getOtherwiseBuilder().toEdgeReference();
+    return this;
+  }
+
   public ExpressionBuilder elementPath(String elementPath) {
     edgeReference = ExpressionHelper.parseElementPath(elementPath, edgeReference, false);
     return this;

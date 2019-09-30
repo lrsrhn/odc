@@ -33,22 +33,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class NodeMultiplePredicateEdges implements Node {
+public class NodeMultiplePredicateEdges extends NodeBase {
   private SearchLocationList searchLocationList;
-  private NodeReference thisReference;
 
-  public NodeMultiplePredicateEdges(NodeReference nodeReference, Predicate predicate, Edge edge) {
+  public NodeMultiplePredicateEdges(NodeReference nodeReference, Predicate predicate, Edge edge, Edge otherwise) {
+    super(nodeReference, otherwise);
     this.searchLocationList = new SearchLocationList();
-    this.thisReference = nodeReference;
-    this.thisReference.setNode(this);
     if (predicate != null) {
       searchLocationList.addSearchLocation(edge, predicate);
     }
-  }
-
-  @Override
-  public EdgeBuilder buildEdge(String searchElement, boolean isRelative) {
-    throw new UnsupportedOperationException("This operation is not supported");
   }
 
   @Override
@@ -61,16 +54,6 @@ public class NodeMultiplePredicateEdges implements Node {
       searchLocationList.addSearchLocation(edge, predicate);
       return new EdgeBuilder(this, edge);
     }
-  }
-
-  @Override
-  public NodeReference getReference() {
-    return thisReference;
-  }
-
-  @Override
-  public Node getDereference() {
-    return this;
   }
 
   @Override

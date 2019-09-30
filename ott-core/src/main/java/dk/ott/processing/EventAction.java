@@ -23,7 +23,7 @@
 package dk.ott.processing;
 
 public enum EventAction {
-    NOTHING,
+    CONTINUE,
     SKIP_ELEMENT,
     READ_RAW_TEXT
 }

@@ -23,9 +23,8 @@
 package dk.ott.core;
 
 import dk.ott.dsl.expression.SearchLocationReference;
-import dk.ott.predicate.Predicate;
-import dk.ott.processing.ObjectStore;
 import dk.ott.processing.ElementCursor;
+import dk.ott.processing.ObjectStore;
 import dk.ott.util.TreePrettyPrintHelper;
 
 import java.util.ArrayList;
@@ -33,14 +32,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public final class NodeMultipleElementEdgesArray implements Node {
+public final class NodeMultipleElementEdgesArray extends NodeBase {
   private SearcLocationList nextXmlElementFinders;
-  private NodeReference thisReference;
   private boolean hasRelatives;
 
-  NodeMultipleElementEdgesArray(NodeReference thisReference, String searchElement, Edge edge) {
-    this.thisReference = thisReference;
-    thisReference.setNode(this);
+  NodeMultipleElementEdgesArray(NodeReference thisReference, String searchElement, Edge edge, Edge otherwise) {
+    super(thisReference, otherwise);
     this.nextXmlElementFinders = new SearcLocationList();
     if (searchElement != null) {
       hasRelatives = edge.isRelative();
@@ -57,21 +54,6 @@ public final class NodeMultipleElementEdgesArray implements Node {
       hasRelatives |= isRelative;
     }
     return new EdgeBuilder(this, edge);
-  }
-
-  @Override
-  public EdgeBuilder buildEdge(Predicate predicate) {
-    throw new UnsupportedOperationException("This operation is not supported");
-  }
-
-  @Override
-  public NodeReference getReference() {
-    return thisReference;
-  }
-
-  @Override
-  public Node getDereference() {
-    return this;
   }
 
   @Override
