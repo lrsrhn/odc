@@ -1,17 +1,17 @@
 /**
  * The MIT License
  * Copyright © 2018 Lars Storm
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -33,13 +33,13 @@ import dk.ott.processing.structures.NodeStack;
 import dk.ott.processing.structures.StackItem;
 
 public final class ObservableTreeTraverser {
-    private Node currentNode;
-    private TextLocation currentOnTextLocation;
     private final NodeStack nodeStack;
     private final IntStack depthStack;
+    private final ObjectStore objectStore;
+    private Node currentNode;
+    private TextLocation currentOnTextLocation;
     private int parentDepth;
     private int childDepth;
-    private final ObjectStore objectStore;
 
     public ObservableTreeTraverser(final Node rootNode, ObjectStore objectStore) {
         this.objectStore = objectStore;
@@ -54,8 +54,10 @@ public final class ObservableTreeTraverser {
     public EventAction startElement(final InternalElementCursor elementCursor, final int currentDepth) throws Exception {
         elementCursor.clearCache();
         currentOnTextLocation = null;
+//        System.out.println("StartElement: '" + elementCursor.getElementName() + "'");
         Edge edge = currentNode.lookupEdge(elementCursor, objectStore, childDepth == currentDepth);
         if (edge != null) {
+//            System.out.println("StartElement: handle absolute edge");
             return handleEdge(edge, elementCursor, currentDepth);
         }
         Edge otherwise = currentNode.getOtherwise();
@@ -84,8 +86,7 @@ public final class ObservableTreeTraverser {
             if (nextNode != null) {
                 handleStacks(currentDepth, null);
                 handleNextElementFinder(elementCursor, currentDepth, nextNode);
-            }
-            else if (currentOnTextLocation != null) {
+            } else if (currentOnTextLocation != null) {
                 handleStacks(currentDepth, null);
                 return currentOnTextLocation.isRaw() ? EventAction.READ_RAW_TEXT : EventAction.CONTINUE;
             } else {
@@ -118,7 +119,9 @@ public final class ObservableTreeTraverser {
     }
 
     public void text(final InternalElementCursor elementCursor) throws Exception {
+//        System.out.println("Text event");
         if (currentOnTextLocation != null && elementCursor.getText() != null) {
+//            System.out.println("Text event by handler");
             Predicate filter = currentOnTextLocation.getTextFilter();
             if (filter == null) {
                 currentOnTextLocation.getOnTextHandler().onText(elementCursor, objectStore);
@@ -129,19 +132,28 @@ public final class ObservableTreeTraverser {
     }
 
     public void endElement(final InternalElementCursor elementCursor, final int currentDepth) throws Exception {
-        while (parentDepth == currentDepth) {
-            childDepth = parentDepth;
-            parentDepth = depthStack.popAndPeek();
-            currentOnTextLocation = null;
-            StackItem stackItem = nodeStack.pop();
-            OnEndHandler onEndHandler = stackItem.getOnEndHandler();
-            Node previousNode = stackItem.getPreviousNode();
-            elementCursor.clearCache();
-            if (onEndHandler != null) {
-                onEndHandler.onEnd(elementCursor, objectStore);
+//        System.out.println("EndElement: '" + elementCursor.getElementName() + "'");
+//            System.out.println("EndElement by handler");
+        if (parentDepth == currentDepth) {
+            handleEndElement(elementCursor);
+            if (currentNode.isPredicate()) {
+                handleEndElement(elementCursor);
             }
-            currentNode = previousNode;
         }
+    }
+
+    private void handleEndElement(InternalElementCursor elementCursor) throws Exception {
+        childDepth = parentDepth;
+        parentDepth = depthStack.popAndPeek();
+        currentOnTextLocation = null;
+        StackItem stackItem = nodeStack.pop();
+        OnEndHandler onEndHandler = stackItem.getOnEndHandler();
+        Node previousNode = stackItem.getPreviousNode();
+        elementCursor.clearCache();
+        if (onEndHandler != null) {
+            onEndHandler.onEnd(elementCursor, objectStore);
+        }
+        currentNode = previousNode;
     }
 
     public boolean isTextHandlerSet() {
