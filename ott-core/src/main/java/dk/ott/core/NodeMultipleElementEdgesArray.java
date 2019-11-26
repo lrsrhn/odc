@@ -161,7 +161,7 @@ public final class NodeMultipleElementEdgesArray extends NodeBase {
       int firstIndex = includeAbsolutes ? 0 : firstRelativeIndex;
       for (int i = firstIndex; i < size; i++) {
         if (targetElementNameLength == elementNameLengths[i] && targetElementName.equals(elementNames[i])) {
-          return nextXmlElementFinders.edges[i];
+          return edges[i];
         }
       }
       return null;
