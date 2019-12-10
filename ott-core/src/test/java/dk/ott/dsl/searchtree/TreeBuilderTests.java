@@ -519,6 +519,8 @@ public abstract class TreeBuilderTests {
                         .end(assertElementHandler)
                         .recursionToReference(referenceName)
                     .end(assertElementHandler)
+                    .element("monkey")
+                    .end()
                 .end(assertElementHandler)
             .build();
 

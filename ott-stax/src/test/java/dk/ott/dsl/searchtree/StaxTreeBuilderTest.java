@@ -21,7 +21,6 @@ package dk.ott.dsl.searchtree; /**
  * THE SOFTWARE.
  */
 
-import dk.ott.dsl.searchtree.TreeBuilderTests;
 import dk.ott.processing.StaxObservableTree;
 
 public class StaxTreeBuilderTest extends TreeBuilderTests {

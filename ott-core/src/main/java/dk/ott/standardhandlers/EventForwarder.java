@@ -23,12 +23,10 @@
 package dk.ott.standardhandlers;
 
 import dk.ott.event.EventHandler;
-import dk.ott.event.OnStartHandler;
-import dk.ott.event.OnTextHandler;
-import dk.ott.processing.ObjectStore;
 import dk.ott.processing.ElementCursor;
-// TODO: Remove EventHandler and use EventHandler instead
-public class EventForwarder implements OnStartHandler, OnTextHandler {
+import dk.ott.processing.ObjectStore;
+
+public class EventForwarder implements EventHandler {
     private EventHandler[] eventHandlers;
 
     public EventForwarder(EventHandler[] eventHandlers) {
@@ -46,6 +44,13 @@ public class EventForwarder implements OnStartHandler, OnTextHandler {
     public void onText(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
         for (EventHandler eventHandler : eventHandlers) {
             eventHandler.onText(elementCursor, objectStore);
+        }
+    }
+
+    @Override
+    public void onEnd(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
+        for (EventHandler eventHandler : eventHandlers) {
+            eventHandler.onEnd(elementCursor, objectStore);
         }
     }
 }

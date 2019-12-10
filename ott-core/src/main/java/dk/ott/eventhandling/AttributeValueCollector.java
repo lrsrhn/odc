@@ -41,7 +41,7 @@ public class AttributeValueCollector implements EventHandler {
 
   @Override
   public void onEnd(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
-    handle(elementCursor, objectStore);
+    // Nothing
   }
 
   @Override
@@ -51,6 +51,6 @@ public class AttributeValueCollector implements EventHandler {
 
   @Override
   public void onText(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
-    handle(elementCursor, objectStore);
+    // Nothing
   }
 }

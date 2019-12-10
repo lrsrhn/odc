@@ -29,40 +29,32 @@ import dk.ott.processing.ObjectStore;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextValueCollector implements EventHandler {
-
+public class ListCollector implements EventHandler {
   private String storeKey;
+  private String storeKeyToList;
 
-  public TextValueCollector(String storeKey) {
+  public ListCollector(String storeKey, String storeKeyToList) {
     this.storeKey = storeKey;
+    this.storeKeyToList = storeKeyToList;
   }
 
   public void handle(ElementCursor elementCursor, ObjectStore objectStore) {
-    // TODO: 12/10/19 Add support for append strategies
-    List<String> values = objectStore.get(storeKey, List.class);
-    if (values != null) {
-      values.add(elementCursor.getText());
-      return;
+    List<String> valueList = objectStore.get(storeKey, List.class);
+    if (valueList == null) {
+      valueList = new ArrayList<String>();
+      objectStore.put(storeKey, valueList);
     }
-    String value = objectStore.get(storeKey, String.class);
-    if (value == null) {
-      objectStore.put(storeKey,  elementCursor.getText());
-      return;
-    }
-    values = new ArrayList<String>(3);
-    values.add(value);
-    values.add(elementCursor.getText());
-    objectStore.put(storeKey,  values);
+    valueList.add(objectStore.get(storeKeyToList, String.class));
   }
 
   @Override
   public void onEnd(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
-    // Nothing
+    handle(elementCursor, objectStore);
   }
 
   @Override
   public void onStart(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
-    // Nothing
+    handle(elementCursor, objectStore);
   }
 
   @Override
