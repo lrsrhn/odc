@@ -67,7 +67,7 @@ public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamRea
                     }
                     continue;
                 case XMLStreamConstants.CHARACTERS:
-                    if (!streamReader.isWhiteSpace()) {
+                    if (observableTreeTraverser.isTextHandlerSet()) {
                         xmlElement.setEventType(eventType);
                         observableTreeTraverser.text(xmlElement);
                     }

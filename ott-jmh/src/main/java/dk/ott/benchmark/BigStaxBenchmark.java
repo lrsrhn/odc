@@ -133,7 +133,7 @@ public class BigStaxBenchmark {
                     break;
                 case XMLStreamConstants.CHARACTERS:
                     if (found) {
-                        builder.append(streamReader.getText());
+                        builder.append(streamReader.getText().trim());
                     }
                     break;
                 case XMLStreamReader.END_ELEMENT:

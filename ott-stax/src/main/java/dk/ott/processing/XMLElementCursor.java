@@ -71,10 +71,21 @@ public class XMLElementCursor extends BaseElementCursor {
       return elementTextCache;
     }
     if (eventType == XMLStreamConstants.CHARACTERS || eventType == XMLStreamConstants.CDATA) {
-      try {
-        elementTextCache = trimToNull(xmlStreamReader.getText());
-      } catch (IllegalStateException e) {
-        // Element has children and does not have a value/text
+      int textLength = xmlStreamReader.getTextLength();
+      if (textLength > 0) {
+        char[] characters = xmlStreamReader.getTextCharacters();
+        int startIndex = xmlStreamReader.getTextStart();
+        int endIndex = startIndex + textLength - 1;
+        while(startIndex < endIndex && Character.isWhitespace(characters[startIndex])) {
+          startIndex++;
+        }
+        while(endIndex > startIndex && Character.isWhitespace(characters[endIndex])) {
+          endIndex--;
+        }
+        textLength = endIndex - startIndex;
+        if (textLength > 0) {
+          elementTextCache = new String(characters, startIndex, textLength + 1);
+        }
       }
     }
     return elementTextCache;
