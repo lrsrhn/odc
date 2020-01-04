@@ -40,7 +40,9 @@ public class StubElementProcessor extends BaseElementProcessor<InputReader, Elem
             structureElement.setCurrentElement(element);
             if (element.isStartElement()) {
                 super.observableTreeTraverser.startElement(structureElement, currentDepth++);
-                super.observableTreeTraverser.text(structureElement);
+                if (observableTreeTraverser.isTextHandlerSet()) {
+                    super.observableTreeTraverser.text(structureElement);
+                }
                 continue;
             }
             super.observableTreeTraverser.endElement(structureElement, --currentDepth);

@@ -134,7 +134,6 @@ public final class NodeMultipleElementEdgesArray extends NodeBase {
     Edge[] edges;
     String[] elementNames;
     int[] elementNameLengths;
-    private int firstRelativeIndex; // Equal to count of absolutes
     private int size;
 
     SearcLocationList() {
@@ -142,58 +141,70 @@ public final class NodeMultipleElementEdgesArray extends NodeBase {
       this.elementNames = new String[4];
       this.elementNameLengths = new int[4];
       this.size = 0;
-      this.firstRelativeIndex = size;
     }
 
     final void addSearchLocation(String elementName, Edge edge) {
       this.size++;
-      boolean isRelative = edge.isRelative();
-      edges = addItemToList(edge, edges, isRelative);
-      elementNames = addItemToList(elementName.intern(), elementNames, isRelative);
-      elementNameLengths = addItemToList(elementName.length(), elementNameLengths, isRelative);
-      if (!isRelative) {
-        firstRelativeIndex++;
+      edges = addItemToList(edge, edges);
+      elementNames = addItemToList(elementName.intern(), elementNames);
+      elementNameLengths = addItemToList(elementName.length(), elementNameLengths);
+      this.selectionSort(0, size);
+    }
+
+    private void selectionSort(int startIndex, int length) {
+      for (int i = startIndex; i < length; i++) {
+        int bestIndex = i;
+        for (int j = i + 1; j < length; j++) {
+          if (elementNameLengths[bestIndex] > elementNameLengths[j]) {
+            bestIndex = j;
+          }
+        }
+        if (bestIndex != i) {
+          int templ = elementNameLengths[i];
+          String temps = elementNames[i];
+          Edge tempe = edges[i];
+          elementNameLengths[i] = elementNameLengths[bestIndex];
+          elementNames[i] = elementNames[bestIndex];
+          edges[i] = edges[bestIndex];
+
+          elementNameLengths[bestIndex] = templ;
+          elementNames[bestIndex] = temps;
+          edges[bestIndex] = tempe;
+        }
       }
     }
 
     final Edge lookupSearchLocation(String targetElementName, boolean includeAbsolutes) {
       int targetElementNameLength = targetElementName.length();
-      int firstIndex = includeAbsolutes ? 0 : firstRelativeIndex;
-      for (int i = firstIndex; i < size; i++) {
-        if (targetElementNameLength == elementNameLengths[i] && targetElementName.equals(elementNames[i])) {
-          return edges[i];
+      for (int i = 0; i < size; i++) {
+        int currentLength = elementNameLengths[i];
+        if (targetElementNameLength == currentLength) {
+          Edge edge = edges[i];
+          if (edge.isRelative() || includeAbsolutes) {
+            if (targetElementName.equals(elementNames[i])) {
+              return edge;
+            }
+          }
+        } else if (targetElementNameLength < currentLength) {
+          return null;
         }
       }
       return null;
     }
 
-    private <E> E[] addItemToList(E item, E[] items, boolean isRelative) {
+    private <E> E[] addItemToList(E item, E[] items) {
       if (size > items.length) {
         items = Arrays.copyOf(items, items.length + 1);
       }
-      if (isRelative) {
-        items[size - 1] = item;
-      } else {
-        for (int i = size - 1; i > firstRelativeIndex; i--) {
-          items[i] = items[i - 1];
-        }
-        items[firstRelativeIndex] = item;
-      }
+      items[size - 1] = item;
       return items;
     }
 
-    private int[] addItemToList(int item, int[] items, boolean isRelative) {
+    private int[] addItemToList(int item, int[] items) {
       if (size > items.length) {
         items = Arrays.copyOf(items, items.length + 1);
       }
-      if (isRelative) {
-        items[size - 1] = item;
-      } else {
-        for (int i = size - 1; i > firstRelativeIndex; i--) {
-          items[i] = items[i - 1];
-        }
-        items[firstRelativeIndex] = item;
-      }
+      items[size - 1] = item;
       return items;
     }
 
