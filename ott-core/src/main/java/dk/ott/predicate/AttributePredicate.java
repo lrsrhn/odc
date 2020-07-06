@@ -57,8 +57,7 @@ public class AttributePredicate implements Predicate {
     AttributePredicate that = (AttributePredicate) o;
 
     if (attributeName != null ? attributeName.equals(that.attributeName) : that.attributeName == null)
-      if (attributeValue != null ? attributeValue.equals(that.attributeValue) : that.attributeValue == null)
-        return true;
+      return attributeValue != null ? attributeValue.equals(that.attributeValue) : that.attributeValue == null;
     return false;
   }
 

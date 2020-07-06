@@ -130,7 +130,7 @@ public final class NodeMultipleElementEdgesArray extends NodeBase {
     }
   }
 
-  private final class SearcLocationList {
+  private static final class SearcLocationList {
     Edge[] edges;
     String[] elementNames;
     int[] elementNameLengths;

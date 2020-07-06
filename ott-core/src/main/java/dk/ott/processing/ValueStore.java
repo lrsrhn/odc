@@ -22,6 +22,8 @@
  */
 package dk.ott.processing;
 
+import java.util.Arrays;
+
 /**
  * May be used in the future - otherwise delete
  */
@@ -56,9 +58,7 @@ public class ValueStore {
 
   public void clear() {
     if (values != null) {
-      for (int i = 0; i < values.length; i++) {
-        values[i] = null;
-      }
+      Arrays.fill(values, null);
     }
   }
 }

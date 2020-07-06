@@ -140,7 +140,7 @@ public class NodeMultiplePredicateEdges extends NodeBase {
     }
   }
 
-  private final class SearchLocationList {
+  private static final class SearchLocationList {
     Edge[] edges;
     Predicate[] predicates;
     private int size;

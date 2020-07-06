@@ -30,7 +30,6 @@ public class NamespacePredicate implements Predicate {
 
     public NamespacePredicate(String expectedNamespace) {
         if (expectedNamespace == null) {
-            this.expectedNamespace = expectedNamespace;
             return;
         }
         this.expectedNamespace = expectedNamespace.intern();
