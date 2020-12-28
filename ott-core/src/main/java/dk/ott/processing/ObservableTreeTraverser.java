@@ -22,6 +22,9 @@
  */
 package dk.ott.processing;
 
+import dk.ott.bintree.BinTree;
+import dk.ott.bintree.Index;
+import dk.ott.bintree.PositionalIndex;
 import dk.ott.core.Edge;
 import dk.ott.core.Node;
 import dk.ott.core.TextLocation;
@@ -36,14 +39,16 @@ public final class ObservableTreeTraverser {
     private final NodeStack nodeStack;
     private final IntStack depthStack;
     private final ObjectStore objectStore;
-    private Node currentNode;
+    private PositionalIndex currentIndex;
+    private BinTree binTree;
     private TextLocation currentOnTextLocation;
     private int parentDepth;
     private int childDepth;
 
-    public ObservableTreeTraverser(final Node rootNode, ObjectStore objectStore) {
+    public ObservableTreeTraverser(final BinTree binTree, ObjectStore objectStore) {
         this.objectStore = objectStore;
-        this.currentNode = rootNode;
+        this.binTree = binTree;
+        this.currentIndex = new PositionalIndex(binTree.getRoot(), 0);
         this.nodeStack = new NodeStack(15);
         this.depthStack = new IntStack(15);
         this.depthStack.push(-1);
@@ -55,19 +60,19 @@ public final class ObservableTreeTraverser {
         elementCursor.clearCache();
         currentOnTextLocation = null;
 //        System.out.println("StartElement: '" + elementCursor.getElementName() + "'");
-        Edge edge = currentNode.lookupEdge(elementCursor, objectStore, childDepth == currentDepth);
-        if (edge != null) {
+        if (binTree.lookupIndex(currentIndex, elementCursor, objectStore, childDepth == currentDepth)) {
 //            System.out.println("StartElement: handle absolute edge");
-            return handleEdge(edge, elementCursor, currentDepth);
+            return handleEdge(elementCursor, currentDepth);
         }
-        Edge otherwise = currentNode.getOtherwise();
-        if (otherwise != null) {
-            return handleEdge(otherwise, elementCursor, currentDepth);
-        }
-        return !currentNode.hasRelative() ? EventAction.SKIP_ELEMENT : EventAction.CONTINUE;
+        // TODO: 12/27/20 support this transparently in BinTree by sorting
+//        Edge otherwise = currentNode.getOtherwise();
+//        if (otherwise != null) {
+//            return handleEdge(otherwise, elementCursor, currentDepth);
+//        }
+        return !currentIndex.getIndex().hasRelativeChildren ? EventAction.SKIP_ELEMENT : EventAction.CONTINUE;
     }
 
-    private EventAction handleEdge(final Edge edge, final InternalElementCursor elementCursor, final int currentDepth) throws Exception {
+    private EventAction handleEdge(final InternalElementCursor elementCursor, final int currentDepth) throws Exception {
         OnStartHandler onStartHandler = edge.getOnStartHandler();
         Predicate filter = edge.getFilter();
         currentOnTextLocation = edge.getTextLocation();

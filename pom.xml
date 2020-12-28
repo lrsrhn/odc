@@ -18,12 +18,12 @@
     <modules>
         <module>ott-xml</module>
         <module>ott-core</module>
-        <module>ott-dom</module>
-        <module>ott-sax</module>
+        <!--<module>ott-dom</module>-->
+        <!--<module>ott-sax</module>-->
         <module>ott-stax</module>
-        <module>ott-json</module>
-        <module>ott-xpp</module>
-        <module>ott-vtd-xml</module>
+        <!--<module>ott-json</module>-->
+        <!--<module>ott-xpp</module>-->
+        <!--<module>ott-vtd-xml</module>-->
         <module>ott-jmh</module>
     </modules>
 

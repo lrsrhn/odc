@@ -22,7 +22,6 @@
  */
 package dk.ott.processing.structures;
 
-import dk.ott.core.Node;
 import dk.ott.event.OnEndHandler;
 
 import java.util.Arrays;
@@ -43,7 +42,7 @@ public final class NodeStack {
         }
     }
 
-    public void push(Node previousNode, OnEndHandler onEndHandler) {
+    public void push(int previousNode, OnEndHandler onEndHandler) {
         if (lookupIndex == stackItems.length - 1) {
             int previousSize = stackItems.length;
             stackItems = Arrays.copyOf(stackItems, stackItems.length * 2);

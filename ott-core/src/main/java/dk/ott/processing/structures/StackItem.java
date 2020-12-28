@@ -22,22 +22,23 @@
  */
 package dk.ott.processing.structures;
 
+import dk.ott.bintree.Index;
 import dk.ott.event.OnEndHandler;
 import dk.ott.core.Node;
 
 public class StackItem {
     private OnEndHandler onEndHandler;
-    private Node previousNode;
+    private Index previousNode;
 
     public OnEndHandler getOnEndHandler() {
         return onEndHandler;
     }
 
-    public Node getPreviousNode() {
+    public Index getPreviousNode() {
         return previousNode;
     }
 
-    public void setValues(OnEndHandler onEndHandler, Node previousNode) {
+    public void setValues(OnEndHandler onEndHandler, Index previousNode) {
         this.onEndHandler = onEndHandler;
         this.previousNode = previousNode;
     }
