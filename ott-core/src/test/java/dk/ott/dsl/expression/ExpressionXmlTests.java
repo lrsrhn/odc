@@ -62,7 +62,7 @@ public abstract class ExpressionXmlTests {
         observableTree.elementPath("/one").handle(assertElementHandler);
         observableTree.elementPath("/one/two").handle(assertElementHandler);
         observableTree.elementPath("/one/two/three").handle(assertElementHandler);
-        observableTree.dereferenceSearchTree();
+//        observableTree.dereferenceSearchTree();
 
         observableTree.find(new StringReader(xml));
         assertElementHandler.verify();

@@ -22,13 +22,12 @@
  */
 package dk.ott.processing;
 
-import dk.ott.dsl.ObservableRootTreeFragment;
-import dk.ott.dsl.EdgeReference;
-import dk.ott.dsl.expression.ExpressionBuilder;
-import dk.ott.dsl.expression.RootExpressionBuilder;
-import dk.ott.dsl.searchtree.RootTreeBuilder;
+import dk.ott.bintree.BinTree;
 import dk.ott.core.Node;
-import dk.ott.core.NodeElementEdge;
+import dk.ott.dsl.EdgeReference;
+import dk.ott.dsl.ObservableRootTreeFragment;
+import dk.ott.dsl.expression.ExpressionBuilder;
+import dk.ott.dsl.searchtree.RootTreeBuilder;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -36,39 +35,34 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class ObservableTree {
-  protected EdgeReference rootEdgeReference;
+  protected BinTree binTree;
 
-  public ObservableTree() {
-    this.rootEdgeReference = new EdgeReference(new NodeElementEdge());
+  public ObservableTree(BinTree binTree) {
+    this.binTree = binTree;
   }
 
-  Node getRootEdgeReference() {
-    return rootEdgeReference.getNode();
-  }
+//  Node getRootEdgeReference() {
+//    return rootEdgeReference.getNode();
+//  }
 
   public RootTreeBuilder treeBuilder() {
-    return new RootTreeBuilder(rootEdgeReference.getNode().getReference());
+//    return new RootTreeBuilder(rootEdgeReference.getNode().getReference());
+    return null;
   }
 
   public static ObservableRootTreeFragment detachedTree() {
-    return new ObservableRootTreeFragment();
+//    return new ObservableRootTreeFragment();
+    return null;
   }
 
   public ExpressionBuilder elementPath(String elementPath) {
-    return new RootExpressionBuilder(rootEdgeReference.getNode()).elementPath(elementPath);
+//    return new RootExpressionBuilder(rootEdgeReference.getNode()).elementPath(elementPath);
+    return null;
   }
 
   public ObservableTree addSubTree(EdgeReference edgeReference) {
-    rootEdgeReference.getNode().mergeNode(edgeReference.getNode());
+//    rootEdgeReference.getNode().mergeNode(edgeReference.getNode());
     return this;
-  }
-
-  /**
-   * When the search tree is complete use this method to dereference the search tree for a small performance improvement
-   */
-  public void dereferenceSearchTree() {
-    rootEdgeReference.dereferenceElementFinder();
-    rootEdgeReference.getNode().unreferenceTree();
   }
 
   public ObjectStore find(String rawXml) {
@@ -84,7 +78,7 @@ public abstract class ObservableTree {
     try {
       StringBuilder tostring = new StringBuilder();
       Set<Node> visited = new HashSet<Node>();
-      rootEdgeReference.getNode().buildToString(new StringBuilder(), visited, tostring);
+//      rootEdgeReference.getNode().buildToString(new StringBuilder(), visited, tostring);
       return tostring.toString();
     } catch (Exception ex) {
       throw new RuntimeException(ex);

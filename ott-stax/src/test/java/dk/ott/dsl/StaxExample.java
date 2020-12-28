@@ -27,7 +27,7 @@ import dk.ott.processing.StaxObservableTree;
 public class StaxExample extends Example {
     @Override
     public void setObservablePathFinder() {
-        StaxObservableTree staxPathFinder = new StaxObservableTree();
+        StaxObservableTree staxPathFinder = new StaxObservableTree(null);
         staxPathFinder.enableRawTextReading();
         super.observableTree = staxPathFinder;
     }

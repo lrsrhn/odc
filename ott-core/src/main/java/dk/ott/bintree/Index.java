@@ -8,4 +8,5 @@ public class Index {
     public boolean isPredicate;
     public boolean isRelative;
     public boolean hasRelativeChildren;
+    public boolean hasPredicateChildren;
 }

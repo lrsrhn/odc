@@ -23,10 +23,8 @@
 package dk.ott.processing;
 
 import dk.ott.bintree.BinTree;
-import dk.ott.bintree.Index;
 import dk.ott.bintree.PositionalIndex;
-import dk.ott.core.Edge;
-import dk.ott.core.Node;
+import dk.ott.core.BinEdge;
 import dk.ott.core.TextLocation;
 import dk.ott.event.OnEndHandler;
 import dk.ott.event.OnStartHandler;
@@ -69,15 +67,15 @@ public final class ObservableTreeTraverser {
 //        if (otherwise != null) {
 //            return handleEdge(otherwise, elementCursor, currentDepth);
 //        }
-        return !currentIndex.getIndex().hasRelativeChildren ? EventAction.SKIP_ELEMENT : EventAction.CONTINUE;
+        return currentIndex.getIndex().hasRelativeChildren ? EventAction.CONTINUE : EventAction.SKIP_ELEMENT;
     }
 
     private EventAction handleEdge(final InternalElementCursor elementCursor, final int currentDepth) throws Exception {
+        BinEdge edge = binTree.getEdge(currentIndex.getPosition());
         OnStartHandler onStartHandler = edge.getOnStartHandler();
         Predicate filter = edge.getFilter();
         currentOnTextLocation = edge.getTextLocation();
         OnEndHandler onEndHandler = edge.getOnEndHandler();
-        Node nextNode = edge.getChildNode();
         if (onStartHandler != null) {
             if (filter == null) {
                 onStartHandler.onStart(elementCursor, objectStore);
@@ -88,9 +86,9 @@ public final class ObservableTreeTraverser {
             }
         }
         if (onEndHandler == null) {
-            if (nextNode != null) {
+            if (currentIndex.getIndex().childIndex != 0) {
                 handleStacks(currentDepth, null);
-                handleNextElementFinder(elementCursor, currentDepth, nextNode);
+                handleNextElementFinder(elementCursor, currentDepth);
             } else if (currentOnTextLocation != null) {
                 handleStacks(currentDepth, null);
                 return currentOnTextLocation.isRaw() ? EventAction.READ_RAW_TEXT : EventAction.CONTINUE;
@@ -99,8 +97,8 @@ public final class ObservableTreeTraverser {
             }
         } else {
             handleStacks(currentDepth, onEndHandler);
-            if (nextNode != null) {
-                handleNextElementFinder(elementCursor, currentDepth, nextNode);
+            if (currentIndex.getIndex().childIndex != 0) {
+                handleNextElementFinder(elementCursor, currentDepth);
             }
         }
         return EventAction.CONTINUE;
@@ -110,15 +108,13 @@ public final class ObservableTreeTraverser {
         depthStack.push(currentDepth);
         parentDepth = currentDepth;
         childDepth = parentDepth + 1;
-        nodeStack.push(currentNode, onEndHandler);
+        nodeStack.push(currentIndex.getIndex(), currentIndex.getPosition(), onEndHandler);
     }
 
-    private void handleNextElementFinder(final InternalElementCursor elementCursor, final int currentDepth, final Node nextNode) throws Exception {
-        currentNode = nextNode;
-        if (currentNode.isPredicate()) {
-            Edge edge = currentNode.lookupEdge(elementCursor, objectStore);
-            if (edge != null) {
-                handleEdge(edge, elementCursor, currentDepth);
+    private void handleNextElementFinder(final InternalElementCursor elementCursor, final int currentDepth) throws Exception {
+        if (currentIndex.getIndex().hasPredicateChildren) {
+            if (binTree.lookupIndex(currentIndex, elementCursor, objectStore, true)) {
+                handleEdge(elementCursor, currentDepth);
             }
         }
     }
@@ -141,7 +137,7 @@ public final class ObservableTreeTraverser {
 //            System.out.println("EndElement by handler");
         if (parentDepth == currentDepth) {
             handleEndElement(elementCursor);
-            if (currentNode.isPredicate()) {
+            if (currentIndex.getIndex().isPredicate) {
                 handleEndElement(elementCursor);
             }
         }
@@ -153,12 +149,12 @@ public final class ObservableTreeTraverser {
         currentOnTextLocation = null;
         StackItem stackItem = nodeStack.pop();
         OnEndHandler onEndHandler = stackItem.getOnEndHandler();
-        Node previousNode = stackItem.getPreviousNode();
         elementCursor.clearCache();
         if (onEndHandler != null) {
             onEndHandler.onEnd(elementCursor, objectStore);
         }
-        currentNode = previousNode;
+        currentIndex.setPosition(stackItem.getPreviousNodeIndex());
+        currentIndex.setIndex(stackItem.getPreviousNode());
     }
 
     public boolean isTextHandlerSet() {

@@ -22,7 +22,7 @@
  */
 package dk.ott.processing;
 
-import dk.ott.core.Node;
+import dk.ott.bintree.BinTree;
 import org.codehaus.stax2.XMLStreamReader2;
 
 import javax.xml.stream.XMLStreamConstants;
@@ -32,8 +32,8 @@ public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamRea
 
     private XmlRawTextReader2 xmlRawTextReader;
 
-    public XmlElementProcessor(Node nextNode, ObjectStore objectStore, XmlRawTextReader2 xmlRawTextReader) {
-        super(nextNode, objectStore);
+    public XmlElementProcessor(BinTree binTree, ObjectStore objectStore, XmlRawTextReader2 xmlRawTextReader) {
+        super(binTree, objectStore);
         this.xmlRawTextReader = xmlRawTextReader;
     }
 

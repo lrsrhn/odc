@@ -23,6 +23,7 @@
 package dk.ott.processing;
 
 import com.ctc.wstx.stax.WstxInputFactory;
+import dk.ott.bintree.BinTree;
 import org.codehaus.stax2.XMLStreamReader2;
 import org.codehaus.stax2.validation.XMLValidationSchema;
 
@@ -43,12 +44,13 @@ public class StaxObservableTree extends ObservableTree {
   private boolean isRawTextReadingEnabled;
   private XMLValidationSchema xmlValidationSchema;
 
-  public StaxObservableTree() {
-    this(DEFAULT_XML_INPUT_FACTORY);
+  public StaxObservableTree(BinTree binTree) {
+    this(binTree, DEFAULT_XML_INPUT_FACTORY);
     this.isRawTextReadingEnabled = true;
   }
 
-  public StaxObservableTree(WstxInputFactory xmlInputFactory) {
+  public StaxObservableTree(BinTree binTree, WstxInputFactory xmlInputFactory) {
+    super(binTree);
     if (xmlInputFactory != DEFAULT_XML_INPUT_FACTORY) {
       xmlInputFactory.configureForConvenience();
       xmlInputFactory.setProperty(WstxInputFactory.P_INTERN_NAMES, false);
@@ -88,7 +90,7 @@ public class StaxObservableTree extends ObservableTree {
         streamReader.validateAgainst(xmlValidationSchema);
       }
       XMLElementCursor xmlElement = new XMLElementCursor(streamReader);
-      XmlElementProcessor xmlElementProcessor = new XmlElementProcessor(rootEdgeReference.getNode(), objectStore, xmlRawTextReader);
+      XmlElementProcessor xmlElementProcessor = new XmlElementProcessor(binTree, objectStore, xmlRawTextReader);
       return xmlElementProcessor.search(streamReader, xmlElement);
     } catch (Exception ex) {
       throw new RuntimeException(ex.getMessage(), ex);

@@ -4,6 +4,7 @@ import com.ctc.wstx.stax.WstxInputFactory;
 import dk.ott.bintree.BinTree;
 import dk.ott.bintree.Index;
 import dk.ott.bintree.PositionalIndex;
+import dk.ott.core.BinEdge;
 import dk.ott.event.OnTextHandler;
 import org.codehaus.stax2.XMLInputFactory2;
 import org.codehaus.stax2.XMLStreamReader2;
@@ -20,15 +21,15 @@ public class TestBinTree {
     @Test
     public void testing() throws Exception {
         BinTree binTree = new BinTree();
-        int parentIndex = binTree.buildElementIndex(0, "root", null);
-        parentIndex = binTree.buildElementIndex(parentIndex, "row", null);
-        binTree.buildElementIndex(parentIndex, "tags", null);
-        binTree.buildElementIndex(parentIndex, "registered", new OnTextHandler() {
+        binTree.buildElementIndex(0, "root");
+        binTree.buildElementIndex(1, "row");
+        binTree.buildElementIndex(2, "tags");
+        binTree.buildElementIndex(2, "registered").onTextHandler(new OnTextHandler() {
             @Override
             public void onText(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
-//                System.out.println(elementCursor.getText());
+                System.out.println(elementCursor.getText());
             }
-        });
+        }).build();
 
         String xml = createXmlStreamBuilderToString(true)
                 .element("root")
@@ -45,7 +46,7 @@ public class TestBinTree {
 
         XMLInputFactory2 inputFactory2 = new WstxInputFactory();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 2; i++) {
             process((XMLStreamReader2) inputFactory2.createXMLStreamReader(new StringReader(xml)), binTree.getRoot(), binTree);
         }
     }
@@ -64,7 +65,8 @@ public class TestBinTree {
                 case XMLStreamConstants.CHARACTERS:
                     if (positionalIndex.getIndex().hasTextHandler) {
                         xmlElement.setEventType(eventType);
-                        binTree.getOnTextHandler(positionalIndex.getPosition()).onText(xmlElement, null);
+                        BinEdge edge = binTree.getEdge(positionalIndex.getPosition());
+                        edge.getTextLocation().getOnTextHandler().onText(xmlElement, null);
                     }
                     continue;
                 case XMLStreamReader.END_ELEMENT:

@@ -29,6 +29,7 @@ import dk.ott.core.Node;
 public class StackItem {
     private OnEndHandler onEndHandler;
     private Index previousNode;
+    private int previousNodeIndex;
 
     public OnEndHandler getOnEndHandler() {
         return onEndHandler;
@@ -38,8 +39,13 @@ public class StackItem {
         return previousNode;
     }
 
-    public void setValues(OnEndHandler onEndHandler, Index previousNode) {
+    public int getPreviousNodeIndex() {
+        return previousNodeIndex;
+    }
+
+    public void setValues(OnEndHandler onEndHandler, Index previousNode, int previousNodeIndex) {
         this.onEndHandler = onEndHandler;
         this.previousNode = previousNode;
+        this.previousNodeIndex = previousNodeIndex;
     }
 }

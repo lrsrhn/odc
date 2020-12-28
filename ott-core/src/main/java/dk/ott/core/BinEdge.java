@@ -22,45 +22,46 @@
  */
 package dk.ott.core;
 
-import dk.ott.dsl.EdgeReference;
 import dk.ott.event.OnEndHandler;
 import dk.ott.event.OnStartHandler;
 import dk.ott.predicate.Predicate;
 
-public final class Edge {
-    private boolean isRelative;
-    private Node childNode;
+public final class BinEdge {
     private OnStartHandler onStartHandler;
     private TextLocation textLocation;
     private OnEndHandler onEndHandler;
     private Predicate filter;
 
-    public Edge(boolean isRelative) {
-        this.isRelative = isRelative;
+    public BinEdge() {
     }
 
-    public Edge(Node childNode, OnStartHandler onStartHandler, OnEndHandler onEndHandler, boolean isRelative) {
-        this.childNode = childNode;
+    public BinEdge(OnStartHandler onStartHandler, OnEndHandler onEndHandler) {
         this.onStartHandler = onStartHandler;
         this.onEndHandler = onEndHandler;
-        this.isRelative = isRelative;
-    }
-
-    public Node getChildNode() {
-        return childNode;
-    }
-
-    public Edge setChildNode(Node childNode) {
-        this.childNode = childNode;
-        return this;
     }
 
     public OnStartHandler getOnStartHandler() {
         return onStartHandler;
     }
 
-    public Edge setOnStartHandler(OnStartHandler onStartHandler) {
+    public BinEdge setOnStartHandler(OnStartHandler onStartHandler) {
         this.onStartHandler = onStartHandler;
+        return this;
+    }
+
+    public TextLocation getTextLocation() {
+        return textLocation;
+    }
+
+     public TextLocation getOrCreateTextLocation() {
+        if (textLocation == null) {
+            this.textLocation = new TextLocation();
+        }
+        return textLocation;
+    }
+
+    public BinEdge setTextLocation(TextLocation textLocation) {
+        this.textLocation = textLocation;
         return this;
     }
 
@@ -68,13 +69,8 @@ public final class Edge {
         return onEndHandler;
     }
 
-    public Edge setOnEndHandler(OnEndHandler onEndHandler) {
+    public BinEdge setOnEndHandler(OnEndHandler onEndHandler) {
         this.onEndHandler = onEndHandler;
-        return this;
-    }
-
-    public Edge setFilter(Predicate filter) {
-        this.filter = filter;
         return this;
     }
 
@@ -82,41 +78,12 @@ public final class Edge {
         return filter;
     }
 
-    public TextLocation getTextLocation() {
-        return textLocation;
-    }
-
-    public TextLocation getOrCreateTextLocation() {
-        if (textLocation == null) {
-            this.textLocation = new TextLocation();
-        }
-        return textLocation;
-    }
-
-    public boolean isRelative() {
-        return isRelative;
-    }
-
-    public Edge setRelative(boolean relative) {
-        isRelative = relative;
+    public BinEdge setFilter(Predicate filter) {
+        this.filter = filter;
         return this;
     }
 
-    public Edge setTextLocation(TextLocation textLocation) {
-        this.textLocation = textLocation;
-        return this;
-    }
-
-    public EdgeReference toTreeEdgeReference(Node node) {
-        return new EdgeReference(node, this);
-    }
-
-    public Edge merge(Edge mergee) {
-        if (childNode == null) {
-            childNode = mergee.childNode;
-        } else if (mergee.childNode != null && childNode != mergee.childNode) {
-            childNode.mergeNode(mergee.childNode);
-        }
+    public BinEdge merge(BinEdge mergee) {
         if (onStartHandler == null) {
             onStartHandler = mergee.onStartHandler;
         } else if (mergee.onStartHandler != null && !onStartHandler.equals(mergee.onStartHandler)) {
@@ -145,23 +112,18 @@ public final class Edge {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Edge that = (Edge) o;
+        BinEdge edge = (BinEdge) o;
 
-        if (isRelative != that.isRelative) return false;
-        if (childNode != null ? !childNode.equals(that.childNode) : that.childNode != null)
+        if (onStartHandler != null ? !onStartHandler.equals(edge.onStartHandler) : edge.onStartHandler != null)
             return false;
-        if (onStartHandler != null ? !onStartHandler.equals(that.onStartHandler) : that.onStartHandler != null)
-            return false;
-        if (textLocation != null ? !textLocation.equals(that.textLocation) : that.textLocation != null) return false;
-        if (onEndHandler != null ? !onEndHandler.equals(that.onEndHandler) : that.onEndHandler != null) return false;
-        return filter != null ? filter.equals(that.filter) : that.filter == null;
+        if (textLocation != null ? !textLocation.equals(edge.textLocation) : edge.textLocation != null) return false;
+        if (onEndHandler != null ? !onEndHandler.equals(edge.onEndHandler) : edge.onEndHandler != null) return false;
+        return filter != null ? filter.equals(edge.filter) : edge.filter == null;
     }
 
     @Override
     public int hashCode() {
-        int result = (isRelative ? 1 : 0);
-        result = 31 * result + (childNode != null ? childNode.hashCode() : 0);
-        result = 31 * result + (onStartHandler != null ? onStartHandler.hashCode() : 0);
+        int result = onStartHandler != null ? onStartHandler.hashCode() : 0;
         result = 31 * result + (textLocation != null ? textLocation.hashCode() : 0);
         result = 31 * result + (onEndHandler != null ? onEndHandler.hashCode() : 0);
         result = 31 * result + (filter != null ? filter.hashCode() : 0);

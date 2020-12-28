@@ -22,18 +22,18 @@
  */
 package dk.ott.processing;
 
-import dk.ott.core.Node;
+import dk.ott.bintree.BinTree;
 
 public abstract class BaseElementProcessor<E, T extends ElementCursor> {
     protected ObservableTreeTraverser observableTreeTraverser;
     protected ObjectStore objectStore;
 
-    public BaseElementProcessor(Node rootNode, ObjectStore objectStore) {
-        if (rootNode == null) {
+    public BaseElementProcessor(BinTree binTree, ObjectStore objectStore) {
+        if (binTree == null) {
             throw new IllegalArgumentException("The root xml element finder cannot be null");
         }
         this.objectStore = objectStore;
-        this.observableTreeTraverser = new ObservableTreeTraverser(rootNode, this.objectStore);
+        this.observableTreeTraverser = new ObservableTreeTraverser(binTree, this.objectStore);
     }
 
     public abstract ObjectStore search(E parser, T structureElement) throws Exception;

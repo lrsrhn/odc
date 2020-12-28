@@ -22,6 +22,7 @@
  */
 package dk.ott.processing.structures;
 
+import dk.ott.bintree.Index;
 import dk.ott.event.OnEndHandler;
 
 import java.util.Arrays;
@@ -42,13 +43,13 @@ public final class NodeStack {
         }
     }
 
-    public void push(int previousNode, OnEndHandler onEndHandler) {
+    public void push(Index previousNode, int previousNodeIndex, OnEndHandler onEndHandler) {
         if (lookupIndex == stackItems.length - 1) {
             int previousSize = stackItems.length;
             stackItems = Arrays.copyOf(stackItems, stackItems.length * 2);
             prefill(previousSize);
         }
-         stackItems[++lookupIndex].setValues(onEndHandler, previousNode);
+         stackItems[++lookupIndex].setValues(onEndHandler, previousNode, previousNodeIndex);
     }
 
     public StackItem pop() {

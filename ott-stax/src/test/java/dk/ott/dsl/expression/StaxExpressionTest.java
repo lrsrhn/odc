@@ -27,7 +27,7 @@ public class StaxExpressionTest extends ExpressionXmlTests {
 
     @Override
     public void setObservablePathFinder() {
-        StaxObservableTree staxPathFinder = new StaxObservableTree();
+        StaxObservableTree staxPathFinder = new StaxObservableTree(null);
         staxPathFinder.enableRawTextReading();
         this.observableTree = staxPathFinder;
     }

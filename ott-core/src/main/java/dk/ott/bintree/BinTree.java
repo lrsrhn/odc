@@ -1,5 +1,7 @@
 package dk.ott.bintree;
 
+import dk.ott.core.BinEdge;
+import dk.ott.core.BinEdgeBuilder;
 import dk.ott.core.Edge;
 import dk.ott.core.EdgeBuilder;
 import dk.ott.event.OnEndHandler;
@@ -14,10 +16,10 @@ public class BinTree {
     Index[] indices = new Index[50];
     String[] elementNames = new String[50];
     Predicate[] predicates = new Predicate[50];
-    Edge[] edges = new Edge[50];
+    BinEdge[] edges = new BinEdge[50];
 
     public BinTree() {
-        buildElementIndex(-1, null, null);
+        buildElementIndex(-1, null);
     }
 
     public int addIndex(Index newIndex) {
@@ -31,54 +33,37 @@ public class BinTree {
         return size++;
     }
 
-    public EdgeBuilder buildElementIndex(int parentIndex, String elementName) {
+    public BinEdge addEdge(int index) {
+        BinEdge binEdge = edges[index];
+        if (binEdge == null) {
+            binEdge = new BinEdge();
+            edges[index] = binEdge;
+        }
+        return binEdge;
+    }
 
-        lookupChildIndex(parentIndex, elementName);
+    public BinEdgeBuilder buildElementIndex(int parentIndex, String elementName) {
         Index index = new Index();
         index.parentIndex = (short) parentIndex;
         index.nameLength = elementName != null ? (short)  elementName.length() : 0;
-        index.hasTextHandler = onTextHandler != null;
-
-        int indexKey = addIndex(index);
-        setElementName(indexKey, elementName);
-        setOnTextHandler(indexKey, onTextHandler);
-        return indexKey;
+        int indexIndex = addIndex(index);
+        elementNames[indexIndex] = elementName;
+        return new BinEdgeBuilder(index, addEdge(indexIndex));
     }
 
     public Index getRoot() {
         return indices[0];
     }
 
-    public void setElementName(int indexKey, String elementName) {
-        if (elementName != null) {
-            elementNames[indexKey] = elementName;
-        }
-    }
-
-    public void setPredicate(int indexKey, Predicate predicate) {
-        predicates[indexKey] = predicate;
-    }
-
-    public void setOnTextHandler(int indexKey, OnTextHandler onTextHandler) {
-        if (onTextHandler != null) {
-            onTextHandlers[indexKey] = onTextHandler;
-        }
-    }
-
-    public void setOnStartHandler(int indexKey, OnStartHandler onStartHandler) {
-        onStartHandlers[indexKey] = onStartHandler;
-    }
-
-    public void setOnEndHandlers(int indexKey, OnEndHandler onEndHandler) {
-        onEndHandlers[indexKey] = onEndHandler;
-    }
-
     public boolean lookupIndex(PositionalIndex positionalIndex, ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes) {
         int firstChildIndex = positionalIndex.getIndex().childIndex;
         int parentIndex = positionalIndex.getPosition();
         int elementNameLength = elementCursor.getElementName().length();
-        Index currentIndex;
-        for (int i = firstChildIndex; i < size && (currentIndex = indices[i]).parentIndex == parentIndex && currentIndex.nameLength <= elementNameLength; i++) {
+        for (int i = firstChildIndex; i < size; i++) {
+            Index currentIndex = indices[i];
+            if (currentIndex.parentIndex != parentIndex || currentIndex.nameLength > elementNameLength) {
+                return false;
+            }
             if (currentIndex.nameLength == elementNameLength && elementNames[i].equals(elementCursor.getElementName())) {
                 positionalIndex.setPosition(i);
                 positionalIndex.setIndex(currentIndex);
@@ -99,11 +84,11 @@ public class BinTree {
         return -1;
     }
 
-    public OnTextHandler getOnTextHandler(int currentIndexKey) {
-        return onTextHandlers[currentIndexKey];
-    }
-
     public Index getIndex(int indexKey) {
         return indices[indexKey];
+    }
+
+    public BinEdge getEdge(int index) {
+        return edges[index];
     }
 }
