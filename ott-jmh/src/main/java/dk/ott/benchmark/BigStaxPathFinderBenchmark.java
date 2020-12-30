@@ -22,6 +22,7 @@
  */
 package dk.ott.benchmark;
 
+import dk.ott.bintree.BinTree;
 import dk.ott.processing.StaxObservableTree;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
@@ -47,11 +48,18 @@ public class BigStaxPathFinderBenchmark {
             try {
 
                 xmlContent = readFile();
-                staxPathFinder = new StaxObservableTree(null);
+                BinTree binTree = new BinTree();
+                staxPathFinder = new StaxObservableTree(binTree);
                 staxPathFinder.disableRawTextReading();
                 ToStringBuilderHandler testHandler = new ToStringBuilderHandler(builder);
-                staxPathFinder.elementPath("/root/row/tags").onText(testHandler);
-                staxPathFinder.elementPath("/root/row/registered").onText(testHandler);
+                binTree.buildElementIndex(0, "root");
+                binTree.buildElementIndex(1, "row");
+                binTree.buildElementIndex(2, "tags").onTextHandler(testHandler).build();
+                binTree.buildElementIndex(2, "registered").onTextHandler(testHandler).build();
+
+
+//                staxPathFinder.elementPath("/root/row/tags").onText(testHandler);
+//                staxPathFinder.elementPath("/root/row/registered").onText(testHandler);
 //                staxPathFinder.addXpath("/root/row/greeting").onText(testHandler);
 //                staxPathFinder.addXpath("/root/row/latitude").onText(testHandler);
 

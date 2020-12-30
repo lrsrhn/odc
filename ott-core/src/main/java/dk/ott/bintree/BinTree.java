@@ -65,8 +65,8 @@ public class BinTree {
                 return false;
             }
             if (currentIndex.nameLength == elementNameLength && elementNames[i].equals(elementCursor.getElementName())) {
-                positionalIndex.setPosition(i);
                 positionalIndex.setIndex(currentIndex);
+                positionalIndex.setPosition(i);
                 return true;
             }
         }

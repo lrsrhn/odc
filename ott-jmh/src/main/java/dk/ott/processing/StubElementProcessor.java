@@ -22,13 +22,14 @@
  */
 package dk.ott.processing;
 
+import dk.ott.bintree.BinTree;
 import dk.ott.core.Node;
 import dk.ott.core.stub.Element;
 import dk.ott.core.stub.InputReader;
 
 public class StubElementProcessor extends BaseElementProcessor<InputReader, ElementCursorContext> {
 
-    public StubElementProcessor(Node rootNode, ObjectStore objectStore) {
+    public StubElementProcessor(BinTree rootNode, ObjectStore objectStore) {
         super(rootNode, objectStore);
     }
 

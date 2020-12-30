@@ -38,6 +38,7 @@ public final class ObservableTreeTraverser {
     private final IntStack depthStack;
     private final ObjectStore objectStore;
     private PositionalIndex currentIndex;
+    private PositionalIndex childIndex;
     private BinTree binTree;
     private TextLocation currentOnTextLocation;
     private int parentDepth;
@@ -47,6 +48,7 @@ public final class ObservableTreeTraverser {
         this.objectStore = objectStore;
         this.binTree = binTree;
         this.currentIndex = new PositionalIndex(binTree.getRoot(), 0);
+        this.childIndex = new PositionalIndex(binTree.getRoot(), 0);
         this.nodeStack = new NodeStack(15);
         this.depthStack = new IntStack(15);
         this.depthStack.push(-1);
@@ -58,9 +60,9 @@ public final class ObservableTreeTraverser {
         elementCursor.clearCache();
         currentOnTextLocation = null;
 //        System.out.println("StartElement: '" + elementCursor.getElementName() + "'");
-        if (binTree.lookupIndex(currentIndex, elementCursor, objectStore, childDepth == currentDepth)) {
+        if (binTree.lookupIndex(childIndex, elementCursor, objectStore, childDepth == currentDepth)) {
 //            System.out.println("StartElement: handle absolute edge");
-            return handleEdge(elementCursor, currentDepth);
+            return handleEdge(elementCursor, childIndex, currentDepth);
         }
         // TODO: 12/27/20 support this transparently in BinTree by sorting
 //        Edge otherwise = currentNode.getOtherwise();
@@ -70,8 +72,8 @@ public final class ObservableTreeTraverser {
         return currentIndex.getIndex().hasRelativeChildren ? EventAction.CONTINUE : EventAction.SKIP_ELEMENT;
     }
 
-    private EventAction handleEdge(final InternalElementCursor elementCursor, final int currentDepth) throws Exception {
-        BinEdge edge = binTree.getEdge(currentIndex.getPosition());
+    private EventAction handleEdge(final InternalElementCursor elementCursor, PositionalIndex childIndex, final int currentDepth) throws Exception {
+        BinEdge edge = binTree.getEdge(childIndex.getPosition());
         OnStartHandler onStartHandler = edge.getOnStartHandler();
         Predicate filter = edge.getFilter();
         currentOnTextLocation = edge.getTextLocation();
@@ -86,9 +88,9 @@ public final class ObservableTreeTraverser {
             }
         }
         if (onEndHandler == null) {
-            if (currentIndex.getIndex().childIndex != 0) {
+            if (childIndex.getIndex().childIndex != 0) {
                 handleStacks(currentDepth, null);
-                handleNextElementFinder(elementCursor, currentDepth);
+                handleNextElementFinder(elementCursor, childIndex, currentDepth);
             } else if (currentOnTextLocation != null) {
                 handleStacks(currentDepth, null);
                 return currentOnTextLocation.isRaw() ? EventAction.READ_RAW_TEXT : EventAction.CONTINUE;
@@ -97,8 +99,8 @@ public final class ObservableTreeTraverser {
             }
         } else {
             handleStacks(currentDepth, onEndHandler);
-            if (currentIndex.getIndex().childIndex != 0) {
-                handleNextElementFinder(elementCursor, currentDepth);
+            if (childIndex.getIndex().childIndex != 0) {
+                handleNextElementFinder(elementCursor, childIndex, currentDepth);
             }
         }
         return EventAction.CONTINUE;
@@ -111,10 +113,11 @@ public final class ObservableTreeTraverser {
         nodeStack.push(currentIndex.getIndex(), currentIndex.getPosition(), onEndHandler);
     }
 
-    private void handleNextElementFinder(final InternalElementCursor elementCursor, final int currentDepth) throws Exception {
+    private void handleNextElementFinder(final InternalElementCursor elementCursor, PositionalIndex childIndex, final int currentDepth) throws Exception {
+        currentIndex.copyFrom(childIndex);
         if (currentIndex.getIndex().hasPredicateChildren) {
-            if (binTree.lookupIndex(currentIndex, elementCursor, objectStore, true)) {
-                handleEdge(elementCursor, currentDepth);
+            if (binTree.lookupIndex(childIndex, elementCursor, objectStore, childDepth == currentDepth)) {
+                handleEdge(elementCursor, childIndex, currentDepth);
             }
         }
     }
@@ -133,9 +136,10 @@ public final class ObservableTreeTraverser {
     }
 
     public void endElement(final InternalElementCursor elementCursor, final int currentDepth) throws Exception {
-//        System.out.println("EndElement: '" + elementCursor.getElementName() + "'");
+
 //            System.out.println("EndElement by handler");
         if (parentDepth == currentDepth) {
+//            System.out.println("EndElement: '" + elementCursor.getElementName() + "'");
             handleEndElement(elementCursor);
             if (currentIndex.getIndex().isPredicate) {
                 handleEndElement(elementCursor);
@@ -155,6 +159,8 @@ public final class ObservableTreeTraverser {
         }
         currentIndex.setPosition(stackItem.getPreviousNodeIndex());
         currentIndex.setIndex(stackItem.getPreviousNode());
+        childIndex.setPosition(stackItem.getPreviousNodeIndex());
+        childIndex.setIndex(stackItem.getPreviousNode());
     }
 
     public boolean isTextHandlerSet() {

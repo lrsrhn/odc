@@ -20,16 +20,19 @@ public class TestBinTree {
 
     @Test
     public void testing() throws Exception {
-        BinTree binTree = new BinTree();
-        binTree.buildElementIndex(0, "root");
-        binTree.buildElementIndex(1, "row");
-        binTree.buildElementIndex(2, "tags");
-        binTree.buildElementIndex(2, "registered").onTextHandler(new OnTextHandler() {
+
+        OnTextHandler textHandler = new OnTextHandler() {
             @Override
             public void onText(ElementCursor elementCursor, ObjectStore objectStore) throws Exception {
                 System.out.println(elementCursor.getText());
             }
-        }).build();
+        };
+
+        BinTree binTree = new BinTree();
+        binTree.buildElementIndex(0, "root");
+        binTree.buildElementIndex(1, "row");
+        binTree.buildElementIndex(2, "tags").onTextHandler(textHandler).build();
+        binTree.buildElementIndex(2, "registered").onTextHandler(textHandler).build();
 
         String xml = createXmlStreamBuilderToString(true)
                 .element("root")
@@ -40,13 +43,27 @@ public class TestBinTree {
                         .element("registered")
                             .value("This is a registered")
                         .elementEnd()
+                        .element("somethingElse")
+                            .value("Something else")
+                        .elementEnd()
+                    .elementEnd()
+                    .element("row")
+                        .element("tags")
+                            .value("This is a tag")
+                        .elementEnd()
+                        .element("registered")
+                            .value("This is a registered")
+                        .elementEnd()
+                        .element("somethingElse")
+                            .value("Something else")
+                        .elementEnd()
                     .elementEnd()
                 .elementEnd()
             .toString();
 
         XMLInputFactory2 inputFactory2 = new WstxInputFactory();
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 1; i++) {
             process((XMLStreamReader2) inputFactory2.createXMLStreamReader(new StringReader(xml)), binTree.getRoot(), binTree);
         }
     }
@@ -70,6 +87,7 @@ public class TestBinTree {
                     }
                     continue;
                 case XMLStreamReader.END_ELEMENT:
+                    System.out.println("End element: " + streamReader.getLocalName());
                     xmlElement.setEventType(eventType);
                     int parentIndex = positionalIndex.getIndex().parentIndex;
                     if (parentIndex != -1) {

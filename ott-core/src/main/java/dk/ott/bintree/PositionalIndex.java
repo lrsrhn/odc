@@ -24,4 +24,9 @@ public class PositionalIndex {
     public void setPosition(int position) {
         this.position = position;
     }
+
+    public void copyFrom(PositionalIndex from) {
+        this.index = from.index;
+        this.position = from.position;
+    }
 }

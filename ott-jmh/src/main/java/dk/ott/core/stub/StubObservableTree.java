@@ -22,6 +22,7 @@
  */
 package dk.ott.core.stub;
 
+import dk.ott.bintree.BinTree;
 import dk.ott.processing.ElementCursorContext;
 import dk.ott.processing.ObjectStore;
 import dk.ott.processing.ObservableTree;
@@ -30,6 +31,10 @@ import dk.ott.processing.StubElementProcessor;
 import java.io.Reader;
 
 public class StubObservableTree extends ObservableTree {
+
+    public StubObservableTree() {
+        super(null);
+    }
 
     @Override
     public ObjectStore find(Reader reader, ObjectStore objectStore) {
@@ -42,7 +47,8 @@ public class StubObservableTree extends ObservableTree {
         try {
             inputReader.reset();
             ElementCursorContext elementContext = new ElementCursorContext(objectStore);
-            StubElementProcessor stubElementProcessor = new StubElementProcessor(super.rootEdgeReference.getNode(), objectStore);
+            // TODO: 12/29/20 Do something here
+            StubElementProcessor stubElementProcessor = new StubElementProcessor(null, objectStore);
             return stubElementProcessor.search(inputReader, elementContext);
         } catch (Exception e) {
             throw new RuntimeException(e);
