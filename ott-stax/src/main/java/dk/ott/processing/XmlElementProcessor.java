@@ -44,11 +44,11 @@ public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamRea
             switch (eventType) {
                 case XMLStreamReader.START_ELEMENT:
                     xmlElement.setEventType(eventType);
-                    switch (observableTreeTraverser.startElement(xmlElement, currentDepth++)) {
+                    switch (startElement(xmlElement, currentDepth++)) {
                         case SKIP_ELEMENT:
                             streamReader.skipElement();
                             xmlElement.setEventType(XMLStreamReader.END_ELEMENT);
-                            observableTreeTraverser.endElement(xmlElement, --currentDepth);
+                            endElement(xmlElement, --currentDepth);
                             continue;
                         case READ_RAW_TEXT:
                             if (xmlRawTextReader == null) {
@@ -59,22 +59,22 @@ public final class XmlElementProcessor extends BaseElementProcessor<XMLStreamRea
                             streamReader.skipElement();
                             xmlElement.setText(xmlRawTextReader.readRawText(streamReader.getLocation().getCharacterOffset()));
                             // Notify OnTextHandler
-                            observableTreeTraverser.text(xmlElement);
+                            text(xmlElement);
                             // Notify OnEndHandler
                             xmlElement.setEventType(XMLStreamReader.END_ELEMENT);
-                            observableTreeTraverser.endElement(xmlElement, --currentDepth);
+                            endElement(xmlElement, --currentDepth);
                             continue;
                     }
                     continue;
                 case XMLStreamConstants.CHARACTERS:
-                    if (observableTreeTraverser.isTextHandlerSet()) {
+                    if (currentOnTextLocation != null) {
                         xmlElement.setEventType(eventType);
-                        observableTreeTraverser.text(xmlElement);
+                        text(xmlElement);
                     }
                     continue;
                 case XMLStreamReader.END_ELEMENT:
                     xmlElement.setEventType(eventType);
-                    observableTreeTraverser.endElement(xmlElement, --currentDepth);
+                    endElement(xmlElement, --currentDepth);
             }
         }
         return objectStore;

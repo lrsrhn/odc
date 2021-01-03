@@ -22,22 +22,27 @@
  */
 package dk.ott.core;
 
-import dk.ott.bintree.Index;
+import dk.ott.bintree.BinTree;
+import dk.ott.bintree.PositionalIndex;
 import dk.ott.event.OnEndHandler;
 import dk.ott.event.OnStartHandler;
 import dk.ott.event.OnTextHandler;
 import dk.ott.predicate.Predicate;
 
+import static dk.ott.bintree.NodeBuilder.nodeBuilder;
+
 public class BinEdgeBuilder {
     private BinEdge edge;
-    private Index index;
+    private PositionalIndex positionalIndex;
+    private BinTree binTree;
 
-    public BinEdgeBuilder(Index index, BinEdge edge) {
+    public BinEdgeBuilder(PositionalIndex positionalIndex, BinTree binTree, BinEdge edge) {
         if (edge == null) {
             throw new RuntimeException("Passed edge is null!");
         }
         this.edge = edge;
-        this.index = index;
+        this.positionalIndex = positionalIndex;
+        this.binTree = binTree;
     }
 
     public BinEdgeBuilder filter(Predicate filter) {
@@ -57,13 +62,15 @@ public class BinEdgeBuilder {
 
     public BinEdgeBuilder textAsRaw() {
         edge.getOrCreateTextLocation().setRaw(true);
-        this.index.hasTextHandler = true;
+        positionalIndex.setNode(nodeBuilder(positionalIndex.getNode()).hasTextHandler(true).build());
+        binTree.setNode(positionalIndex);
         return this;
     }
 
     public BinEdgeBuilder onTextHandler(OnTextHandler onTextHandler) {
         this.edge.getOrCreateTextLocation().setOnTextHandler(onTextHandler);
-        this.index.hasTextHandler = true;
+        positionalIndex.setNode(nodeBuilder(positionalIndex.getNode()).hasTextHandler(true).build());
+        binTree.setNode(positionalIndex);
         return this;
     }
 

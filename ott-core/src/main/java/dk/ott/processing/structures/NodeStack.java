@@ -43,13 +43,13 @@ public final class NodeStack {
         }
     }
 
-    public void push(Index previousNode, int previousNodeIndex, OnEndHandler onEndHandler) {
+    public void push(long previousPositionalNode, OnEndHandler onEndHandler) {
         if (lookupIndex == stackItems.length - 1) {
             int previousSize = stackItems.length;
             stackItems = Arrays.copyOf(stackItems, stackItems.length * 2);
             prefill(previousSize);
         }
-         stackItems[++lookupIndex].setValues(onEndHandler, previousNode, previousNodeIndex);
+         stackItems[++lookupIndex].setValues(onEndHandler, previousPositionalNode);
     }
 
     public StackItem pop() {

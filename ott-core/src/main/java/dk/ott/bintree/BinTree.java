@@ -2,33 +2,31 @@ package dk.ott.bintree;
 
 import dk.ott.core.BinEdge;
 import dk.ott.core.BinEdgeBuilder;
-import dk.ott.core.Edge;
-import dk.ott.core.EdgeBuilder;
-import dk.ott.event.OnEndHandler;
-import dk.ott.event.OnStartHandler;
-import dk.ott.event.OnTextHandler;
 import dk.ott.predicate.Predicate;
 import dk.ott.processing.ElementCursor;
-import dk.ott.processing.ObjectStore;
+
+import static dk.ott.bintree.NodeBuilder.nodeBuilder;
 
 public class BinTree {
     private int size = 0;
-    Index[] indices = new Index[50];
+//    Index[] indices = new Index[50];
+    int[] nodes = new int[50];
     String[] elementNames = new String[50];
     Predicate[] predicates = new Predicate[50];
     BinEdge[] edges = new BinEdge[50];
+    private PositionalIndex node;
 
     public BinTree() {
-        buildElementIndex(-1, null);
+        buildElementIndex(0, null);
     }
 
-    public int addIndex(Index newIndex) {
-        indices[size] = newIndex;
-        if (newIndex.parentIndex != -1) {
-            Index parentIndex = indices[newIndex.parentIndex];
-            if (parentIndex.childIndex == 0) {
-                parentIndex.childIndex = (short) size;
-            }
+    public int addIndex(int newNode) {
+        nodes[size] = newNode;
+        int parentNodeIndex = NodeOperations.getParentIndex(newNode);
+        int parentNode = nodes[parentNodeIndex];
+        int childNodeIndex = NodeOperations.getChildIndex(parentNode);
+        if (childNodeIndex == 0) {
+            nodes[parentNodeIndex] = nodeBuilder(parentNode).childNodeIndex(size).build();
         }
         return size++;
     }
@@ -43,29 +41,31 @@ public class BinTree {
     }
 
     public BinEdgeBuilder buildElementIndex(int parentIndex, String elementName) {
-        Index index = new Index();
-        index.parentIndex = (short) parentIndex;
-        index.nameLength = elementName != null ? (short)  elementName.length() : 0;
-        int indexIndex = addIndex(index);
-        elementNames[indexIndex] = elementName;
-        return new BinEdgeBuilder(index, addEdge(indexIndex));
+        int newNode = nodeBuilder()
+                .parentNodeIndex(parentIndex)
+                .nameLength(elementName != null ? elementName.length() : 0)
+                .build();
+        int newNodeIndex = addIndex(newNode);
+        elementNames[newNodeIndex] = elementName;
+        return new BinEdgeBuilder(new PositionalIndex(newNode, newNodeIndex), this, addEdge(newNodeIndex));
     }
 
-    public Index getRoot() {
-        return indices[0];
+    public int getRoot() {
+        return nodes[0];
     }
 
-    public boolean lookupIndex(PositionalIndex positionalIndex, ElementCursor elementCursor, ObjectStore objectStore, boolean includeAbsolutes) {
-        int firstChildIndex = positionalIndex.getIndex().childIndex;
+    public boolean lookupIndex(PositionalIndex positionalIndex, ElementCursor elementCursor, boolean includeAbsolutes) {
+        int node = positionalIndex.getNode();
         int parentIndex = positionalIndex.getPosition();
         int elementNameLength = elementCursor.getElementName().length();
-        for (int i = firstChildIndex; i < size; i++) {
-            Index currentIndex = indices[i];
-            if (currentIndex.parentIndex != parentIndex || currentIndex.nameLength > elementNameLength) {
+        for (int i = NodeOperations.getChildIndex(node); i < size; i++) {
+            int currentIndex = nodes[i];
+            int currentNameLength = NodeOperations.getNameLength(currentIndex);
+            if (NodeOperations.getParentIndex(currentIndex) != parentIndex || currentNameLength > elementNameLength) {
                 return false;
             }
-            if (currentIndex.nameLength == elementNameLength && elementNames[i].equals(elementCursor.getElementName())) {
-                positionalIndex.setIndex(currentIndex);
+            if (currentNameLength == elementNameLength && elementNames[i].equals(elementCursor.getElementName())) {
+                positionalIndex.setNode(currentIndex);
                 positionalIndex.setPosition(i);
                 return true;
             }
@@ -73,22 +73,48 @@ public class BinTree {
         return false;
     }
 
-    private int lookupChildIndex(int parentIndex, String elementName) {
-        int elementNameLength = elementName.length();
-        Index currentIndex;
-        for (int i = indices[parentIndex].childIndex; i < size && (currentIndex = indices[i]).parentIndex == parentIndex && currentIndex.nameLength <= elementNameLength; i++) {
-            if (currentIndex.nameLength == elementNameLength && elementNames[i].equals(elementName)) {
-                return i;
+    // TODO: 1/2/21 Start from here!
+    public long lookupIndex(long positionalIndex, ElementCursor elementCursor, boolean includeAbsolutes) {
+        int node = NodeOperations.positionalNodeToNode(positionalIndex);
+        int parentIndex = NodeOperations.positionalNodeToIndex(positionalIndex);
+        int elementNameLength = elementCursor.getElementName().length();
+        for (int i = NodeOperations.getChildIndex(node); i < size; i++) {
+            int currentIndex = nodes[i];
+            int currentNameLength = NodeOperations.getNameLength(currentIndex);
+            if (NodeOperations.getParentIndex(currentIndex) != parentIndex || currentNameLength > elementNameLength) {
+                return -1;
+            }
+            if (currentNameLength == elementNameLength && elementNames[i].equals(elementCursor.getElementName())) {
+                return NodeOperations.toPositionalNode(currentIndex, i);
             }
         }
         return -1;
     }
 
-    public Index getIndex(int indexKey) {
-        return indices[indexKey];
+//    private int lookupChildIndex(int parentIndex, String elementName) {
+//        int elementNameLength = elementName.length();
+//        Index currentIndex;
+//        for (int i = indices[parentIndex].childIndex; i < size && (currentIndex = indices[i]).parentIndex == parentIndex && currentIndex.nameLength <= elementNameLength; i++) {
+//            if (currentIndex.nameLength == elementNameLength && elementNames[i].equals(elementName)) {
+//                return i;
+//            }
+//        }
+//        return -1;
+//    }
+
+    public int getNodeByIndex(int nodeIndex) {
+        return nodes[nodeIndex];
     }
 
     public BinEdge getEdge(int index) {
         return edges[index];
+    }
+
+    public BinEdge getEdge(long positionalNode) {
+        return edges[NodeOperations.positionalNodeToIndex(positionalNode)];
+    }
+
+    public void setNode(PositionalIndex node) {
+        nodes[node.getPosition()] = node.getNode();
     }
 }

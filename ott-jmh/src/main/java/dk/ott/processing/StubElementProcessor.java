@@ -35,19 +35,19 @@ public class StubElementProcessor extends BaseElementProcessor<InputReader, Elem
 
     @Override
     public ObjectStore search(InputReader parser, ElementCursorContext structureElement) throws Exception {
-        int currentDepth = 0;
-        while(parser.hasNext() && !structureElement.mustStopProcessing()) {
-            Element element = parser.next();
-            structureElement.setCurrentElement(element);
-            if (element.isStartElement()) {
-                super.observableTreeTraverser.startElement(structureElement, currentDepth++);
-                if (observableTreeTraverser.isTextHandlerSet()) {
-                    super.observableTreeTraverser.text(structureElement);
-                }
-                continue;
-            }
-            super.observableTreeTraverser.endElement(structureElement, --currentDepth);
-        }
+//        int currentDepth = 0;
+//        while(parser.hasNext() && !structureElement.mustStopProcessing()) {
+//            Element element = parser.next();
+//            structureElement.setCurrentElement(element);
+//            if (element.isStartElement()) {
+//                super.observableTreeTraverser.startElement(structureElement, currentDepth++);
+//                if (observableTreeTraverser.isTextHandlerSet()) {
+//                    super.observableTreeTraverser.text(structureElement);
+//                }
+//                continue;
+//            }
+//            super.observableTreeTraverser.endElement(structureElement, --currentDepth);
+//        }
         return objectStore;
     }
 }

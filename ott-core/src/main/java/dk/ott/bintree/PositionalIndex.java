@@ -1,20 +1,20 @@
 package dk.ott.bintree;
 
 public class PositionalIndex {
-    private Index index;
+    private int node;
     private int position;
 
-    public PositionalIndex(Index index, int position) {
-        this.index = index;
+    public PositionalIndex(int node, int position) {
+        this.node = node;
         this.position = position;
     }
 
-    public Index getIndex() {
-        return index;
+    public int getNode() {
+        return node;
     }
 
-    public void setIndex(Index index) {
-        this.index = index;
+    public void setNode(int node) {
+        this.node = node;
     }
 
     public int getPosition() {
@@ -26,7 +26,7 @@ public class PositionalIndex {
     }
 
     public void copyFrom(PositionalIndex from) {
-        this.index = from.index;
+        this.node = from.node;
         this.position = from.position;
     }
 }

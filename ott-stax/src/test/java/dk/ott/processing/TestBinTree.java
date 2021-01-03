@@ -2,7 +2,7 @@ package dk.ott.processing;
 
 import com.ctc.wstx.stax.WstxInputFactory;
 import dk.ott.bintree.BinTree;
-import dk.ott.bintree.Index;
+import dk.ott.bintree.NodeOperations;
 import dk.ott.bintree.PositionalIndex;
 import dk.ott.core.BinEdge;
 import dk.ott.event.OnTextHandler;
@@ -68,33 +68,33 @@ public class TestBinTree {
         }
     }
 
-    private void process(XMLStreamReader2 streamReader, Index root, BinTree binTree) throws Exception {
+    private void process(XMLStreamReader2 streamReader, int root, BinTree binTree) throws Exception {
         XMLElementCursor xmlElement = new XMLElementCursor(streamReader);
-        PositionalIndex positionalIndex = new PositionalIndex(root, 0);
+        long currentNode = NodeOperations.toPositionalNode(root, 0);
         while (streamReader.hasNext()) {
             int eventType = streamReader.next();
             switch (eventType) {
                 case XMLStreamReader.START_ELEMENT:
                     xmlElement.setEventType(eventType);
                     xmlElement.clearCache();
-                    binTree.lookupIndex(positionalIndex, xmlElement, null, false);
+                    long chidNode = binTree.lookupIndex(currentNode, xmlElement, false);
+                    if (chidNode != -1) {
+                        currentNode = chidNode;
+                    }
                     continue;
                 case XMLStreamConstants.CHARACTERS:
-                    if (positionalIndex.getIndex().hasTextHandler) {
+                    if (NodeOperations.hasTextHandler(currentNode)) {
                         xmlElement.setEventType(eventType);
-                        BinEdge edge = binTree.getEdge(positionalIndex.getPosition());
+                        BinEdge edge = binTree.getEdge(NodeOperations.positionalNodeToIndex(currentNode));
                         edge.getTextLocation().getOnTextHandler().onText(xmlElement, null);
                     }
                     continue;
                 case XMLStreamReader.END_ELEMENT:
                     System.out.println("End element: " + streamReader.getLocalName());
                     xmlElement.setEventType(eventType);
-                    int parentIndex = positionalIndex.getIndex().parentIndex;
-                    if (parentIndex != -1) {
-                        positionalIndex.setPosition(parentIndex);
-                        positionalIndex.setIndex(binTree.getIndex(parentIndex));
-                        xmlElement.clearCache();
-                    }
+                    int parentIndex = NodeOperations.getParentIndex(currentNode);
+                    currentNode = NodeOperations.toPositionalNode(binTree.getNodeByIndex(parentIndex), parentIndex);
+                    xmlElement.clearCache();
             }
         }
     }
